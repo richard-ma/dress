@@ -18,6 +18,10 @@ nav = Nav()
 nav.register_element('top', topbar)
 nav.init_app(app)
 
+# flask-login
+login_manager = LoginManager()
+login_manager.init_app(app)
+
 @app.route('/')
 @app.route('/<name>')
 def index(name=None):
