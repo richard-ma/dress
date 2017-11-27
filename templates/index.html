@@ -1,0 +1,13 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}This is an example page{% endblock %}
+
+{% block navbar %}
+{{nav.top.render()}}
+{% endblock %}
+
+{% block content %}
+    <h1>Hello, Bootstrap</h1>
+    <div class="alert alert-success" role="alert">
+        this is alert
+    </div>
+{% endblock %}
