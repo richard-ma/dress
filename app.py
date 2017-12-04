@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import render_template
+from flask import render_template, url_for, flash, redirect
 
 from flask_nav import Nav
 from flask_nav.elements import Navbar, View
@@ -55,6 +55,8 @@ class Host(db.Model):
     db_name = db.Column(db.String(32))
     db_pwd = db.Column(db.String(32))
 
+app.secret_key = 'secret_key'
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -71,7 +73,9 @@ def host_add():
     db.session.add(host)
     db.session.commit()
 
-    return 'added'
+    flash('Host added')
+
+    return redirect(url_for('host'))
 
 # move operation
 @app.route('/move')
