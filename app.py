@@ -46,7 +46,20 @@ db = SQLAlchemy(app)
 
 class Host(db.Model):
     __tablename__ = 'host'
-    id
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(32))
+    ip = db.Column(db.String(32))
+    port = db.Column(db.Integer)
+    domain = db.Column(db.String(32))
+    pwd = db.Column(db.String(32))
+    db_name = db.Column(db.String(32))
+    db_pwd = db.Column(db.String(32))
+
+    def __init__(self):
+        self.name = 'Default Host'
+        self.ip = '0.0.0.0'
+        self.port = 80
+        self.domain = 'default.domain'
 
 @app.route('/')
 def index():
