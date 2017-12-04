@@ -55,12 +55,6 @@ class Host(db.Model):
     db_name = db.Column(db.String(32))
     db_pwd = db.Column(db.String(32))
 
-    def __init__(self):
-        self.name = 'Default Host'
-        self.ip = '0.0.0.0'
-        self.port = 80
-        self.domain = 'default.domain'
-
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -69,6 +63,15 @@ def index():
 @app.route('/host')
 def host():
     return render_template('host.html')
+
+@app.route('/host/add')
+def host_add():
+    host = Host()
+    host.name = 'new host'
+    db.session.add(host)
+    db.session.commit()
+
+    return 'added'
 
 # move operation
 @app.route('/move')
