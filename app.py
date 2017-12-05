@@ -62,7 +62,9 @@ def index():
 # host operation
 @app.route('/host')
 def host():
-    return render_template('host.html')
+    hosts = Host.query.all()
+
+    return render_template('host.html', hosts=hosts)
 
 @app.route('/host/add')
 def host_add():

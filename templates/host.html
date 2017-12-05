@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Hello, host</h1>
+    {% for host in hosts%}
+        <div>id - {{ host.id }}</div>
+        <div>name - {{ host.name }}</div>
+    {% endfor %}
 {% endblock %}
