@@ -1,8 +1,31 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% for host in hosts%}
-        <div>id - {{ host.id }}</div>
-        <div>name - {{ host.name }}</div>
-    {% endfor %}
+<div class="container">
+
+<h2 class="sub-header">Host</h2>
+<table class="table">
+    <thead>
+        <th scope="col">#</th>
+        <th scope="col">NAME</th>
+        <th scope="col">IP</th>
+        <th scope="col">PORT</th>
+        <th scope="col">DOMAIN</th>
+        <th scope="col">OPERATION</th>
+    </thead>
+    <tbody>
+{% for host in hosts%}
+        <tr>
+            <th scope="row">{{ host.id }}</th>
+            <td>{{ host.name }}</td>
+            <td>{{ host.ip }}</td>
+            <td>{{ host.port}}</td>
+            <td>{{ host.domain}}</td>
+            <td>Placeholder</td>
+        </tr>
+{% endfor %}
+    </tbody>
+</table>
+
+</div>
 {% endblock %}
