@@ -30,7 +30,6 @@ Bootstrap(app)
 
 # flask-nav
 topbar = Navbar('',
-        View('Home', 'index'),
         View('Host', 'host'),
         View('Move', 'move'),
 )
@@ -59,7 +58,7 @@ app.secret_key = 'secret_key'
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return redirect(url_for('host'))
 
 # host operation
 @app.route('/host')
@@ -83,6 +82,12 @@ def host_add():
 @app.route('/move')
 def move():
     return render_template('move.html')
+
+# test
+@app.route('/test_flash')
+def test_flash():
+    flash('This is flash message')
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')

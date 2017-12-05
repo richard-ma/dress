@@ -3,15 +3,22 @@
 {% block title %}Dress - Host{% endblock %}
 
 {% block navbar %}
+<div class="container">
 
 {{nav.top.render()}}
 
 {% with messages = get_flashed_messages() %}
     {% if messages %}
         {% for message in messages %}
-        <h3>{{ message }}</h3>
+        <div class="alert alert-warning alert-dismissible" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-lable="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
         {% endfor %}
     {% endif %}
 {% endwith %}
 
+</div>
 {% endblock %}
