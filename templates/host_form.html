@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+
+<h2 class="sub-header">Host Form</h2>
+
+<form class="form-horizontal">
+    <div class="form-group">
+        <label for="host_name" class="col-sm-2 control-label">Host Name</label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" id="host_name" placeholder="My Host">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="host_ip" class="col-sm-2 control-label">IP</label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" id="host_ip" placeholder="233.233.233.233">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="host_port" class="col-sm-2 control-label">SSH Port</label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" id="host_port" placeholder="22">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="host_pwd" class="col-sm-2 control-label">Root Password</label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" id="host_pwd" placeholder="Your Password">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="host_domain" class="col-sm-2 control-label">Domain</label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" id="host_domain" placeholder="example.com">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="host_db_name" class="col-sm-2 control-label">Database Name</label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" id="host_db_name" placeholder="Database Name">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="host_db_pwd" class="col-sm-2 control-label">Database Password</label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" id="host_db_pwd" placeholder="Database Password">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+    </div>
+</form>
+
+</div>
+{% endblock %}

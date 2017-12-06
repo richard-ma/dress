@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import render_template, url_for, flash, redirect
+from flask import render_template, url_for, flash, redirect, request
 
 from flask_nav import Nav
 from flask_nav.elements import Navbar, View
@@ -66,6 +66,28 @@ def host():
     hosts = Host.query.all()
 
     return render_template('host.html', hosts=hosts)
+
+@app.route('/host/form')
+def host_form():
+    return render_template('host_form.html')
+
+@app.route('/host/delete/<host_id>')
+def host_delete(host_id):
+    delete_host = Host.query.filter_by(id=host_id).first()
+    db.session.delete(delete_host)
+    db.commit()
+
+    flash('Host #%s %s deleted.' % (delete_host.id, delete_host.name))
+
+    return redirect(url_for('host'))
+
+@app.route('/host/update/<host_id>')
+def host_update(host_id):
+    update_host = Host.query.filter_by(id=host_id).first()
+
+    flash('Host #%s %s updated.' % (update_host.id, update_host.name))
+
+    return redirect(url_for('host'))
 
 @app.route('/host/add')
 def host_add():
