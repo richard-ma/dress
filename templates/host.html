@@ -21,7 +21,10 @@
             <td>{{ host.ip }}</td>
             <td>{{ host.port}}</td>
             <td>{{ host.domain}}</td>
-            <td>Placeholder</td>
+            <td>
+                <a target="_self" href="{{ url_for('host_update', host_id=host.id) }}"><span class="glyphicon glyphicon-pencil"></span></a>
+                <a target="_self" href="{{ url_for('host_delete', host_id=host.id) }}"><span class="glyphicon glyphicon-trash"></span></a>
+            </td>
         </tr>
 {% endfor %}
     </tbody>
