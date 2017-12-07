@@ -67,9 +67,14 @@ def host():
 
     return render_template('host.html', hosts=hosts)
 
-@app.route('/host/form')
-def host_form():
-    return render_template('host_form.html')
+@app.route('/host/form/')
+@app.route('/host/form/<host_id>')
+def host_form(host_id=None):
+    host = None
+    if host_id != None:
+        host = Host.query.filter_by(id=host_id).first()
+
+    return render_template('host_form.html', host=host)
 
 @app.route('/host/delete/<host_id>')
 def host_delete(host_id):
@@ -82,7 +87,7 @@ def host_delete(host_id):
     return redirect(url_for('host'))
 
 @app.route('/host/update/<host_id>')
-def host_update(host_id):
+def host_update(host_id=None):
     update_host = Host.query.filter_by(id=host_id).first()
 
     flash('Host #%s %s updated.' % (update_host.id, update_host.name))
