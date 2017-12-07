@@ -80,28 +80,47 @@ def host_form(host_id=None):
 def host_delete(host_id):
     delete_host = Host.query.filter_by(id=host_id).first()
     db.session.delete(delete_host)
-    db.commit()
+    db.session.commit()
 
     flash('Host #%s %s deleted.' % (delete_host.id, delete_host.name))
 
     return redirect(url_for('host'))
 
-@app.route('/host/update/<host_id>')
-def host_update(host_id=None):
+@app.route('/host/update/<host_id>', methods=['POST'])
+def host_update(host_id):
     update_host = Host.query.filter_by(id=host_id).first()
 
-    flash('Host #%s %s updated.' % (update_host.id, update_host.name))
+    update_host.id = host_id
+    update_host.name = request.form['host_name']
+    update_host.ip = request.form['host_ip']
+    update_host.port = request.form['host_port']
+    update_host.pwd = request.form['host_pwd']
+    update_host.domain = request.form['host_domain']
+    update_host.db_name = request.form['host_db_name']
+    update_host.db_pwd = request.form['host_db_pwd']
+
+    db.session.commit()
+
+    flash('Host #%s "%s" updated.' % (update_host.id, update_host.name))
 
     return redirect(url_for('host'))
 
-@app.route('/host/add')
+@app.route('/host/add', methods=['POST'])
 def host_add():
-    host = Host()
-    host.name = 'new host'
-    db.session.add(host)
+    new_host = Host()
+
+    new_host.name = request.form['host_name']
+    new_host.ip = request.form['host_ip']
+    new_host.port = request.form['host_port']
+    new_host.pwd = request.form['host_pwd']
+    new_host.domain = request.form['host_domain']
+    new_host.db_name = request.form['host_db_name']
+    new_host.db_pwd = request.form['host_db_pwd']
+
+    db.session.add(new_host)
     db.session.commit()
 
-    flash('Host added')
+    flash('Host #%s "%s" added.' % (new_host.id, new_host.name))
 
     return redirect(url_for('host'))
 

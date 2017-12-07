@@ -3,7 +3,8 @@
 {% block content %}
 <div class="container">
 
-<h2 class="sub-header">Host</h2>
+<h1 class="sub-header">Host <small><a class="link" href="{{ url_for('host_form') }}">[Add host]</a></small></h1>
+
 <table class="table table-striped">
     <thead>
         <th scope="col">#</th>
@@ -22,8 +23,8 @@
             <td>{{ host.port}}</td>
             <td>{{ host.domain}}</td>
             <td>
-                <a target="_self" href="{{ url_for('host_form', host_id=host.id) }}"><span class="glyphicon glyphicon-pencil"></span></a>
-                <a target="_self" href="{{ url_for('host_delete', host_id=host.id) }}"><span class="glyphicon glyphicon-trash"></span></a>
+                <a target="_self" title="Edit" href="{{ url_for('host_form', host_id=host.id) }}"><span class="glyphicon glyphicon-pencil"></span></a>
+                <a target="_self" title="Delete" href="{{ url_for('host_delete', host_id=host.id) }}"><span class="glyphicon glyphicon-trash"></span></a>
             </td>
         </tr>
 {% endfor %}
