@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Hello, move</h1>
+<div class="container">
+
+<h1 class="sub-header">Clone</h1>
+<div class="pull-right">
+    <a class="btn btn-primary" href="{{ url_for('host_form') }}">New Clone</a>
+</div>
+
+</div>
 {% endblock %}
