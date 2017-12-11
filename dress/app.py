@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from flask import render_template, url_for, flash, redirect, request
 
@@ -7,6 +8,9 @@ from flask_nav.elements import Navbar, View
 from flask_bootstrap import Bootstrap
 
 app = Flask(__name__)
+
+# load config
+app.config.from_object(os.environ['APP_CONFIG'])
 
 # flask plugin engine
 #from flask_pluginengine import PluginFlask, PluginEngine
@@ -40,7 +44,6 @@ nav.init_app(app)
 # flask_sqlalchemy
 from flask_sqlalchemy import SQLAlchemy
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///host.db'
 db = SQLAlchemy(app)
 
 class Host(db.Model):
@@ -53,8 +56,6 @@ class Host(db.Model):
     pwd = db.Column(db.String(32))
     db_name = db.Column(db.String(32))
     db_pwd = db.Column(db.String(32))
-
-app.secret_key = 'secret_key'
 
 @app.route('/')
 def index():
