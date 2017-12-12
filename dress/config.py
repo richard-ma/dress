@@ -7,6 +7,7 @@ class BaseConfig(object):
     TESTING = False
 
     SQLALCHEMY_DATABASE_URI = 'sqlite://' # use memory for sqlite
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     SECRET_KEY = 'example secret key'
 
@@ -22,9 +23,10 @@ class BaseConfig(object):
 
 class DevelopmentConfig(BaseConfig):
     DEBUG = True
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///dress_development.db'
 
 class ProductionConfig(BaseConfig):
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///dress.db' # use memory for sqlite
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///dress_production.db'
 
 class TestingConfig(BaseConfig):
     TESTING = True
