@@ -3,7 +3,11 @@ import os
 
 class BaseConfig(object):
     DEBUG = False
-    SECRET_KEY = os.environ['APP_SECRET_KEY']
+    if 'APP_SECRET_KEY' in os.environ:
+        SECRET_KEY = os.environ['APP_SECRET_KEY']
+    else:
+        SECRET_KEY = 'example secret key'
+
     SQLALCHEMY_DATABASE_URI = 'sqlite:///dress.db'
 
 class DevelopmentConfig(BaseConfig):

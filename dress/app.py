@@ -7,44 +7,40 @@ from flask_nav.elements import Navbar, View
 
 from flask_bootstrap import Bootstrap
 
-app = Flask(__name__)
-
-# load config
-app.config.from_object(os.environ['APP_CONFIG'])
-
-# flask plugin engine
-#from flask_pluginengine import PluginFlask, PluginEngine
-'''
-app = PluginFlask(__name__)
-
-app.config['PLUGINENGINE_NAMESPACE'] = 'dress'
-app.config['PLUGINENGINE_PLUGINS'] = ['dress_plugin']
-
-plugin_engine = PluginEngine(app=app)
-plugin_engine.load_plugins(app)
-active_plugins = plugin_engine.get_active_plugins(app=app).values()
-
-for plugin in active_plugins:
-    with plugin.plugin_context():
-        app.register_blueprint(plugin.get_blueprint())
-
-'''
-# flask-bootstrap
-Bootstrap(app)
-
-# flask-nav
-topbar = Navbar('',
-        View('Host', 'host'),
-        View('Move', 'move'),
-)
-nav = Nav()
-nav.register_element('top', topbar)
-nav.init_app(app)
-
-# flask_sqlalchemy
 from flask_sqlalchemy import SQLAlchemy
 
-db = SQLAlchemy(app)
+def create_app(config=None):
+    app = Flask('dress')
+
+    # load config
+    if 'APP_CONFIG' in os.environ:
+        app.config.from_object(os.environ['APP_CONFIG'])
+    else:
+        app.config.from_object('dress.config.DevelopmentConfig')
+
+    if config != None: app.config.update(config)
+
+    # flask-bootstrap
+    Bootstrap(app)
+
+    # flask-nav
+    topbar = Navbar('',
+            View('Host', 'host'),
+            View('Move', 'move'),
+    )
+    nav = Nav()
+    nav.register_element('top', topbar)
+    nav.init_app(app)
+
+    return app
+
+def get_db(app):
+
+    return SQLAlchemy(app)
+
+app = create_app()
+
+db = get_db(app)
 
 class Host(db.Model):
     __tablename__ = 'host'
