@@ -40,3 +40,6 @@ class Host(db.Model):
         self.db_name = db_name
         self.db_pwd = db_pwd
         db.session.commit()
+
+    def __repr__(self):
+        return '<Host %r>' % (self.name)
