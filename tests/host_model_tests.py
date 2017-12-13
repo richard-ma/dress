@@ -7,7 +7,7 @@ from dress.data.models import Host, Status
 from seed import seed_db
 #from tests.utils import get_endpoint
 
-class HostControllerTestCase(TestCase):
+class HostTestCase(TestCase):
 
     def create_app(self):
         app = dress.create_app()
@@ -49,6 +49,18 @@ class HostControllerTestCase(TestCase):
                 status=new_status.id)
         self.assertEqual('test.domain', update_host.domain)
         self.assertEqual(new_status.title, update_host.status.title)
+
+    def test_delete_host(self):
+        h = Host('testhost')
+        h.create()
+
+        # host created
+        query_host = Host.query.filter_by(name='testhost').first()
+        self.assertEqual(query_host.status.title, 'Prepare')
+
+        # delete host
+        h.delete()
+        self.assertIsNone(Host.query.filter_by(name='testhost').first())
 
 if __name__ == '__main__':
     unittest.main()
