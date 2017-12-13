@@ -14,9 +14,11 @@ class Host(db.Model):
     pwd = db.Column(db.String(32))
     db_name = db.Column(db.String(32))
     db_pwd = db.Column(db.String(32))
-    status = db.Column(db.Integer, db.ForeignKey('status.id'))
+    status_id = db.Column(db.Integer, db.ForeignKey('status.id', ondelete='CASCADE'))
 
-    def __init__(self, name, ip=None, port=22, domain=None, pwd=None, db_name=None, db_pwd=None):
+    status = relationship("Status", back_populates='hosts')
+
+    def __init__(self, name, ip=None, port=22, domain=None, pwd=None, db_name=None, db_pwd=None, status=None):
         self.name = name
         self.ip = ip
         self.port = port
@@ -24,6 +26,7 @@ class Host(db.Model):
         self.pwd = pwd
         self.db_name = db_name
         self.db_pwd = db_pwd
+        self.status = Status.query.all()[0]
 
     def create(self):
         db.session.add(self)
@@ -35,7 +38,9 @@ class Host(db.Model):
         db.session.delete(self)
         db.session.commit()
 
-    def update(self, name, ip, port, domain, pwd, db_name, db_pwd):
+        return self
+
+    def update(self, name, ip, port, domain, pwd, db_name, db_pwd, status):
         self.name = name
         self.ip = ip
         self.port = port
@@ -43,6 +48,11 @@ class Host(db.Model):
         self.pwd = pwd
         self.db_name = db_name
         self.db_pwd = db_pwd
+        if status != None:
+            self.status = Status.query.filter_by(id=status).first()
+        else:
+            self.status = Status.query.all()[0]
+
         db.session.commit()
 
     def __repr__(self):
@@ -54,7 +64,7 @@ class Status(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(32), unique=True)
 
-    hosts = relationship("Host")
+    hosts = relationship("Host", back_populates='status')
 
     def __init__(self, title):
         self.title = title
@@ -68,6 +78,8 @@ class Status(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+
+        return self
 
     def update(self, title):
         self.title = title

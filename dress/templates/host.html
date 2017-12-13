@@ -21,7 +21,20 @@
 {% for host in hosts%}
         <tr>
             <th scope="row">{{ host.id }}</th>
-            <td>{{ host.name }}</td>
+            <td>
+                <span class="label 
+                {% if host.status.title == 'Prepare' %}
+                label-warning
+                {% elif host.status.title == 'Business' %}
+                label-success
+                {% elif host.status.title == 'Problem' %}
+                label-danger
+                {% else %}
+                label-primary
+                {% endif %}
+                    ">{{ host.status.title }}</span> 
+                {{ host.name }}
+            </td>
             <td>{{ host.ip }}</td>
             <td>{{ host.port}}</td>
             <td>{{ host.domain}}</td>

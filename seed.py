@@ -31,8 +31,8 @@ def seed_db(app):
         db.drop_all()
         db.create_all()
 
-        seed_host_data(db)
         seed_status_data(db)
+        seed_host_data(db)
 
 if __name__ == '__main__':
     flask_app = create_app()
