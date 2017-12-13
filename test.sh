@@ -1,3 +1,3 @@
 #!/bin/sh
 
-python -m unittest discover tests "*_tests.py"
+DRESS_CONFIGURATION=testing python -m unittest discover tests "*_tests.py"
