@@ -34,5 +34,23 @@ class HostControllerTestCase(TestCase):
         self.assertIsInstance(query_host.status, Status)
         self.assertEqual(query_host.status.title, 'Prepare')
 
+    def test_update_host(self):
+        h = Host('testhost')
+        h.create()
+        update_host = Host.query.filter_by(name='testhost').first()
+
+        new_status = Status.query.filter_by(title='Business').first()
+        update_host.update(
+                name=update_host.name,
+                ip=update_host.ip,
+                port=update_host.port,
+                domain='test.domain',
+                pwd=update_host.pwd,
+                db_name=update_host.db_name,
+                db_pwd=update_host.db_pwd,
+                status=new_status.id)
+        self.assertEqual('test.domain', update_host.domain)
+        self.assertEqual(new_status.title, update_host.status.title)
+
 if __name__ == '__main__':
     unittest.main()
