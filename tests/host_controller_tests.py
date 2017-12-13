@@ -4,7 +4,6 @@ import os
 import unittest
 from flask_testing import TestCase
 import dress
-from dress.data.models import Host, Status
 from seed import seed_db
 #from tests.utils import get_endpoint
 
@@ -23,16 +22,13 @@ class HostControllerTestCase(TestCase):
     def tearDown(self):
         pass
 
-    def test_create_host(self):
-        h = Host('testhost')
-        h.create()
-
-        query_host = Host.query.filter_by(name='testhost').first()
-
-        self.assertEqual(query_host.name, 'testhost')
-        self.assertEqual(query_host.port, 22)
-        self.assertIsInstance(query_host.status, Status)
-        self.assertEqual(query_host.status.title, 'Prepare')
+    def test_all_host_url(self):
+        result = self.client.get('/host')
+        self.assertEqual(200, result.status_code)
+        self.assertTrue(b'Host' in result.data)
+        result = self.client.get('/host/form/')
+        self.assertEqual(200, result.status_code)
+        self.assertTrue(b'Add Host' in result.data)
 
 if __name__ == '__main__':
     unittest.main()
