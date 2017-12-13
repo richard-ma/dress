@@ -22,6 +22,3 @@ class HostTestCase(TestCase):
     def test_all_host_url(self):
         result = self.client.get('/host')
         self.assertEqual(result.status_code, 200)
-
-if __name__ == '__main__':
-    unittest.main()
