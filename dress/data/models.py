@@ -4,6 +4,8 @@ from sqlalchemy.orm import relationship
 db = SQLAlchemy()
 
 class Host(db.Model):
+    __tablename__ = 'host'
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32), unique=True)
     ip = db.Column(db.String(32))
@@ -12,7 +14,7 @@ class Host(db.Model):
     pwd = db.Column(db.String(32))
     db_name = db.Column(db.String(32))
     db_pwd = db.Column(db.String(32))
-    status = relationship('Status')
+    status = db.Column(db.Integer, db.ForeignKey('status.id'))
 
     def __init__(self, name, ip, port, domain, pwd, db_name, db_pwd):
         self.name = name
@@ -47,8 +49,12 @@ class Host(db.Model):
         return '<Host %r>' % (self.name)
 
 class Status(db.Model):
+    __tablename__ = 'status'
+
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(32), unique=True)
+
+    hosts = relationship("Host")
 
     def __init__(self, title):
         self.title = title
