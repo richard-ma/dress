@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import os
 import unittest
 from flask_testing import TestCase
 import dress
@@ -16,7 +15,6 @@ class HostControllerTestCase(TestCase):
         return app
 
     def setUp(self):
-        os.environ['DRESS_CONFIGURATION'] = 'testing'
         seed_db(self.app)
 
     def tearDown(self):
