@@ -16,7 +16,7 @@ class Host(db.Model):
     db_pwd = db.Column(db.String(32))
     status = db.Column(db.Integer, db.ForeignKey('status.id'))
 
-    def __init__(self, name, ip, port, domain, pwd, db_name, db_pwd):
+    def __init__(self, name, ip=None, port=22, domain=None, pwd=None, db_name=None, db_pwd=None):
         self.name = name
         self.ip = ip
         self.port = port

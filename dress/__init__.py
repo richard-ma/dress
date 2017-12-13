@@ -17,10 +17,10 @@ def create_app():
     configure_app(app)
     db.init_app(app)
 
-    # flask-bootstrap
+    # Bootstrap flask-bootstrap
     Bootstrap(app)
 
-    # flask-nav
+    # Navbar flask-nav
     topbar = Navbar('',
             View('Host', 'host'),
             View('Move', 'move'),
@@ -52,8 +52,7 @@ def create_app():
     @app.route('/host/delete/<host_id>')
     def host_delete(host_id):
         delete_host = Host.query.filter_by(id=host_id).first()
-        db.session.delete(delete_host)
-        db.session.commit()
+        delete_host.delete()
 
         flash('Host #%s %s deleted.' % (delete_host.id, delete_host.name))
 
@@ -63,16 +62,16 @@ def create_app():
     def host_update(host_id):
         update_host = Host.query.filter_by(id=host_id).first()
 
-        update_host.id = host_id
-        update_host.name = request.form['host_name']
-        update_host.ip = request.form['host_ip']
-        update_host.port = request.form['host_port']
-        update_host.pwd = request.form['host_pwd']
-        update_host.domain = request.form['host_domain']
-        update_host.db_name = request.form['host_db_name']
-        update_host.db_pwd = request.form['host_db_pwd']
+        id = host_id
+        name = request.form['host_name']
+        ip = request.form['host_ip']
+        port = request.form['host_port']
+        domain = request.form['host_domain']
+        pwd = request.form['host_pwd']
+        db_name = request.form['host_db_name']
+        db_pwd = request.form['host_db_pwd']
 
-        db.session.commit()
+        update_host.update(name, ip, port, domain, pwd, db_name, db_pwd)
 
         flash('Host #%s "%s" updated.' % (update_host.id, update_host.name))
 
@@ -80,18 +79,16 @@ def create_app():
 
     @app.route('/host/add', methods=['POST'])
     def host_add():
-        new_host = Host()
+        name = request.form['host_name']
+        ip = request.form['host_ip']
+        port = request.form['host_port']
+        domain = request.form['host_domain']
+        pwd = request.form['host_pwd']
+        db_name = request.form['host_db_name']
+        db_pwd = request.form['host_db_pwd']
 
-        new_host.name = request.form['host_name']
-        new_host.ip = request.form['host_ip']
-        new_host.port = request.form['host_port']
-        new_host.pwd = request.form['host_pwd']
-        new_host.domain = request.form['host_domain']
-        new_host.db_name = request.form['host_db_name']
-        new_host.db_pwd = request.form['host_db_pwd']
-
-        db.session.add(new_host)
-        db.session.commit()
+        new_host = Host(name, ip, port, domain, pwd, db_name, db_pwd)
+        new_host = new_host.create()
 
         flash('Host #%s "%s" added.' % (new_host.id, new_host.name))
 
