@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import unittest
 from flask_testing import TestCase
 import dress
 from seed import seed_db
@@ -22,3 +23,6 @@ class HostTestCase(TestCase):
     def test_all_host_url(self):
         result = self.client.get('/host')
         self.assertEqual(result.status_code, 200)
+
+if __name__ == '__main__':
+    unittest.main()
