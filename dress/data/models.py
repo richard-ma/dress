@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import relationship
 
 db = SQLAlchemy()
 
@@ -11,6 +12,7 @@ class Host(db.Model):
     pwd = db.Column(db.String(32))
     db_name = db.Column(db.String(32))
     db_pwd = db.Column(db.String(32))
+    status = relationship('Status')
 
     def __init__(self, name, ip, port, domain, pwd, db_name, db_pwd):
         self.name = name
@@ -43,3 +45,27 @@ class Host(db.Model):
 
     def __repr__(self):
         return '<Host %r>' % (self.name)
+
+class Status(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(32), unique=True)
+
+    def __init__(self, title):
+        self.title = title
+
+    def create(self):
+        db.session.add(self)
+        db.session.commit()
+
+        return self
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+    def update(self, title):
+        self.title = title
+        db.session.commit()
+
+    def __repr__(self):
+        return '<Status %r>' % (self.title)
