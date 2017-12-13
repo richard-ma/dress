@@ -38,5 +38,24 @@ class HostControllerTestCase(TestCase):
         self.assertEqual(200, result.status_code)
         self.assertTrue(b'Update Host' in result.data)
 
+    def test_add_host_operation(self):
+        host_name = 'uniqueNameHost'
+        host = Host(name=host_name)
+        result = self.client.post(
+                '/host/add',
+                data=dict(
+                    host_name=host.name,
+                    host_ip=host.ip,
+                    host_port=host.port,
+                    host_domain=host.domain,
+                    host_pwd=host.pwd,
+                    host_db_name=host.db_name,
+                    host_db_pwd=host.db_pwd,
+                    host_status=host.status.id,
+                ), follow_redirects=True)
+        print(result.data)
+        self.assertTrue(b'added' in result.data)
+        self.assertTrue(host_name in result.data)
+
 if __name__ == '__main__':
     unittest.main()
