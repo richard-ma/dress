@@ -81,5 +81,38 @@ class HostControllerTestCase(TestCase):
         self.assertTrue(b'deleted' in result.data)
         self.assertIsNone(Host.query.filter_by(name=host_name).first())
 
+    def test_update_host_operation(self):
+        host_name = self.test_host_name
+
+        new_host = Host(host_name)
+        new_host.create()
+
+        new_host_name = 'New Test Host Name'
+        new_host_ip = '192.168.1.1'
+        new_host_port = 22
+        new_host_domain = 'new.test.domain'
+
+        host = Host.query.filter_by(name=host_name).first()
+        host_id = host.id
+
+        result = self.client.post(
+                '/host/update/%d' % (host_id),
+                data=dict(
+                    host_name=new_host_name,
+                    host_ip=new_host_ip,
+                    host_port=new_host_port,
+                    host_domain=new_host_domain,
+                    host_pwd='hostpwd',
+                    host_db_name='db_name',
+                    host_db_pwd='db_pwd',
+                    host_status=host.status.id,
+                ), follow_redirects=True)
+
+        self.assertTrue(b'updated' in result.data)
+        self.assertTrue(bytes(new_host_name, encoding='utf-8') in result.data)
+        self.assertTrue(bytes(new_host_ip, encoding='utf-8') in result.data)
+        self.assertTrue(bytes(str(new_host_port), encoding='utf-8') in result.data)
+        self.assertTrue(bytes(new_host_domain, encoding='utf-8') in result.data)
+
 if __name__ == '__main__':
     unittest.main()
