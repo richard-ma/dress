@@ -25,4 +25,4 @@ domain=${1}
 dest_ip=${2}
 
 # create backup dir
-scp ${domain}.tar.xz root@${dest_ip}:/root
+scp -p ${domain}.tar.xz root@${dest_ip}:/root

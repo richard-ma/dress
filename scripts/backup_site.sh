@@ -38,4 +38,4 @@ cp /usr/local/nginx/conf/vhost/${domain}.conf ./nginx.conf
 
 # compose site
 cd ..
-tar -cJpf ${domain}.tar.xz ${domain}
+tar -cpf ${domain}.tar ${domain}
