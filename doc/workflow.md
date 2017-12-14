@@ -29,9 +29,18 @@ Restore site to destination host
 * unarchive /root/`$domain`/site.tar > /home/wwwroot/`$domain`
 * create database
 * import data /home/wwwroot/`$domain`/database.sql -> mysql
+* restart lnmp
 
 ## release
 `run in destination host`
 Replace all configurations to fit new domain
 
 ### Instruction
+* replace /usr/local/apache/conf/vhost/`$domain`.conf configurations
+* rename /usr/local/apache/conf/vhost/`$domain`.conf -> /usr/local/apache/conf/vhost/`$new_domain`.conf
+* replace /usr/local/nginx/conf/vhost/`$domain`.conf configurations
+* rename /usr/local/nginx/conf/vhost/`$domain`.conf -> /usr/local/nginx/conf/vhost/`$new_domain`.conf
+* replace /home/wwwroot/`$domain`/config.php
+* rename /home/wwwroot/`$domain` -> /home/wwwroot/`$new_domain`
+* replace databse `$domain` -> `$new_domain`
+* restart lnmp
