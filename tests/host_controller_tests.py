@@ -18,6 +18,8 @@ class HostControllerTestCase(TestCase):
     def setUp(self):
         seed_db(self.app)
 
+        self.test_host_name = 'Test Host'
+
     def tearDown(self):
         pass
 
@@ -39,23 +41,45 @@ class HostControllerTestCase(TestCase):
         self.assertTrue(b'Update Host' in result.data)
 
     def test_add_host_operation(self):
-        host_name = 'uniqueNameHost'
-        host = Host(name=host_name)
+        host_name = self.test_host_name
+        host_ip = '233.233.233.233'
+        host_port = 10086
+        host_domain = 'host.domain'
+        status = Status.query.all()[0]
+
         result = self.client.post(
                 '/host/add',
                 data=dict(
-                    host_name=host.name,
-                    host_ip=host.ip,
-                    host_port=host.port,
-                    host_domain=host.domain,
-                    host_pwd=host.pwd,
-                    host_db_name=host.db_name,
-                    host_db_pwd=host.db_pwd,
-                    host_status=host.status.id,
+                    host_name=host_name,
+                    host_ip=host_ip,
+                    host_port=host_port,
+                    host_domain=host_domain,
+                    host_pwd='hostpwd',
+                    host_db_name='db_name',
+                    host_db_pwd='db_pwd',
+                    host_status=status.id,
                 ), follow_redirects=True)
-        print(result.data)
+
         self.assertTrue(b'added' in result.data)
-        self.assertTrue(host_name in result.data)
+        self.assertTrue(bytes(host_name, encoding='utf-8') in result.data)
+        self.assertTrue(bytes(host_ip, encoding='utf-8') in result.data)
+        self.assertTrue(bytes(str(host_port), encoding='utf-8') in result.data)
+        self.assertTrue(bytes(host_domain, encoding='utf-8') in result.data)
+
+    def test_delete_host_operation(self):
+        host_name = self.test_host_name
+
+        new_host = Host(host_name)
+        new_host.create()
+
+        host_id = Host.query.filter_by(name=host_name).first().id
+
+        result = self.client.get(
+                '/host/delete/%d' % (host_id),
+                follow_redirects=True)
+
+        self.assertTrue(b'deleted' in result.data)
+        self.assertIsNone(Host.query.filter_by(name=host_name).first())
 
 if __name__ == '__main__':
     unittest.main()
