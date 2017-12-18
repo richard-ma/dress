@@ -13,12 +13,12 @@ from concurrent.futures import ThreadPoolExecutor
 def create_app():
     app = Flask(__name__)
 
-    # create task executor
-    executor = ThreadPoolExecutor(2)
-
     # load config
     configure_app(app)
     db.init_app(app)
+
+    # create task executor
+    executor = ThreadPoolExecutor(app.config['TASK_POOL_SIZE'])
 
     # Bootstrap flask-bootstrap
     Bootstrap(app)

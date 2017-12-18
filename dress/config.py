@@ -15,6 +15,8 @@ class BaseConfig(object):
     LOGGING_LEVEL = logging.DEBUG
     LOGGING_FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 
+    TASK_POOL_SIZE = 1
+
     #CACHE_TYPE = 'simple'
 
     #COMPRESS_MIMETYPES = ['text/html', 'text/xml', 'application/json']
