@@ -100,10 +100,15 @@ def create_app():
 
         return redirect(url_for('host'))
 
-    # site clone operation
-    @app.route('/clone')
-    def site_clone():
-        return render_template('clone.html')
+    # Tasks
+
+    # clone site task
+    @app.route('/task/clone/site/<source_host_id>/<dest_host_id>')
+    def task_clone_site(source_host_id, dest_host_id):
+        source_host = Host.query.filter_by(id=source_host_id).first()
+        dest_host = Host.query.filter_by(id=dest_host_id).first()
+
+        # log "source %s, dest %s!" % (source_host.name, dest_host.name)
 
     # test
     @app.route('/test_flash')
