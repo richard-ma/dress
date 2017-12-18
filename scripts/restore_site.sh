@@ -27,13 +27,9 @@ cp ./apache.conf /usr/local/apache/conf/vhost/${domain}.conf
 
 cp ./nginx.conf /usr/local/nginx/conf/vhost/${domain}.conf
 
+tar -xf site.tar -C / # extract files to root directory
 
-# export site files
-tar -cpf site.tar /home/wwwroot/${domain}
+# import data to mysql
 
-# export database
-# database is in site directory
-
-# compose site
-cd ..
-tar -cJpf ${domain}.tar.xz ${domain}
+# restart lnmp
+lnmp restart
