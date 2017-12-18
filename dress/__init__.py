@@ -26,7 +26,6 @@ def create_app():
     # Navbar flask-nav
     topbar = Navbar('',
             View('Host', 'host'),
-            View('Move', 'move'),
     )
     nav = Nav()
     nav.register_element('top', topbar)
