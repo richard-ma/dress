@@ -8,8 +8,13 @@ from flask_bootstrap import Bootstrap
 from dress.config import configure_app
 from dress.data.models import db, Host, Status
 
+from concurrent.futures import ThreadPoolExecutor
+
 def create_app():
     app = Flask(__name__)
+
+    # create task executor
+    executor = ThreadPoolExecutor(2)
 
     # load config
     configure_app(app)
@@ -95,15 +100,33 @@ def create_app():
 
         return redirect(url_for('host'))
 
-    # move operation
-    @app.route('/move')
-    def move():
-        return render_template('move.html')
+    # site clone operation
+    @app.route('/clone')
+    def site_clone():
+        return render_template('clone.html')
 
     # test
     @app.route('/test_flash')
     def test_flash():
         flash('This is flash message')
         return redirect(url_for('index'))
+
+    @app.route('/test_task')
+    def test_task():
+        executor.submit(some_long_task1)
+        executor.submit(some_long_task2, 'hello', 123)
+        return 'launched!'
+
+    def some_long_task1():
+        from time import sleep
+        print("Task #1 started!")
+        sleep(10)
+        print("Task #1 is done!")
+
+    def some_long_task2(arg1, arg2):
+        from time import sleep
+        print("Task #2 started with args %s %s!" % (arg1, arg2))
+        sleep(5)
+        print("Task #2 is done!")
 
     return app
