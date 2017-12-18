@@ -1,11 +1,12 @@
 #!/bin/sh
 
-# transport_site.sh <domain> <dest_ip> <dest_ssh_password>
+# pull source host site to dest host
+# transport_site.sh <source_domain> <dest_domain> <source_host_ip> <source_host_ssh_password>
 
 # usage
 usage() {
     echo "Usage:"
-    echo "${0} <domain> <dest_ip> <dest_ssh_password>"
+    echo "${0} <source_domain> <dest_domain> <source_host_ip> <source_host_ssh_password>"
 
     exit -1
 }
@@ -23,9 +24,19 @@ fi
 if [ -z "${3}" ]; then
     usage
 fi
+if [ -z "${4}" ]; then
+    usage
+fi
 
-domain=${1}
-dest_ip=${2}
-dest_ssh_password=${3}
+source_domain=${1}
+dest_domain=${2}
+source_host_ip=${3}
+source_host_ssh_password=${4}
 
-sshpass -p ${dest_ssh_password} scp -o StrictHostKeyChecking=no -p ${domain}.tar root@${dest_ip}:/root
+# copy site files
+sshpass -p ${source_host_ssh_password} scp -o StrictHostKeyChecking=no -p -r root@${source_host_ip}:/home/wwwroot/${source_domain} /home/wwwroot/${dest_domain}
+# copy apache configration
+sshpass -p ${source_host_ssh_password} scp -o StrictHostKeyChecking=no -p root@${source_host_ip}:/usr/local/apache/conf/vhost/${source_domain}.conf /usr/local/apache/conf/vhost/${dest_domain}.conf
+# copy nginx configration
+sshpass -p ${source_host_ssh_password} scp -o StrictHostKeyChecking=no -p root@${source_host_ip}:/usr/local/nginx/conf/vhost/${source_domain}.conf /usr/local/nginx/conf/vhost/${dest_domain}.conf
+# copy database (Optional)
