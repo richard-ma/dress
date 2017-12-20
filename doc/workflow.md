@@ -2,34 +2,27 @@
 
 ## backup
 `run in source host`
-Collect all site files, database script and configration files
+Backup database to `$domain`.sql
 
 ### Instruction
-* create /root/`$domain`
-* copy /home/wwwroot/`$domain`/* -> /root/`$domain`/site.tar
-* copy /usr/local/apache/conf/vhost/`$domain`.conf -> /root/`$domain`/apache.conf
-* copy /usr/local/nginx/conf/vhost/`$domain`.conf -> /root/`$domain`/nginx.conf
-* compress /root/`$domain` -> /root/`$domain`.tar.xz
+/root/$domain.sql
 
 ## transport
-`run in source host`
-Copy site to destination host
+`run in destination host`
+Copy site & files to destination host
 
 ### Instruction
-* copy /root/`$domain`.tar.xz -> destination_host /root/`$domain`.tar.xz
+* sshpass -p `$dest_host.pwd` scp -o StrictHostKeyChecking=no -p -r root@`$dest_host.ip`:/home/wwwroot/`$source_host.domain` /home/wwwroot/`$dest_host.domain`
+* sshpass -p `$dest_host.pwd` scp -o StrictHostKeyChecking=no -p root@`$dest_host.ip`:/usr/local/apache/conf/vhost/`$source_host.domain`.conf /usr/local/apache/conf/vhost/`$dest_host.domain`.conf
+* sshpass -p `$dest_host.pwd` scp -o StrictHostKeyChecking=no -p root@`$dest_host.ip`:/usr/local/nginx/conf/vhost/`$source_host.domain`.conf /usr/local/nginx/conf/vhost/`$dest_host.domain`.conf
 
 ## restore
 `run in destination host`
-Restore site to destination host
+Create database & Import data
 
 ### Instruction
-* uncompress /root/`$domain`.tar.xz -> /root/`$domain`
-* copy /root/`$domain`/apache.conf -> /usr/local/apache/conf/vhost/`$domain`.conf
-* copy /root/`$domain`/nginx.conf -> /usr/local/nginx/conf/vhost/`$domain`.conf
-* unarchive /root/`$domain`/site.tar > /home/wwwroot/`$domain`
-* create database
-* import data /home/wwwroot/`$domain`/database.sql -> mysql
-* restart lnmp
+* mysql -u root -e 'create database \``$dest_host.domain`\`;'
+* mysql -u root `$dest_host.domain` < /home/wwwroot/`$dest_host.domain`/dacscartb.sql
 
 ## release
 `run in destination host`
@@ -37,9 +30,7 @@ Replace all configurations to fit new domain
 
 ### Instruction
 * replace /usr/local/apache/conf/vhost/`$domain`.conf configurations
-* rename /usr/local/apache/conf/vhost/`$domain`.conf -> /usr/local/apache/conf/vhost/`$new_domain`.conf
 * replace /usr/local/nginx/conf/vhost/`$domain`.conf configurations
-* rename /usr/local/nginx/conf/vhost/`$domain`.conf -> /usr/local/nginx/conf/vhost/`$new_domain`.conf
 * replace /home/wwwroot/`$domain`/config.php
 * rename /home/wwwroot/`$domain` -> /home/wwwroot/`$new_domain`
 * replace databse `$domain` -> `$new_domain`

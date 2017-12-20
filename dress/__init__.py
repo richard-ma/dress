@@ -108,6 +108,9 @@ def create_app():
         dest_host = Host.query.filter_by(id=dest_host_id).first()
 
         # log "source %s, dest %s!" % (source_host.name, dest_host.name)
+        from dress.tasks.tasks import CloneSiteTask
+        executor.submit(CloneSiteTask(source_host, dest_host).run())
+        return "completed"
 
     # test
     @app.route('/test_flash')
