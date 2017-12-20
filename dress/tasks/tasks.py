@@ -7,6 +7,12 @@ class Task(object):
     def message(self, msg):
         print("%s: %s" % (self.__taskname__, msg))
 
+    @classmethod
+    def runMessage(func):
+        print("[%s] started!" % (self.__taskname__))
+        func()
+        print("[%s] is done!" % (self.__taskname__))
+
 # CloneSiteTask
 from dress.data.models import Host, Status
 
@@ -35,13 +41,14 @@ class CloneSiteTask(Task):
 
         #self.copyFiles(ssh)
         self.restore(ssh)
+        self.release(ssh)
 
         ssh.close()
 
     def copyFiles(self, ssh):
         #stdin, stdout, stderr = ssh.exec_command('command')
         # pull source host site files
-        ssh.exec_command(
+        stdin, stdout, stderr = ssh.exec_command(
                 'sshpass -p %s scp -o StrictHostKeyChecking=no -p -r root@%s:/home/wwwroot/%s /home/wwwroot/%s' % (
                     self.source_host.pwd,
                     self.source_host.ip,
@@ -49,8 +56,9 @@ class CloneSiteTask(Task):
                     self.dest_host.domain
                     )
         )
+        self.message(command + " - " + stdout + ":" + stderr)
         # pull source host apache config file
-        ssh.exec_command(
+        stdin, stdout, stderr = ssh.exec_command(
                 'sshpass -p %s scp -o StrictHostKeyChecking=no -p root@%s:/usr/local/apache/conf/vhost/%s.conf /usr/local/apache/conf/vhost/%s.conf' % (
                     self.source_host.pwd,
                     self.source_host.ip,
@@ -58,8 +66,9 @@ class CloneSiteTask(Task):
                     self.dest_host.domain
                     )
         )
+        self.message(command + " - " + stdout + ":" + stderr)
         # pull source host nginx config file
-        ssh.exec_command(
+        stdin, stdout, stderr = ssh.exec_command(
                 'sshpass -p %s scp -o StrictHostKeyChecking=no -p root@%s:/usr/local/nginx/conf/vhost/%s.conf /usr/local/nginx/conf/vhost/%s.conf' % (
                     self.source_host.pwd,
                     self.source_host.ip,
@@ -67,26 +76,74 @@ class CloneSiteTask(Task):
                     self.dest_host.domain,
                     )
         )
+        self.message(command + " - " + stdout + ":" + stderr)
         # pull source host database sql file
 
     def restore(self, ssh):
         # create database
-        command = "mysql -u root -e 'create database `%s`;'" % (
-                    self.dest_host.domain,
+        stdin, stdout, stderr = command = "mysql -u root -e 'create database `%s`;'" % (
+                    self.dest_host.db_name,
                     )
         ssh.exec_command(command)
-        self.message(command)
+        self.message(command + " - " + stdout + ":" + stderr)
+
+        # replace domain in data
+        command = "sed -i \"s/%s/%s/g\" /home/wwwroot/%s/dacscartb.sql" % (
+                    self.source_host.domain,
+                    self.dest_host.domain,
+                    self.dest_host.domain,
+                    )
+        stdin, stdout, stderr = ssh.exec_command(command)
+        self.message(command + " - " + stdout + ":" + stderr)
 
         # import data
         command = "mysql -u root %s < /home/wwwroot/%s/dacscartb.sql" % (
+                    self.dest_host.db_name,
+                    self.dest_host.domain,
+                    )
+        stdin, stdout, stderr = ssh.exec_command(command)
+        self.message(command + " - " + stdout + ":" + stderr)
+
+    def release(self, ssh):
+        # release cscart config file
+        command = "sed -i \"s/\$config\['db_name'] = '.*';/\$config\['db_name'\] = '%s';/g\" /home/wwwroot/%s/config.local.php" % (
+                    self.dest_host.db_name,
+                    self.dest_host.domain,
+                    )
+        stdin, stdout, stderr = ssh.exec_command(command)
+        self.message(command + " - " + stdout + ":" + stderr)
+        command = "sed -i \"s/\$config\['db_user'] = '.*';/\$config\['db_user'\] = '%s';/g\" /home/wwwroot/%s/config.local.php" % (
+                    'root',
+                    self.dest_host.domain,
+                    )
+        stdin, stdout, stderr = ssh.exec_command(command)
+        self.message(command + " - " + stdout + ":" + stderr)
+        command = "sed -i \"s/\$config\['db_password'] = '.*';/\$config\['db_password'\] = '%s';/g\" /home/wwwroot/%s/config.local.php" % (
+                    self.dest_host.db_pwd,
+                    self.dest_host.domain,
+                    )
+        stdin, stdout, stderr = ssh.exec_command(command)
+        self.message(command + " - " + stdout + ":" + stderr)
+
+        # release apache config file
+        command = "sed -i 's/%s/%s/g' /usr/local/apache/conf/vhost/%s.conf" % (
+                    self.source_host.domain,
                     self.dest_host.domain,
                     self.dest_host.domain,
                     )
-        ssh.exec_command(command)
-        self.message(command)
+        stdin, stdout, stderr = ssh.exec_command(command)
+        self.message(command + " - " + stdout + ":" + stderr)
 
-    def release(self, ssh):
-        pass
-        # release cscart config file
-        # release apache config file
         # release nginx config file
+        command = "sed -i 's/%s/%s/g' /usr/local/nginx/conf/vhost/%s.conf" % (
+                    self.source_host.domain,
+                    self.dest_host.domain,
+                    self.dest_host.domain,
+                    )
+        stdin, stdout, stderr = ssh.exec_command(command)
+        self.message(command + " - " + stdout + ":" + stderr)
+
+        # restart lnmp
+        command = "lnmp restart"
+        stdin, stdout, stderr = ssh.exec_command(command)
+        self.message(command + " - " + stdout + ":" + stderr)
