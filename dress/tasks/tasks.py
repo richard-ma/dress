@@ -1,17 +1,10 @@
+from dress import app
+
 class Task(object):
     __taskname__ = 'Task'
 
     def run(self):
         pass
-
-    def message(self, msg):
-        print("%s: %s" % (self.__taskname__, msg))
-
-    @classmethod
-    def runMessage(func):
-        print("[%s] started!" % (self.__taskname__))
-        func()
-        print("[%s] is done!" % (self.__taskname__))
 
 # CloneSiteTask
 from dress.data.models import Host, Status
@@ -27,30 +20,29 @@ class CloneSiteTask(Task):
         self.dest_ssh = executor.SSHExecutor(
                 dest_host.ip,
                 # TODO: add default value to host class
-                #port = dest_host.port,
-                #username = dest_host.username,
-                password = dest_host.password
-                )
+                port = 22, #port = dest_host.port,
+                username = 'root', #username = dest_host.username,
+                password = dest_host.pwd)
 
     def run(self):
         commands = list()
 
         # copy files
-        commmand = 'sshpass -p %s scp -o StrictHostKeyChecking=no -p -r root@%s:/home/wwwroot/%s /home/wwwroot/%s' % (
+        command = 'sshpass -p \'%s\' scp -o StrictHostKeyChecking=no -p -r root@%s:/home/wwwroot/%s /home/wwwroot/%s' % (
             self.source_host.pwd,
             self.source_host.ip,
             self.source_host.domain,
             self.dest_host.domain)
         commands.append(command)
 
-        command = 'sshpass -p %s scp -o StrictHostKeyChecking=no -p root@%s:/usr/local/apache/conf/vhost/%s.conf /usr/local/apache/conf/vhost/%s.conf' % (
+        command = 'sshpass -p \'%s\' scp -o StrictHostKeyChecking=no -p root@%s:/usr/local/apache/conf/vhost/%s.conf /usr/local/apache/conf/vhost/%s.conf' % (
             self.source_host.pwd,
             self.source_host.ip,
             self.source_host.domain,
             self.dest_host.domain)
         commands.append(command)
 
-        command = 'sshpass -p %s scp -o StrictHostKeyChecking=no -p root@%s:/usr/local/nginx/conf/vhost/%s.conf /usr/local/nginx/conf/vhost/%s.conf' % (
+        command = 'sshpass -p \'%s\' scp -o StrictHostKeyChecking=no -p root@%s:/usr/local/nginx/conf/vhost/%s.conf /usr/local/nginx/conf/vhost/%s.conf' % (
             self.source_host.pwd,
             self.source_host.ip,
             self.source_host.domain,

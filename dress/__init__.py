@@ -137,3 +137,5 @@ def create_app():
         print("Task #2 is done!")
 
     return app
+
+app = create_app()

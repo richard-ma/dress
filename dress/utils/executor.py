@@ -1,3 +1,5 @@
+from dress import app
+
 class Executor(object):
     def __init__(self):
         pass
@@ -6,8 +8,7 @@ class Executor(object):
         pass
 
     def exec(self, commands):
-        for command in commands:
-            self.exec_command(command)
+        pass
 
 # SSH Executor
 import paramiko
@@ -34,5 +35,20 @@ class SSHExecutor(Executor):
     def close(self):
         self.client.close()
 
+    def exec(self, commands):
+        try:
+            self.connect()
+            for command in commands:
+                app.logger.debug(command + ' started!')
+                self.exec_command(command)
+                app.logger.debug(command + ' is done!')
+        except paramiko.SSHException as e:
+            app.logger.error('ERROR ' + command)
+            app.logger.error(e.message)
+        finally:
+            self.close()
+
     def exec_command(self, command):
-        self.client.exec_command(command)
+        stdin, stdout, stderr = self.client.exec_command(command)
+        print(stdout.readlines())
+        print(stderr.readlines())
