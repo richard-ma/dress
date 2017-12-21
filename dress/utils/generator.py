@@ -6,8 +6,10 @@ class Generator(object):
     def generat():
         pass
 
+import random
+
 class PasswordGenerator(Generator):
     @classmethod
-    def generat(password_len):
+    def generat(cls, password_len):
         s = "abcdefghijklmnopqrstuvwxyz01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()?"
         return "".join(random.sample(s, password_len))
