@@ -29,6 +29,7 @@ class DevelopmentConfig(BaseConfig):
 
 class ProductionConfig(BaseConfig):
     SQLALCHEMY_DATABASE_URI = 'sqlite:///dress_production.db'
+    LOGGING_LEVEL = logging.ERROR
 
 class TestingConfig(BaseConfig):
     TESTING = True
