@@ -43,6 +43,7 @@ class HostTestCase(TestCase):
                 domain='test.domain',
                 pwd=update_host.pwd,
                 db_pwd=update_host.db_pwd,
+                memo=update_host.memo,
                 status=new_status.id)
         self.assertEqual('test.domain', update_host.domain)
         self.assertEqual(new_status.title, update_host.status.title)

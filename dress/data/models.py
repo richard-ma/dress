@@ -12,16 +12,18 @@ class Host(db.Model):
     domain = db.Column(db.String(32))
     pwd = db.Column(db.String(32))
     db_pwd = db.Column(db.String(32))
+    memo = db.Column(db.String(32))
     status_id = db.Column(db.Integer, db.ForeignKey('status.id', ondelete='CASCADE'))
 
     status = relationship("Status", back_populates='hosts')
 
-    def __init__(self, ip=None, port=22, domain=None, pwd=None, db_pwd=None, status=None):
+    def __init__(self, ip=None, port=22, domain=None, pwd=None, db_pwd=None, memo=None, status=None):
         self.ip = ip
         self.port = port
         self.domain = domain
         self.pwd = pwd
         self.db_pwd = db_pwd
+        self.memo = memo
         self.status = Status.query.all()[0]
 
     def create(self):
@@ -36,12 +38,13 @@ class Host(db.Model):
 
         return self
 
-    def update(self, ip, port, domain, pwd, db_pwd, status):
+    def update(self, ip, port, domain, pwd, db_pwd, memo, status):
         self.ip = ip
         self.port = port
         self.domain = domain
         self.pwd = pwd
         self.db_pwd = db_pwd
+        self.memo = memo
         if status != None:
             self.status = Status.query.filter_by(id=status).first()
         else:

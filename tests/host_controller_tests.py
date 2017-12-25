@@ -42,6 +42,7 @@ class HostControllerTestCase(TestCase):
         host_ip = '233.233.233.233'
         host_port = 10086
         host_domain = 'host.domain'
+        host_memo = 'memo'
         status = Status.query.all()[0]
 
         result = self.client.post(
@@ -53,6 +54,7 @@ class HostControllerTestCase(TestCase):
                     host_pwd='hostpwd',
                     host_db_name='db_name',
                     host_db_pwd='db_pwd',
+                    host_memo=host_memo,
                     host_status=status.id,
                 ), follow_redirects=True)
 
@@ -60,6 +62,7 @@ class HostControllerTestCase(TestCase):
         self.assertTrue(bytes(host_ip, encoding='utf-8') in result.data)
         self.assertTrue(bytes(str(host_port), encoding='utf-8') in result.data)
         self.assertTrue(bytes(host_domain, encoding='utf-8') in result.data)
+        self.assertTrue(bytes(host_memo, encoding='utf-8') in result.data)
 
     def test_delete_host_operation(self):
 
@@ -83,6 +86,7 @@ class HostControllerTestCase(TestCase):
         new_host_ip = '192.168.1.1'
         new_host_port = 22
         new_host_domain = 'new.test.domain'
+        new_host_memo = 'new memo'
 
         host = Host.query.filter_by(id=new_host.id).first()
         host_id = host.id
@@ -96,6 +100,7 @@ class HostControllerTestCase(TestCase):
                     host_pwd='hostpwd',
                     host_db_name='db_name',
                     host_db_pwd='db_pwd',
+                    host_memo=new_host_memo,
                     host_status=host.status.id,
                 ), follow_redirects=True)
 
@@ -103,6 +108,7 @@ class HostControllerTestCase(TestCase):
         self.assertTrue(bytes(new_host_ip, encoding='utf-8') in result.data)
         self.assertTrue(bytes(str(new_host_port), encoding='utf-8') in result.data)
         self.assertTrue(bytes(new_host_domain, encoding='utf-8') in result.data)
+        self.assertTrue(bytes(new_host_memo, encoding='utf-8') in result.data)
 
 if __name__ == '__main__':
     unittest.main()
