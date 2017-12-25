@@ -129,7 +129,7 @@ def create_app():
 
         flash("Clone Task Is Running In Background. Please Wait...")
 
-        return redirect(url_for('/task/clone_site/form'))
+        return redirect(url_for('task_clone_site_form'))
 
     # test
     @app.route('/test_flash')
