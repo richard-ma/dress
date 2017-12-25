@@ -17,6 +17,7 @@
 * Browser: http://host-ip:5000
 
 # TODO
+* [ ] [M] add host.memo
 * [ ] [M] remove host.db_name
 * [ ] [V] use Database Root Password instead of Database Password
 * [ ] [V] use SSH Port instead of Port
