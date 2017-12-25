@@ -14,21 +14,20 @@ import dress.utils.generator as generator
 class CloneSiteTask(Task):
     __taskname__ = 'Clone Site Task'
 
-    def __init__(self, source_host, dest_host):
+    def __init__(self, source_host, target_host):
         self.source_host = source_host
-        self.dest_host = dest_host
+        self.target_host = target_host
 
-        self.dest_ssh = executor.SSHExecutor(
-                dest_host.ip,
+        self.target_ssh = executor.SSHExecutor(
+                target_host.ip,
                 # TODO: add default value to host class
-                port = 22, #port = dest_host.port,
-                username = 'root', #username = dest_host.username,
-                password = dest_host.pwd)
+                port = 22, #port = target_host.port,
+                username = 'root', #username = target_host.username,
+                password = target_host.pwd)
 
     def run(self):
-        print(dir(app.config.keys()))
         site_database_password = generator.PasswordGenerator.generat(32)
-        return
+
         commands = list()
 
         # copy files
@@ -36,93 +35,95 @@ class CloneSiteTask(Task):
             self.source_host.pwd,
             self.source_host.ip,
             self.source_host.domain,
-            self.dest_host.domain)
+            self.target_host.domain)
         commands.append(command)
 
         command = 'sshpass -p \'%s\' scp -o StrictHostKeyChecking=no -p root@%s:/usr/local/apache/conf/vhost/%s.conf /usr/local/apache/conf/vhost/%s.conf' % (
             self.source_host.pwd,
             self.source_host.ip,
             self.source_host.domain,
-            self.dest_host.domain)
+            self.target_host.domain)
         commands.append(command)
 
         command = 'sshpass -p \'%s\' scp -o StrictHostKeyChecking=no -p root@%s:/usr/local/nginx/conf/vhost/%s.conf /usr/local/nginx/conf/vhost/%s.conf' % (
             self.source_host.pwd,
             self.source_host.ip,
             self.source_host.domain,
-            self.dest_host.domain)
+            self.target_host.domain)
         commands.append(command)
 
         # restore site
         command = "sed -i \"s/%s/%s/g\" /home/wwwroot/%s/dacscartb.sql" % (
             self.source_host.domain,
-            self.dest_host.domain,
-            self.dest_host.domain)
+            self.target_host.domain,
+            self.target_host.domain)
         commands.append(command)
 
         command = "mysql -u root -e 'CREATE USER '%s'@'localhost' IDENTIFIED BY '%s';'" % (
-                self.dest_host.domain,
+                self.target_host.domain,
                 site_database_pwd)
         commands.append(command)
 
         command = "mysql -u root -e 'GRANT USAGE ON * . * TO '%s'@'localhost' IDENTIFIED BY '%s' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0 ;'" % (
-                self.dest_host.domain,
+                self.target_host.domain,
                 site_database_pwd)
         commands.append(command)
 
-        command = "mysql -u root -e 'create database `%s`;'" % (self.dest_host.db_name)
+        command = "mysql -u root -e 'create database `%s`;'" % (self.target_host.db_name)
         commands.append(command)
 
         command = "mysql -u root -e 'GRANT ALL PRIVILEGES ON `%s` . * TO '%s'@'localhost';'" % (
-                self.dest_host.domain,
-                self.dest_host.domain)
+                self.target_host.domain,
+                self.target_host.domain)
         commands.append(command)
 
         command = "mysql -u root %s < /home/wwwroot/%s/dacscartb.sql" % (
-            self.dest_host.db_name,
-            self.dest_host.domain)
+            self.target_host.db_name,
+            self.target_host.domain)
         commands.append(command)
 
         # release site
         command = "sed -i \"s/\$config\['db_name'] = '.*';/\$config\['db_name'\] = '%s';/g\" /home/wwwroot/%s/config.local.php" % (
-                    self.dest_host.db_name,
-                    self.dest_host.domain)
+                    self.target_host.db_name,
+                    self.target_host.domain)
         commands.append(command)
 
         command = "sed -i \"s/\$config\['db_user'] = '.*';/\$config\['db_user'\] = '%s';/g\" /home/wwwroot/%s/config.local.php" % (
                     'root',
-                    self.dest_host.domain)
+                    self.target_host.domain)
         commands.append(command)
 
         command = "sed -i \"s/\$config\['db_password'] = '.*';/\$config\['db_password'\] = '%s';/g\" /home/wwwroot/%s/config.local.php" % (
                     site_database_password,
-                    self.dest_host.domain)
+                    self.target_host.domain)
         commands.append(command)
 
         command = "sed -i 's/%s/%s/g' /home/wwwroot/%s/config.local.php" % (
                     self.source_host.domain,
-                    self.dest_host.domain,
-                    self.dest_host.domain)
+                    self.target_host.domain,
+                    self.target_host.domain)
         commands.append(command)
 
         command = "sed -i 's/%s/%s/g' /usr/local/apache/conf/vhost/%s.conf" % (
                     self.source_host.domain,
-                    self.dest_host.domain,
-                    self.dest_host.domain)
+                    self.target_host.domain,
+                    self.target_host.domain)
         commands.append(command)
 
         command = "sed -i 's/%s/%s/g' /usr/local/nginx/conf/vhost/%s.conf" % (
                     self.source_host.domain,
-                    self.dest_host.domain,
-                    self.dest_host.domain)
+                    self.target_host.domain,
+                    self.target_host.domain)
         commands.append(command)
 
-        command = "rm -rf /home/wwwroot/%s/var/cache/*" % (self.dest_host.domain,)
+        command = "rm -rf /home/wwwroot/%s/var/cache/*" % (self.target_host.domain,)
         commands.append(command)
 
         command = "lnmp restart"
         commands.append(command)
 
-        self.dest_ssh.connect()
-        self.dest_ssh.exec(commands)
-        self.dest_ssh.close()
+        self.target_ssh.connect()
+        self.target_ssh.exec(commands)
+        self.target_ssh.close()
+
+        self.target_host.status = Status.query.filter_by(title='Business').first()
