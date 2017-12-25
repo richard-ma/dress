@@ -20,6 +20,6 @@
 * [ ] [M] add host.memo
 * [x] [M] remove host.db_name
 * [x] [V] use Database Root Password instead of Database Password
-* [ ] [V] use SSH Port instead of Port
+* [x] [V] use SSH Port instead of Port
 * [x] [V] use host.domain@host.ip as host identifier
 * [x] [M] remove host.name
