@@ -22,24 +22,22 @@ class HostTestCase(TestCase):
         pass
 
     def test_create_host(self):
-        h = Host('testhost')
+        h = Host()
         h.create()
 
-        query_host = Host.query.filter_by(name='testhost').first()
+        query_host = Host.query.filter_by(id=h.id).first()
 
-        self.assertEqual(query_host.name, 'testhost')
         self.assertEqual(query_host.port, 22)
         self.assertIsInstance(query_host.status, Status)
         self.assertEqual(query_host.status.title, 'Prepare')
 
     def test_update_host(self):
-        h = Host('testhost')
+        h = Host()
         h.create()
-        update_host = Host.query.filter_by(name='testhost').first()
+        update_host = Host.query.filter_by(id=h.id).first()
 
         new_status = Status.query.filter_by(title='Business').first()
         update_host.update(
-                name=update_host.name,
                 ip=update_host.ip,
                 port=update_host.port,
                 domain='test.domain',
@@ -55,12 +53,12 @@ class HostTestCase(TestCase):
         h.create()
 
         # host created
-        query_host = Host.query.filter_by(name='testhost').first()
+        query_host = Host.query.filter_by(id=h.id).first()
         self.assertEqual(query_host.status.title, 'Prepare')
 
         # delete host
         h.delete()
-        self.assertIsNone(Host.query.filter_by(name='testhost').first())
+        self.assertIsNone(Host.query.filter_by(id=h.id).first())
 
 if __name__ == '__main__':
     unittest.main()

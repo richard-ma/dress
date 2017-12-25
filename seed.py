@@ -2,8 +2,8 @@ from dress import create_app
 from dress.data.models import db, Host, Status
 
 def seed_host_data(database):
-    example_host1 = Host('example1')
-    example_host2 = Host('example2')
+    example_host1 = Host()
+    example_host2 = Host()
     try:
         database.session.add(example_host1)
         database.session.add(example_host2)

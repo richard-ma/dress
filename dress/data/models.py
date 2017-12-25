@@ -18,8 +18,7 @@ class Host(db.Model):
 
     status = relationship("Status", back_populates='hosts')
 
-    def __init__(self, name, ip=None, port=22, domain=None, pwd=None, db_name=None, db_pwd=None, status=None):
-        self.name = name
+    def __init__(self, ip=None, port=22, domain=None, pwd=None, db_name=None, db_pwd=None, status=None):
         self.ip = ip
         self.port = port
         self.domain = domain
@@ -40,8 +39,7 @@ class Host(db.Model):
 
         return self
 
-    def update(self, name, ip, port, domain, pwd, db_name, db_pwd, status):
-        self.name = name
+    def update(self, ip, port, domain, pwd, db_name, db_pwd, status):
         self.ip = ip
         self.port = port
         self.domain = domain
@@ -54,6 +52,9 @@ class Host(db.Model):
             self.status = Status.query.all()[0]
 
         db.session.commit()
+
+    def name(self):
+        return "%s@%s" % (self.domain, self.ip)
 
     def __repr__(self):
         return '<Host %r>' % (self.name)

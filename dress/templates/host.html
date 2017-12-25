@@ -12,9 +12,7 @@
     <thead>
         <th scope="col">#</th>
         <th scope="col">NAME</th>
-        <th scope="col">IP</th>
         <th scope="col">PORT</th>
-        <th scope="col">DOMAIN</th>
         <th scope="col">OPERATION</th>
     </thead>
     <tbody>
@@ -33,11 +31,8 @@
                 label-primary
                 {% endif %}
                     ">{{ host.status.title }}</span> 
-                {{ host.name }}
-            </td>
-            <td>{{ host.ip }}</td>
+                {{ host.domain }}@{{ host.ip }}
             <td>{{ host.port}}</td>
-            <td>{{ host.domain}}</td>
             <td>
                 <a target="_self" title="Edit" href="{{ url_for('host_form', host_id=host.id) }}"><span class="glyphicon glyphicon-pencil"></span></a>
                 <a target="_self" title="Delete" href="{{ url_for('host_delete', host_id=host.id) }}"><span class="glyphicon glyphicon-trash"></span></a>

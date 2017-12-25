@@ -58,7 +58,7 @@ def create_app():
         delete_host = Host.query.filter_by(id=host_id).first()
         delete_host.delete()
 
-        flash('Host #%s %s deleted.' % (delete_host.id, delete_host.name))
+        flash('Host #%s %s deleted.' % (delete_host.id, delete_host.name()))
 
         return redirect(url_for('host'))
 
@@ -67,7 +67,6 @@ def create_app():
         update_host = Host.query.filter_by(id=host_id).first()
 
         id = host_id
-        name = request.form['host_name']
         ip = request.form['host_ip']
         port = request.form['host_port']
         domain = request.form['host_domain']
@@ -76,15 +75,14 @@ def create_app():
         db_pwd = request.form['host_db_pwd']
         status = request.form['host_status']
 
-        update_host.update(name, ip, port, domain, pwd, db_name, db_pwd, status)
+        update_host.update(ip, port, domain, pwd, db_name, db_pwd, status)
 
-        flash('Host #%s "%s" updated.' % (update_host.id, update_host.name))
+        flash('Host #%s "%s" updated.' % (update_host.id, update_host.name()))
 
         return redirect(url_for('host'))
 
     @app.route('/host/add', methods=['POST'])
     def host_add():
-        name = request.form['host_name']
         ip = request.form['host_ip']
         port = request.form['host_port']
         domain = request.form['host_domain']
@@ -93,10 +91,10 @@ def create_app():
         db_pwd = request.form['host_db_pwd']
         status = request.form['host_status']
 
-        new_host = Host(name, ip, port, domain, pwd, db_name, db_pwd, status)
+        new_host = Host(ip, port, domain, pwd, db_name, db_pwd, status)
         new_host = new_host.create()
 
-        flash('Host #%s "%s" added.' % (new_host.id, new_host.name))
+        flash('Host #%s "%s" added.' % (new_host.id, new_host.name()))
 
         return redirect(url_for('host'))
 
@@ -125,7 +123,7 @@ def create_app():
             flash("Target Host Not Found!")
             return redirect(url_for('/task/clone_site/form'))
 
-        # log "source %s, target %s!" % (source_host.name, target_host.name)
+        # log "source %s, target %s!" % (source_host.name(), target_host.name())
         from dress.tasks.tasks import CloneSiteTask
         executor.submit(CloneSiteTask(source_host, target_host).run())
 

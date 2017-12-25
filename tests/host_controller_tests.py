@@ -18,8 +18,6 @@ class HostControllerTestCase(TestCase):
     def setUp(self):
         seed_db(self.app)
 
-        self.test_host_name = 'Test Host'
-
     def tearDown(self):
         pass
 
@@ -41,7 +39,6 @@ class HostControllerTestCase(TestCase):
         self.assertTrue(b'Update Host' in result.data)
 
     def test_add_host_operation(self):
-        host_name = self.test_host_name
         host_ip = '233.233.233.233'
         host_port = 10086
         host_domain = 'host.domain'
@@ -50,7 +47,6 @@ class HostControllerTestCase(TestCase):
         result = self.client.post(
                 '/host/add',
                 data=dict(
-                    host_name=host_name,
                     host_ip=host_ip,
                     host_port=host_port,
                     host_domain=host_domain,
@@ -61,44 +57,39 @@ class HostControllerTestCase(TestCase):
                 ), follow_redirects=True)
 
         self.assertTrue(b'added' in result.data)
-        self.assertTrue(bytes(host_name, encoding='utf-8') in result.data)
         self.assertTrue(bytes(host_ip, encoding='utf-8') in result.data)
         self.assertTrue(bytes(str(host_port), encoding='utf-8') in result.data)
         self.assertTrue(bytes(host_domain, encoding='utf-8') in result.data)
 
     def test_delete_host_operation(self):
-        host_name = self.test_host_name
 
-        new_host = Host(host_name)
+        new_host = Host()
         new_host.create()
 
-        host_id = Host.query.filter_by(name=host_name).first().id
+        host_id = Host.query.filter_by(id=new_host.id).first().id
 
         result = self.client.get(
                 '/host/delete/%d' % (host_id),
                 follow_redirects=True)
 
         self.assertTrue(b'deleted' in result.data)
-        self.assertIsNone(Host.query.filter_by(name=host_name).first())
+        self.assertIsNone(Host.query.filter_by(id=new_host.id).first())
 
     def test_update_host_operation(self):
-        host_name = self.test_host_name
 
-        new_host = Host(host_name)
+        new_host = Host()
         new_host.create()
 
-        new_host_name = 'New Test Host Name'
         new_host_ip = '192.168.1.1'
         new_host_port = 22
         new_host_domain = 'new.test.domain'
 
-        host = Host.query.filter_by(name=host_name).first()
+        host = Host.query.filter_by(id=new_host.id).first()
         host_id = host.id
 
         result = self.client.post(
                 '/host/update/%d' % (host_id),
                 data=dict(
-                    host_name=new_host_name,
                     host_ip=new_host_ip,
                     host_port=new_host_port,
                     host_domain=new_host_domain,
@@ -109,7 +100,6 @@ class HostControllerTestCase(TestCase):
                 ), follow_redirects=True)
 
         self.assertTrue(b'updated' in result.data)
-        self.assertTrue(bytes(new_host_name, encoding='utf-8') in result.data)
         self.assertTrue(bytes(new_host_ip, encoding='utf-8') in result.data)
         self.assertTrue(bytes(str(new_host_port), encoding='utf-8') in result.data)
         self.assertTrue(bytes(new_host_domain, encoding='utf-8') in result.data)
