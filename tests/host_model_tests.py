@@ -42,7 +42,6 @@ class HostTestCase(TestCase):
                 port=update_host.port,
                 domain='test.domain',
                 pwd=update_host.pwd,
-                db_name=update_host.db_name,
                 db_pwd=update_host.db_pwd,
                 status=new_status.id)
         self.assertEqual('test.domain', update_host.domain)

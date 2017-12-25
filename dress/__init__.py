@@ -71,11 +71,10 @@ def create_app():
         port = request.form['host_port']
         domain = request.form['host_domain']
         pwd = request.form['host_pwd']
-        db_name = request.form['host_db_name']
         db_pwd = request.form['host_db_pwd']
         status = request.form['host_status']
 
-        update_host.update(ip, port, domain, pwd, db_name, db_pwd, status)
+        update_host.update(ip, port, domain, pwd, db_pwd, status)
 
         flash('Host #%s "%s" updated.' % (update_host.id, update_host.name()))
 
@@ -87,11 +86,10 @@ def create_app():
         port = request.form['host_port']
         domain = request.form['host_domain']
         pwd = request.form['host_pwd']
-        db_name = request.form['host_db_name']
         db_pwd = request.form['host_db_pwd']
         status = request.form['host_status']
 
-        new_host = Host(ip, port, domain, pwd, db_name, db_pwd, status)
+        new_host = Host(ip, port, domain, pwd, db_pwd, status)
         new_host = new_host.create()
 
         flash('Host #%s "%s" added.' % (new_host.id, new_host.name()))

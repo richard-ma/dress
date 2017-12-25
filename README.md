@@ -18,7 +18,7 @@
 
 # TODO
 * [ ] [M] add host.memo
-* [ ] [M] remove host.db_name
+* [x] [M] remove host.db_name
 * [ ] [V] use Database Root Password instead of Database Password
 * [ ] [V] use SSH Port instead of Port
 * [x] [V] use host.domain@host.ip as host identifier
