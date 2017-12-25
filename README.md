@@ -15,3 +15,10 @@
 # RUN
 * python run.py
 * Browser: http://host-ip:5000
+
+# TODO
+* [ ] [M] remove host.db_name
+* [ ] [V] use Database Root Password instead of Database Password
+* [ ] [V] use SSH Port instead of Port
+* [ ] [V] use host.domain@host.ip as host identifier
+* [ ] [M] remove host.name

@@ -9,6 +9,7 @@ class Task(object):
 # CloneSiteTask
 from dress.data.models import Host, Status
 import dress.utils.executor as executor
+import dress.utils.generator as generator
 
 class CloneSiteTask(Task):
     __taskname__ = 'Clone Site Task'
@@ -25,6 +26,9 @@ class CloneSiteTask(Task):
                 password = dest_host.pwd)
 
     def run(self):
+        print(dir(app.config.keys()))
+        site_database_password = generator.PasswordGenerator.generat(32)
+        return
         commands = list()
 
         # copy files
@@ -56,7 +60,22 @@ class CloneSiteTask(Task):
             self.dest_host.domain)
         commands.append(command)
 
+        command = "mysql -u root -e 'CREATE USER '%s'@'localhost' IDENTIFIED BY '%s';'" % (
+                self.dest_host.domain,
+                site_database_pwd)
+        commands.append(command)
+
+        command = "mysql -u root -e 'GRANT USAGE ON * . * TO '%s'@'localhost' IDENTIFIED BY '%s' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0 ;'" % (
+                self.dest_host.domain,
+                site_database_pwd)
+        commands.append(command)
+
         command = "mysql -u root -e 'create database `%s`;'" % (self.dest_host.db_name)
+        commands.append(command)
+
+        command = "mysql -u root -e 'GRANT ALL PRIVILEGES ON `%s` . * TO '%s'@'localhost';'" % (
+                self.dest_host.domain,
+                self.dest_host.domain)
         commands.append(command)
 
         command = "mysql -u root %s < /home/wwwroot/%s/dacscartb.sql" % (
@@ -76,7 +95,7 @@ class CloneSiteTask(Task):
         commands.append(command)
 
         command = "sed -i \"s/\$config\['db_password'] = '.*';/\$config\['db_password'\] = '%s';/g\" /home/wwwroot/%s/config.local.php" % (
-                    self.dest_host.db_pwd,
+                    site_database_password,
                     self.dest_host.domain)
         commands.append(command)
 

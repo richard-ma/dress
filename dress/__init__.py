@@ -26,6 +26,7 @@ def create_app():
     # Navbar flask-nav
     topbar = Navbar('',
             View('Host', 'host'),
+            View('Clone', 'task_clone_site_form'),
     )
     nav = Nav()
     nav.register_element('top', topbar)
@@ -102,15 +103,35 @@ def create_app():
     # Tasks
 
     # clone site task
-    @app.route('/task/clone/site/<source_host_id>/<dest_host_id>')
-    def task_clone_site(source_host_id, dest_host_id):
-        source_host = Host.query.filter_by(id=source_host_id).first()
-        dest_host = Host.query.filter_by(id=dest_host_id).first()
+    @app.route('/task/clone_site/form')
+    def task_clone_site_form():
+        hosts = Host.query.all()
 
-        # log "source %s, dest %s!" % (source_host.name, dest_host.name)
+        return render_template('task_clone_site_form.html', hosts=hosts)
+
+    # clone site task
+    @app.route('/task/clone_site', methods=['POST'])
+    def task_clone_site():
+        source_host_id = request.form['source_host_id']
+        target_host_id = request.form['target_host_id']
+
+        source_host = Host.query.filter_by(id=source_host_id).first()
+        target_host = Host.query.filter_by(id=target_host_id).first()
+
+        if not isinstance(source_host, Host):
+            flash("Source Host Not Found!")
+            return redirect(url_for('/task/clone_site/form'))
+        if not isinstance(target_host, Host):
+            flash("Target Host Not Found!")
+            return redirect(url_for('/task/clone_site/form'))
+
+        # log "source %s, target %s!" % (source_host.name, target_host.name)
         from dress.tasks.tasks import CloneSiteTask
-        executor.submit(CloneSiteTask(source_host, dest_host).run())
-        return "completed"
+        executor.submit(CloneSiteTask(source_host, target_host).run())
+
+        flash("Clone Task Is Running In Background. Please Wait...")
+
+        return redirect(url_for('/task/clone_site/form'))
 
     # test
     @app.route('/test_flash')
