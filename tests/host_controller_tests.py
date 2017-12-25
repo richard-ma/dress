@@ -42,6 +42,8 @@ class HostControllerTestCase(TestCase):
         host_ip = '233.233.233.233'
         host_port = 10086
         host_domain = 'host.domain'
+        host_pwd = 'hostpwd'
+        host_db_pwd = 'db_pwd'
         host_memo = 'memo'
         status = Status.query.all()[0]
 
@@ -51,9 +53,8 @@ class HostControllerTestCase(TestCase):
                     host_ip=host_ip,
                     host_port=host_port,
                     host_domain=host_domain,
-                    host_pwd='hostpwd',
-                    host_db_name='db_name',
-                    host_db_pwd='db_pwd',
+                    host_pwd=host_pwd,
+                    host_db_pwd=host_db_pwd,
                     host_memo=host_memo,
                     host_status=status.id,
                 ), follow_redirects=True)
@@ -86,6 +87,8 @@ class HostControllerTestCase(TestCase):
         new_host_ip = '192.168.1.1'
         new_host_port = 22
         new_host_domain = 'new.test.domain'
+        new_host_pwd = 'new pwd'
+        new_host_db_pwd = 'new db pwd'
         new_host_memo = 'new memo'
 
         host = Host.query.filter_by(id=new_host.id).first()
@@ -97,9 +100,8 @@ class HostControllerTestCase(TestCase):
                     host_ip=new_host_ip,
                     host_port=new_host_port,
                     host_domain=new_host_domain,
-                    host_pwd='hostpwd',
-                    host_db_name='db_name',
-                    host_db_pwd='db_pwd',
+                    host_pwd=new_host_pwd,
+                    host_db_pwd=new_host_db_pwd,
                     host_memo=new_host_memo,
                     host_status=host.status.id,
                 ), follow_redirects=True)
