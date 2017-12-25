@@ -1,16 +1,66 @@
 from dress import app
 
+from dress.data.models import Host, Status
+import dress.utils.executor as executor
+import dress.utils.generator as generator
+
 class Task(object):
     __taskname__ = 'Task'
 
     def run(self):
         pass
 
-# CloneSiteTask
-from dress.data.models import Host, Status
-import dress.utils.executor as executor
-import dress.utils.generator as generator
+class CommandTask(Task):
+    __taskname__ = 'Command Task'
 
+    def __init__(self, command_pool: list):
+        self.command_pool = command_pool
+
+    def _command_pool_append(self, command):
+        self.command_pool.append(command)
+        app.logger.debug("[%s][APPEND] %s" % (self.__taskname__, command))
+
+        return self
+
+    def scp(self, source_ip, source_path, target_path, source_user='root', source_password=''):
+        command = 'sshpass -p \'%s\' scp -o StrictHostKeyChecking=no -p -r %s@%s:%s %s' % (
+                source_password,
+                source_user,
+                source_ip,
+                source_path,
+                target_path)
+
+        return self._command_pool_append(command)
+
+    def sed(self, source, target, filename):
+        command = "sed -i \"s/%s/%s/g\" %s" % (
+            source,
+            target,
+            filename)
+
+        return self._command_pool_append(command)
+
+    def sql(self, sql):
+        command = "mysql -u root -e '%s" % (sql)
+
+        return self._command_pool_append(command)
+
+    def command(self, command):
+
+        return self._command_pool_append(command)
+
+class CopySiteTask(CommandTask):
+    __taskname__ = 'Copy Site Task'
+
+    def run(self, source_host: Host, target_host: Host):
+        self.scp(
+                source_ip=source_host.ip,
+                source_user='root',
+                source_password=source_host.pwd,
+                source_path="/home/wwwroot/%s" % (source_host.domain),
+                target_path="/home/wwwroot/%s" % (target_host.domain))
+
+# CloneSiteTask
 class CloneSiteTask(Task):
     __taskname__ = 'Clone Site Task'
 
@@ -32,10 +82,10 @@ class CloneSiteTask(Task):
 
         # copy files
         command = 'sshpass -p \'%s\' scp -o StrictHostKeyChecking=no -p -r root@%s:/home/wwwroot/%s /home/wwwroot/%s' % (
-            self.source_host.pwd,
-            self.source_host.ip,
-            self.source_host.domain,
-            self.target_host.domain)
+                self.source_host.pwd,
+                self.source_host.ip,
+                self.source_host.domain,
+                self.target_host.domain)
         commands.append(command)
 
         command = 'sshpass -p \'%s\' scp -o StrictHostKeyChecking=no -p root@%s:/usr/local/apache/conf/vhost/%s.conf /usr/local/apache/conf/vhost/%s.conf' % (
