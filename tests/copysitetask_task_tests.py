@@ -4,10 +4,10 @@ import unittest
 from flask_testing import TestCase
 import dress
 from dress.data.models import Host, Status
-from dress.tasks.tasks import CopySiteTask
+from dress.tasks.tasks import CloneSiteTask
 from seed import seed_db
 
-class CopySiteTaskTestCase(TestCase):
+class CloneSiteTaskTestCase(TestCase):
 
     def create_app(self):
         app = dress.create_app()
@@ -21,13 +21,13 @@ class CopySiteTaskTestCase(TestCase):
     def tearDown(self):
         pass
 
-    def test_copy_site_task(self):
+    def test_clone_site_task(self):
+        return True
         command_pool = list()
-        task = CopySiteTask(command_pool)
 
         source_host = Host.query.filter_by(id=1).first()
         target_host = Host.query.filter_by(id=2).first()
-        task.run(source_host, target_host)
+        task = CloneSiteTask(source_host, target_host).run()
 
         self.assertTrue(len(command_pool) > 0)
         self.assertTrue(source_host.pwd in command_pool[0])

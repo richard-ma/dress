@@ -60,8 +60,8 @@ class CommonCommand(Command):
                 source_user='root',
                 source_password=source_host.pwd,
                 source_path="/usr/local/apache/conf/vhost/%s.conf" % (source_host.domain),
-                target_path="/usr/local/apache/conf/vhost/%s.conf" % (target_host.domain))
-        .sed( # replace domain
+                target_path="/usr/local/apache/conf/vhost/%s.conf" % (target_host.domain)
+        ).sed( # replace domain
                 source_host.domain,
                 target_host.domain,
                 "/usr/local/apache/conf/vhost/%s.conf" % (target_host.domain))
@@ -72,8 +72,8 @@ class CommonCommand(Command):
                 source_user='root',
                 source_password=source_host.pwd,
                 source_path="/usr/local/nginx/conf/vhost/%s.conf" % (source_host.domain),
-                target_path="/usr/local/nginx/conf/vhost/%s.conf" % (target_host.domain))
-        .sed( # replace domain
+                target_path="/usr/local/nginx/conf/vhost/%s.conf" % (target_host.domain)
+        ).sed( # replace domain
                 source_host.domain,
                 target_host.domain,
                 "/usr/local/nginx/conf/vhost/%s.conf" % (target_host.domain))
@@ -82,16 +82,16 @@ class CommonCommand(Command):
         self.sql( # create user
                 "CREATE USER '%s'@'localhost' IDENTIFIED BY '%s';" % (
                 user_name,
-                user_password))
-        .sql( # grant privilige
+                user_password)
+        ).sql( # grant privilige
                 "GRANT USAGE ON * . * TO '%s'@'localhost' IDENTIFIED BY '%s' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0 ;" % (
                 user_name,
                 user_password))
 
     def mysql_create_database_command(self, database_name, user_name):
         self.sql( # create database
-                "create database `%s`;" % (self.target_host.db_name))
-        sql( # grant privilige
+                "create database `%s`;" % (self.target_host.domain)
+        ).sql( # grant privilige
                 "GRANT ALL PRIVILEGES ON `%s` . * TO '%s'@'localhost';" % (
                 database_name,
                 user_name))
@@ -150,15 +150,15 @@ class CloneSiteTask(Task):
 
         command = "mysql -u root -e 'CREATE USER '%s'@'localhost' IDENTIFIED BY '%s';'" % (
                 self.target_host.domain,
-                site_database_pwd)
+                site_database_password)
         commands.append(command)
 
         command = "mysql -u root -e 'GRANT USAGE ON * . * TO '%s'@'localhost' IDENTIFIED BY '%s' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0 ;'" % (
                 self.target_host.domain,
-                site_database_pwd)
+                site_database_password)
         commands.append(command)
 
-        command = "mysql -u root -e 'create database `%s`;'" % (self.target_host.db_name)
+        command = "mysql -u root -e 'create database `%s`;'" % (self.target_host.domain)
         commands.append(command)
 
         command = "mysql -u root -e 'GRANT ALL PRIVILEGES ON `%s` . * TO '%s'@'localhost';'" % (
@@ -167,13 +167,13 @@ class CloneSiteTask(Task):
         commands.append(command)
 
         command = "mysql -u root %s < /home/wwwroot/%s/dacscartb.sql" % (
-            self.target_host.db_name,
+            self.target_host.domain,
             self.target_host.domain)
         commands.append(command)
 
         # release site
         command = "sed -i \"s/\$config\['db_name'] = '.*';/\$config\['db_name'\] = '%s';/g\" /home/wwwroot/%s/config.local.php" % (
-                    self.target_host.db_name,
+                    self.source_host.domain,
                     self.target_host.domain)
         commands.append(command)
 

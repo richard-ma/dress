@@ -4,7 +4,7 @@ import dress
 from dress.data.models import Host, Status
 from seed import seed_db
 
-import tasks.tasks as tasks
+from dress.tasks.tasks import Command
 
 class CommandTestCase(TestCase):
 
@@ -29,7 +29,7 @@ class CommandTestCase(TestCase):
 
         command_pool = list()
 
-        tasks.Command(command_pool).scp(
+        Command(command_pool).scp(
                 source_ip,
                 source_path,
                 target_path,
@@ -50,7 +50,7 @@ class CommandTestCase(TestCase):
 
         command_pool = list()
 
-        tasks.Command(command_pool).scp(
+        Command(command_pool).scp(
                 source_ip,
                 source_path,
                 target_path)
@@ -68,7 +68,7 @@ class CommandTestCase(TestCase):
 
         command_pool = list()
 
-        tasks.Command(command_pool).sed(
+        Command(command_pool).sed(
                 source,
                 target,
                 filename)
@@ -82,7 +82,7 @@ class CommandTestCase(TestCase):
 
         command_pool = list()
 
-        tasks.Command(command_pool).sql(sql)
+        Command(command_pool).sql(sql)
         self.assertEqual(1, len(command_pool))
         self.assertTrue('mysql -u root -e' in command_pool[0])
         self.assertTrue(sql in command_pool[0])
@@ -92,7 +92,7 @@ class CommandTestCase(TestCase):
 
         command_pool = list()
 
-        tasks.Command(command_pool).command(command)
+        Command(command_pool).command(command)
         self.assertEqual(1, len(command_pool))
         self.assertTrue(command in command_pool[0])
 
