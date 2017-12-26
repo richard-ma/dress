@@ -44,8 +44,9 @@ class Command(object):
 
         return self._command_pool_append(command)
 
-class CopySiteCommand(Command):
-    def generate(self, source_host: Host, target_host: Host):
+# common command
+class CommonCommand(Command):
+    def copy_site_command(self, source_host: Host, target_host: Host):
         self.scp( # copy site files
                 source_ip=source_host.ip,
                 source_user='root',
@@ -53,8 +54,7 @@ class CopySiteCommand(Command):
                 source_path="/home/wwwroot/%s" % (source_host.domain),
                 target_path="/home/wwwroot/%s" % (target_host.domain))
 
-class ApacheConfigCommand(Command):
-    def generate(self, source_host: Host, target_host: Host):
+    def apache_config_command(self, source_host: Host, target_host: Host):
         self.scp( # copy config file
                 source_ip=source_host.ip,
                 source_user='root',
@@ -66,8 +66,7 @@ class ApacheConfigCommand(Command):
                 target_host.domain,
                 "/usr/local/apache/conf/vhost/%s.conf" % (target_host.domain))
 
-class NginxConfigCommand(Command):
-    def generate(self, source_host: Host, target_host: Host):
+    def nginx_config_command(self, source_host: Host, target_host: Host):
         self.scp( # copy config file
                 source_ip=source_host.ip,
                 source_user='root',
@@ -79,23 +78,21 @@ class NginxConfigCommand(Command):
                 target_host.domain,
                 "/usr/local/nginx/conf/vhost/%s.conf" % (target_host.domain))
 
-class MysqlCreateUserCommand(Command):
-    def generate(self, user_name, user_password):
+    def mysql_create_user_command(self, user_name, user_password):
         self.sql( # create user
-                "mysql -u root -e 'CREATE USER '%s'@'localhost' IDENTIFIED BY '%s';'" % (
+                "CREATE USER '%s'@'localhost' IDENTIFIED BY '%s';" % (
                 user_name,
                 user_password))
         .sql( # grant privilige
-                "mysql -u root -e 'GRANT USAGE ON * . * TO '%s'@'localhost' IDENTIFIED BY '%s' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0 ;'" % (
+                "GRANT USAGE ON * . * TO '%s'@'localhost' IDENTIFIED BY '%s' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0 ;" % (
                 user_name,
                 user_password))
 
-class MysqlCreateDatabaseCommand(Command):
-    def generate(self, database_name, user_name):
+    def mysql_create_database_command(self, database_name, user_name):
         self.sql( # create database
-                "mysql -u root -e 'create database `%s`;'" % (self.target_host.db_name))
+                "create database `%s`;" % (self.target_host.db_name))
         sql( # grant privilige
-                "mysql -u root -e 'GRANT ALL PRIVILEGES ON `%s` . * TO '%s'@'localhost';'" % (
+                "GRANT ALL PRIVILEGES ON `%s` . * TO '%s'@'localhost';" % (
                 database_name,
                 user_name))
 
