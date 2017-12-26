@@ -4,21 +4,16 @@ from dress.data.models import Host, Status
 import dress.utils.executor as executor
 import dress.utils.generator as generator
 
-class Task(object):
-    __taskname__ = 'Task'
-
-    def run(self):
-        pass
-
-class CommandTask(Task):
-    __taskname__ = 'Command Task'
-
+class Command(object):
     def __init__(self, command_pool: list):
         self.command_pool = command_pool
 
+    def generate(self):
+        pass
+
     def _command_pool_append(self, command):
         self.command_pool.append(command)
-        app.logger.debug("[%s][APPEND] %s" % (self.__taskname__, command))
+        app.logger.debug("[%s][APPEND] %s" % (self.__class__, command))
 
         return self
 
@@ -49,21 +44,68 @@ class CommandTask(Task):
 
         return self._command_pool_append(command)
 
-class CopySiteTask(CommandTask):
-    __taskname__ = 'Copy Site Task'
-
-    def run(self, source_host: Host, target_host: Host):
-        self.scp(
+class CopySiteCommand(Command):
+    def generate(self, source_host: Host, target_host: Host):
+        self.scp( # copy site files
                 source_ip=source_host.ip,
                 source_user='root',
                 source_password=source_host.pwd,
                 source_path="/home/wwwroot/%s" % (source_host.domain),
                 target_path="/home/wwwroot/%s" % (target_host.domain))
 
+class ApacheConfigCommand(Command):
+    def generate(self, source_host: Host, target_host: Host):
+        self.scp( # copy config file
+                source_ip=source_host.ip,
+                source_user='root',
+                source_password=source_host.pwd,
+                source_path="/usr/local/apache/conf/vhost/%s.conf" % (source_host.domain),
+                target_path="/usr/local/apache/conf/vhost/%s.conf" % (target_host.domain))
+        .sed( # replace domain
+                source_host.domain,
+                target_host.domain,
+                "/usr/local/apache/conf/vhost/%s.conf" % (target_host.domain))
+
+class NginxConfigCommand(Command):
+    def generate(self, source_host: Host, target_host: Host):
+        self.scp( # copy config file
+                source_ip=source_host.ip,
+                source_user='root',
+                source_password=source_host.pwd,
+                source_path="/usr/local/nginx/conf/vhost/%s.conf" % (source_host.domain),
+                target_path="/usr/local/nginx/conf/vhost/%s.conf" % (target_host.domain))
+        .sed( # replace domain
+                source_host.domain,
+                target_host.domain,
+                "/usr/local/nginx/conf/vhost/%s.conf" % (target_host.domain))
+
+class MysqlCreateUserCommand(Command):
+    def generate(self, user_name, user_password):
+        self.sql( # create user
+                "mysql -u root -e 'CREATE USER '%s'@'localhost' IDENTIFIED BY '%s';'" % (
+                user_name,
+                user_password))
+        .sql( # grant privilige
+                "mysql -u root -e 'GRANT USAGE ON * . * TO '%s'@'localhost' IDENTIFIED BY '%s' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0 ;'" % (
+                user_name,
+                user_password))
+
+class MysqlCreateDatabaseCommand(Command):
+    def generate(self, database_name, user_name):
+        self.sql( # create database
+                "mysql -u root -e 'create database `%s`;'" % (self.target_host.db_name))
+        sql( # grant privilige
+                "mysql -u root -e 'GRANT ALL PRIVILEGES ON `%s` . * TO '%s'@'localhost';'" % (
+                database_name,
+                user_name))
+
+# Tasks
+class Task(object):
+    def run(self):
+        pass
+
 # CloneSiteTask
 class CloneSiteTask(Task):
-    __taskname__ = 'Clone Site Task'
-
     def __init__(self, source_host, target_host):
         self.source_host = source_host
         self.target_host = target_host
