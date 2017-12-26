@@ -34,10 +34,10 @@ class CommonCommandTestCase(TestCase):
     def tearDown(self):
         pass
 
-    def test_copy_site_command(self):
+    def test_copy_site(self):
         command_pool = list()
 
-        CommonCommand(command_pool).copy_site_command(self.source_host, self.target_host)
+        CommonCommand(command_pool).copy_site(self.source_host, self.target_host)
 
         self.assertEqual(1, len(command_pool))
         self.assertTrue('scp' in command_pool[0])
@@ -46,10 +46,10 @@ class CommonCommandTestCase(TestCase):
         self.assertTrue('/home/wwwroot/%s' % (self.source_host.domain) in command_pool[0])
         self.assertTrue('/home/wwwroot/%s' % (self.target_host.domain) in command_pool[0])
 
-    def test_apache_config_command(self):
+    def test_apache_config(self):
         command_pool = list()
 
-        CommonCommand(command_pool).apache_config_command(self.source_host, self.target_host)
+        CommonCommand(command_pool).apache_config(self.source_host, self.target_host)
 
         self.assertEqual(2, len(command_pool))
 
@@ -63,10 +63,10 @@ class CommonCommandTestCase(TestCase):
         self.assertTrue('%s/%s' % (self.source_host.domain, self.target_host.domain) in command_pool[1])
         self.assertTrue('/usr/local/apache/conf/vhost/%s.conf' % (self.target_host.domain) in command_pool[1])
 
-    def test_nginx_config_command(self):
+    def test_nginx_config(self):
         command_pool = list()
 
-        CommonCommand(command_pool).nginx_config_command(self.source_host, self.target_host)
+        CommonCommand(command_pool).nginx_config(self.source_host, self.target_host)
 
         self.assertEqual(2, len(command_pool))
 
@@ -80,13 +80,13 @@ class CommonCommandTestCase(TestCase):
         self.assertTrue('%s/%s' % (self.source_host.domain, self.target_host.domain) in command_pool[1])
         self.assertTrue('/usr/local/nginx/conf/vhost/%s.conf' % (self.target_host.domain) in command_pool[1])
 
-    def test_mysql_create_user_command(self):
+    def test_mysql_create_user(self):
         user_name = 'test user'
         user_password = 'test password'
 
         command_pool = list()
 
-        CommonCommand(command_pool).mysql_create_user_command(user_name, user_password)
+        CommonCommand(command_pool).mysql_create_user(user_name, user_password)
 
         self.assertEqual(2, len(command_pool))
 
@@ -98,13 +98,13 @@ class CommonCommandTestCase(TestCase):
         self.assertTrue('\'%s\'@\'localhost\'' % (user_name) in command_pool[1])
         self.assertTrue(user_password in command_pool[1])
 
-    def test_mysql_create_database_command(self):
+    def test_mysql_create_database(self):
         database_name = 'test database'
         user_name = 'test user'
 
         command_pool = list()
 
-        CommonCommand(command_pool).mysql_create_database_command(database_name, user_name)
+        CommonCommand(command_pool).mysql_create_database(database_name, user_name)
 
         self.assertEqual(2, len(command_pool))
 

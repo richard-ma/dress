@@ -46,7 +46,7 @@ class Command(object):
 
 # common command
 class CommonCommand(Command):
-    def copy_site_command(self, source_host: Host, target_host: Host):
+    def copy_site(self, source_host: Host, target_host: Host):
         self.scp( # copy site files
                 source_ip=source_host.ip,
                 source_user='root',
@@ -54,7 +54,9 @@ class CommonCommand(Command):
                 source_path="/home/wwwroot/%s" % (source_host.domain),
                 target_path="/home/wwwroot/%s" % (target_host.domain))
 
-    def apache_config_command(self, source_host: Host, target_host: Host):
+        return self
+
+    def apache_config(self, source_host: Host, target_host: Host):
         self.scp( # copy config file
                 source_ip=source_host.ip,
                 source_user='root',
@@ -66,7 +68,9 @@ class CommonCommand(Command):
                 target_host.domain,
                 "/usr/local/apache/conf/vhost/%s.conf" % (target_host.domain))
 
-    def nginx_config_command(self, source_host: Host, target_host: Host):
+        return self
+
+    def nginx_config(self, source_host: Host, target_host: Host):
         self.scp( # copy config file
                 source_ip=source_host.ip,
                 source_user='root',
@@ -78,7 +82,9 @@ class CommonCommand(Command):
                 target_host.domain,
                 "/usr/local/nginx/conf/vhost/%s.conf" % (target_host.domain))
 
-    def mysql_create_user_command(self, user_name, user_password):
+        return self
+
+    def mysql_create_user(self, user_name, user_password):
         self.sql( # create user
                 "CREATE USER '%s'@'localhost' IDENTIFIED BY '%s';" % (
                 user_name,
@@ -88,13 +94,22 @@ class CommonCommand(Command):
                 user_name,
                 user_password))
 
-    def mysql_create_database_command(self, database_name, user_name):
+        return self
+
+    def mysql_create_database(self, database_name, user_name):
         self.sql( # create database
                 "create database `%s`;" % (database_name)
         ).sql( # grant privilige
                 "GRANT ALL PRIVILEGES ON `%s` . * TO '%s'@'localhost';" % (
                 database_name,
                 user_name))
+
+        return self
+
+    def restart_lnmp(self):
+        self.command('lnmp restart')
+
+        return self
 
 # Tasks
 class Task(object):
@@ -115,7 +130,21 @@ class CloneSiteTask(Task):
                 password = target_host.pwd)
 
     def run(self):
+        site_database_user_name = self.target_host.domain
+        site_database_name = self.target_host.domain
         site_database_password = generator.PasswordGenerator.generat(32)
+
+        command_pool = list()
+
+        command = CommonCommand(command_pool)
+        command.copy_site(self.source_host, self.target_host)
+        command.apache_config(self.source_host, self.target_host)
+        command.nginx_config(self.source_host, self.target_host)
+        command.mysql_create_user(site_database_user_name, site_database_password)
+        command.mysql_create_database(site_database_name, site_database_user_name)
+
+        print('\r\n'.join(command_pool))
+        return
 
         commands = list()
 
