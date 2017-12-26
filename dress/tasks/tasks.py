@@ -90,7 +90,7 @@ class CommonCommand(Command):
 
     def mysql_create_database_command(self, database_name, user_name):
         self.sql( # create database
-                "create database `%s`;" % (self.target_host.domain)
+                "create database `%s`;" % (database_name)
         ).sql( # grant privilige
                 "GRANT ALL PRIVILEGES ON `%s` . * TO '%s'@'localhost';" % (
                 database_name,
