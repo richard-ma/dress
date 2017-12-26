@@ -115,5 +115,13 @@ class CommonCommandTestCase(TestCase):
         self.assertTrue('\'%s\'@\'localhost\'' % (user_name) in command_pool[1])
         self.assertTrue(database_name in command_pool[1])
 
+    def test_restart_lnmp(self):
+        command_pool = list()
+
+        CommonCommand(command_pool).restart_lnmp()
+
+        self.assertEqual(1, len(command_pool))
+        self.assertTrue('lnmp restart' in command_pool[0])
+
 if __name__ == '__main__':
     unittest.main()
