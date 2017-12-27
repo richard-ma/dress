@@ -8,7 +8,7 @@ from flask_bootstrap import Bootstrap
 from dress.config import configure_app
 from dress.data.models import db, Host, Status
 
-from concurrent.futures import ProcessPoolExecutor
+from concurrent.futures import ThreadPoolExecutor
 
 def create_app():
     app = Flask(__name__)
@@ -18,7 +18,7 @@ def create_app():
     db.init_app(app)
 
     # create task executor
-    executor = ProcessPoolExecutor(app.config['TASK_POOL_SIZE'])
+    executor = ThreadPoolExecutor(app.config['TASK_POOL_SIZE'])
 
     # Bootstrap flask-bootstrap
     Bootstrap(app)
@@ -124,12 +124,16 @@ def create_app():
             return redirect(url_for('/task/clone_site/form'))
 
         # log "source %s, target %s!" % (source_host.name(), target_host.name())
-        from dress.tasks.tasks import CloneSiteTask
-        executor.submit(CloneSiteTask(source_host, target_host).run())
+        executor.submit(CloneSiteTask(source_host, target_host).run)
 
         flash("Clone Task Is Running In Background. Please Wait...")
 
         return redirect(url_for('task_clone_site_form'))
+
+    def task_clone_site_exec(source_host: Host, target_host: Host):
+        from dress.tasks.tasks import CloneSiteTask
+        task = CloneSiteTask(source_host, target_host)
+        task.run()
 
     # test
     @app.route('/test_flash')
@@ -137,7 +141,7 @@ def create_app():
         flash('This is flash message')
         return redirect(url_for('index'))
 
-    @app.route('/test_task')
+    @app.route('/test')
     def test_task():
         executor.submit(some_long_task1)
         executor.submit(some_long_task2, 'hello', 123)

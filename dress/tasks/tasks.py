@@ -159,6 +159,14 @@ class Task(object):
     def run(self):
         pass
 
+class DelayTask(Task):
+    def run(self):
+        from time import sleep
+        app.logger.debug("Timer start")
+        for i in range(10):
+            app.logger.debug("Timer %d" % (i))
+            sleep(1)
+
 # CloneSiteTask
 class CloneSiteTask(Task):
     def __init__(self, source_host, target_host):
