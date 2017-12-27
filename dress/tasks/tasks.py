@@ -36,7 +36,7 @@ class Command(object):
         return self._command_pool_append(command)
 
     def sql(self, sql):
-        command = "mysql -u root -e '%s" % (sql)
+        command = "mysql -u root -e '%s'" % (sql)
 
         return self._command_pool_append(command)
 
@@ -90,7 +90,7 @@ class CommonCommand(Command):
                 user_name,
                 user_password)
         ).sql( # grant privilige
-                "GRANT USAGE ON * . * TO '%s'@'localhost' IDENTIFIED BY '%s' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0 ;" % (
+                "GRANT USAGE ON * . * TO '%s'@'localhost' IDENTIFIED BY '%s' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;" % (
                 user_name,
                 user_password))
 
@@ -98,11 +98,27 @@ class CommonCommand(Command):
 
     def mysql_create_database(self, database_name, user_name):
         self.sql( # create database
-                "create database `%s`;" % (database_name)
+                "CREATE DATABASE `%s`;" % (database_name)
         ).sql( # grant privilige
                 "GRANT ALL PRIVILEGES ON `%s` . * TO '%s'@'localhost';" % (
                 database_name,
                 user_name))
+
+        return self
+
+    def mysql_import_data(self, source_host: Host, target_host: Host):
+        filename = "/home/wwwroot/%s/dacscartb.sql" % (
+                target_host.domain
+        )
+        database_name = target_host.domain
+
+        self.sed(source_host.domain,
+                target_host.domain,
+                filename
+        ).command("mysql -u root %s < %s" % (
+            database_name,
+            filename)
+        )
 
         return self
 
@@ -142,6 +158,9 @@ class CloneSiteTask(Task):
         command.nginx_config(self.source_host, self.target_host)
         command.mysql_create_user(site_database_user_name, site_database_password)
         command.mysql_create_database(site_database_name, site_database_user_name)
+        command.mysql_import_data(self.source_host, self.target_host)
+
+        command.restart_lnmp()
 
         print('\r\n'.join(command_pool))
         return
@@ -149,26 +168,26 @@ class CloneSiteTask(Task):
         commands = list()
 
         # copy files
-        command = 'sshpass -p \'%s\' scp -o StrictHostKeyChecking=no -p -r root@%s:/home/wwwroot/%s /home/wwwroot/%s' % (
-                self.source_host.pwd,
-                self.source_host.ip,
-                self.source_host.domain,
-                self.target_host.domain)
-        commands.append(command)
+        #command = 'sshpass -p \'%s\' scp -o StrictHostKeyChecking=no -p -r root@%s:/home/wwwroot/%s /home/wwwroot/%s' % (
+                #self.source_host.pwd,
+                #self.source_host.ip,
+                #self.source_host.domain,
+                #self.target_host.domain)
+        #commands.append(command)
 
-        command = 'sshpass -p \'%s\' scp -o StrictHostKeyChecking=no -p root@%s:/usr/local/apache/conf/vhost/%s.conf /usr/local/apache/conf/vhost/%s.conf' % (
-            self.source_host.pwd,
-            self.source_host.ip,
-            self.source_host.domain,
-            self.target_host.domain)
-        commands.append(command)
+        #command = 'sshpass -p \'%s\' scp -o StrictHostKeyChecking=no -p root@%s:/usr/local/apache/conf/vhost/%s.conf /usr/local/apache/conf/vhost/%s.conf' % (
+            #self.source_host.pwd,
+            #self.source_host.ip,
+            #self.source_host.domain,
+            #self.target_host.domain)
+        #commands.append(command)
 
-        command = 'sshpass -p \'%s\' scp -o StrictHostKeyChecking=no -p root@%s:/usr/local/nginx/conf/vhost/%s.conf /usr/local/nginx/conf/vhost/%s.conf' % (
-            self.source_host.pwd,
-            self.source_host.ip,
-            self.source_host.domain,
-            self.target_host.domain)
-        commands.append(command)
+        #command = 'sshpass -p \'%s\' scp -o StrictHostKeyChecking=no -p root@%s:/usr/local/nginx/conf/vhost/%s.conf /usr/local/nginx/conf/vhost/%s.conf' % (
+            #self.source_host.pwd,
+            #self.source_host.ip,
+            #self.source_host.domain,
+            #self.target_host.domain)
+        #commands.append(command)
 
         # restore site
         command = "sed -i \"s/%s/%s/g\" /home/wwwroot/%s/dacscartb.sql" % (
@@ -187,7 +206,7 @@ class CloneSiteTask(Task):
                 site_database_password)
         commands.append(command)
 
-        command = "mysql -u root -e 'create database `%s`;'" % (self.target_host.domain)
+        command = "mysql -u root -e 'CREATE DATABASE `%s`;'" % (self.target_host.domain)
         commands.append(command)
 
         command = "mysql -u root -e 'GRANT ALL PRIVILEGES ON `%s` . * TO '%s'@'localhost';'" % (

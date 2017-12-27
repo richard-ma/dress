@@ -17,75 +17,66 @@ class CommandTestCase(TestCase):
     def setUp(self):
         seed_db(self.app)
 
+        self.source_host = Host()
+        self.source_host.ip = '1.1.1.1'
+        self.source_host.port = 10086
+        self.source_host.domain = 'source_domain'
+        self.source_host.pwd = 'source_password'
+        self.source_host.db_pwd = 'source_database_password'
+
+        self.target_host = Host()
+        self.target_host.ip = '2.2.2.2'
+        self.target_host.port = 10010
+        self.target_host.domain = 'target_domain'
+        self.target_host.pwd = 'target_password'
+        self.target_host.db_pwd = 'target_database_password'
+
     def tearDown(self):
         pass
 
     def test_scp_command_with_all_parameters(self):
-        source_ip = '233.233.233.233'
-        source_path = 'source_path'
-        target_path = 'target_path'
-        source_user = 'source_user'
-        source_password = 'source_password'
-
         command_pool = list()
 
         Command(command_pool).scp(
-                source_ip,
-                source_path,
-                target_path,
-                source_user,
-                source_password)
+                source_ip=self.source_host.ip,
+                source_user="source_user",
+                source_password=self.source_host.pwd,
+                source_path="source_path",
+                target_path="target_path")
 
         self.assertEqual(1, len(command_pool))
-        self.assertTrue('scp' in command_pool[0])
-        self.assertTrue('%s@%s' % (source_user, source_ip) in command_pool[0])
-        self.assertTrue(source_password in command_pool[0])
-        self.assertTrue(source_path in command_pool[0])
-        self.assertTrue(target_path in command_pool[0])
+
+        self.assertTrue("sshpass -p \'source_password\' scp -o StrictHostKeyChecking=no -p -r source_user@1.1.1.1:source_path target_path" in command_pool[0])
 
     def test_scp_command_with_default_parameters(self):
-        source_ip = '233.233.233.233'
-        source_path = 'source_path'
-        target_path = 'target_path'
-
         command_pool = list()
 
         Command(command_pool).scp(
-                source_ip,
-                source_path,
-                target_path)
+                source_ip=self.source_host.ip,
+                source_path="source_path",
+                target_path="target_path")
 
         self.assertEqual(1, len(command_pool))
-        self.assertTrue('scp' in command_pool[0])
-        self.assertTrue('%s@%s' % ('root', source_ip) in command_pool[0])
-        self.assertTrue(source_path in command_pool[0])
-        self.assertTrue(target_path in command_pool[0])
+
+        self.assertTrue("sshpass -p \'\' scp -o StrictHostKeyChecking=no -p -r root@1.1.1.1:source_path target_path" in command_pool[0])
 
     def test_sed_command(self):
-        source = 'source'
-        target = 'target'
-        filename = 'filename'
-
         command_pool = list()
 
         Command(command_pool).sed(
-                source,
-                target,
-                filename)
+                source="source",
+                target="target",
+                filename="filename")
         self.assertEqual(1, len(command_pool))
-        self.assertTrue('sed -i' in command_pool[0])
-        self.assertTrue('%s/%s' % (source, target) in command_pool[0])
-        self.assertTrue(filename in command_pool[0])
+
+        self.assertTrue("sed -i \"s/source/target/g\" filename" in command_pool[0])
 
     def test_sql_command(self):
-        sql = 'sql satement'
-
         command_pool = list()
 
-        Command(command_pool).sql(sql)
+        Command(command_pool).sql(sql="sql_statement")
         self.assertEqual(1, len(command_pool))
-        self.assertTrue('mysql -u root -e' in command_pool[0])
-        self.assertTrue(sql in command_pool[0])
+        self.assertTrue('mysql -u root -e \'sql_statement\'' in command_pool[0])
 
     def test_command_command(self):
         command = 'command'
