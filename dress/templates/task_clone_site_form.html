@@ -7,6 +7,16 @@
 
 <form class="form-horizontal" method="post" action="/task/clone_site">
     <div class="form-group">
+        <label for="site_type" class="col-sm-2 control-label">Site Type</label>
+        <div class="col-sm-4">
+            <select class="form-control" name="site_type", value="cscart">
+                <option value="cscart">Cscart</option>
+                <option value="magento">Magento</option>
+                <option value="opencart">Opencart</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
         <label for="source_host_id" class="col-sm-2 control-label">Source Host</label>
         <div class="col-sm-4">
             <select class="form-control" name="source_host_id", value="{{ hosts[0].id }}">

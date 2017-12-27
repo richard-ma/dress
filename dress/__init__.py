@@ -110,6 +110,7 @@ def create_app():
     # clone site task
     @app.route('/task/clone_site', methods=['POST'])
     def task_clone_site():
+        site_type = request.form['site_type'] or 'cscart' # defautl value: cscart
         source_host_id = request.form['source_host_id']
         target_host_id = request.form['target_host_id']
 
@@ -124,15 +125,15 @@ def create_app():
             return redirect(url_for('/task/clone_site/form'))
 
         # log "source %s, target %s!" % (source_host.name(), target_host.name())
-        executor.submit(task_clone_site_exec, source_host, target_host)
+        executor.submit(task_clone_site_exec, source_host, target_host, site_type)
 
         flash("Clone Task Is Running In Background. Please Wait...")
 
         return redirect(url_for('task_clone_site_form'))
 
-    def task_clone_site_exec(source_host: Host, target_host: Host):
+    def task_clone_site_exec(source_host: Host, target_host: Host, site_type):
         from dress.tasks.tasks import CloneSiteTask
-        task = CloneSiteTask(source_host, target_host)
+        task = CloneSiteTask(source_host, target_host, site_type)
         task.run()
 
     # test
