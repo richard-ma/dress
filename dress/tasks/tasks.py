@@ -13,7 +13,7 @@ class Command(object):
 
     def _command_pool_append(self, command):
         self.command_pool.append(command)
-        app.logger.debug("[%s][APPEND] %s" % (self.__class__, command))
+        app.logger.debug("[APPEND] %s" % (command))
 
         return self
 
