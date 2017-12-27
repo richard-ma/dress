@@ -198,7 +198,7 @@ class CloneSiteTask(Task):
         command.restart_lnmp()
 
         self.target_ssh.connect()
-        self.target_ssh.exec(commands)
+        self.target_ssh.exec(command_pool)
         self.target_ssh.close()
 
         # update host status
