@@ -124,6 +124,7 @@ def create_app():
             return redirect(url_for('/task/clone_site/form'))
 
         # log "source %s, target %s!" % (source_host.name(), target_host.name())
+        from dress.tasks.tasks import CloneSiteTask
         executor.submit(CloneSiteTask(source_host, target_host).run)
 
         flash("Clone Task Is Running In Background. Please Wait...")
