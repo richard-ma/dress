@@ -201,4 +201,5 @@ class CloneSiteTask(Task):
         self.target_ssh.exec(commands)
         self.target_ssh.close()
 
+        # update host status
         self.target_host.status = Status.query.filter_by(title='Business').first()

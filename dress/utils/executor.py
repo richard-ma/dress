@@ -42,7 +42,7 @@ class SSHExecutor(Executor):
                 app.logger.debug("[EXECUTING] " % (command))
                 self.exec_command(command)
         except paramiko.SSHException as e:
-            app.logger.error('ERROR ' + command)
+            app.logger.error("[ERROR] " + command)
             app.logger.error(e.message)
         finally:
             self.close()
