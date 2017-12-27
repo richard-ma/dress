@@ -8,7 +8,7 @@ from flask_bootstrap import Bootstrap
 from dress.config import configure_app
 from dress.data.models import db, Host, Status
 
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ProcessPoolExecutor
 
 def create_app():
     app = Flask(__name__)
@@ -18,7 +18,7 @@ def create_app():
     db.init_app(app)
 
     # create task executor
-    executor = ThreadPoolExecutor(app.config['TASK_POOL_SIZE'])
+    executor = ProcessPoolExecutor(app.config['TASK_POOL_SIZE'])
 
     # Bootstrap flask-bootstrap
     Bootstrap(app)
