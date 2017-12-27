@@ -39,9 +39,8 @@ class SSHExecutor(Executor):
         try:
             self.connect()
             for command in commands:
-                app.logger.debug(command + ' started!')
+                app.logger.debug("[EXECUTING] " % (command))
                 self.exec_command(command)
-                app.logger.debug(command + ' is done!')
         except paramiko.SSHException as e:
             app.logger.error('ERROR ' + command)
             app.logger.error(e.message)

@@ -127,6 +127,33 @@ class CommonCommand(Command):
 
         return self
 
+class CscartCommand(Command):
+    def clear_cache(self, target_host: Host):
+        self.command("rm -rf /home/wwwroot/%s/var/cache/*" % (target_host.domain))
+
+        return self
+
+    def cscart_config(self, source_host: Host, target_host: Host, database_password):
+        self.sed(
+                "\$config\['db_name'\] = '.*';",
+                "\$config\['db_name'\] = '%s';" % (target_host.domain),
+                "/home/wwwroot/%s/config.local.php" % (target_host.domain)
+        ).sed(
+                "\$config\['db_user'\] = '.*';",
+                "\$config\['db_user'\] = '%s';" % (target_host.domain),
+                "/home/wwwroot/%s/config.local.php" % (target_host.domain)
+        ).sed(
+                "\$config\['db_password'\] = '.*';",
+                "\$config\['db_password'\] = '%s';" % (database_password),
+                "/home/wwwroot/%s/config.local.php" % (target_host.domain)
+        ).sed(
+                source_host.domain,
+                target_host.domain,
+                "/home/wwwroot/%s/config.local.php" % (target_host.domain)
+        )
+
+        return self
+
 # Tasks
 class Task(object):
     def run(self):
@@ -153,6 +180,8 @@ class CloneSiteTask(Task):
         command_pool = list()
 
         command = CommonCommand(command_pool)
+
+        # prepare environment
         command.copy_site(self.source_host, self.target_host)
         command.apache_config(self.source_host, self.target_host)
         command.nginx_config(self.source_host, self.target_host)
@@ -160,104 +189,13 @@ class CloneSiteTask(Task):
         command.mysql_create_database(site_database_name, site_database_user_name)
         command.mysql_import_data(self.source_host, self.target_host)
 
+        # update cscart config
+        cscart_command = CscartCommand(command_pool)
+        cscart_command.cscart_config(self.source_host, self.target_host, site_database_password)
+        cscart_command.clear_cache(self.target_host)
+
+        # restart services
         command.restart_lnmp()
-
-        print('\r\n'.join(command_pool))
-        return
-
-        commands = list()
-
-        # copy files
-        #command = 'sshpass -p \'%s\' scp -o StrictHostKeyChecking=no -p -r root@%s:/home/wwwroot/%s /home/wwwroot/%s' % (
-                #self.source_host.pwd,
-                #self.source_host.ip,
-                #self.source_host.domain,
-                #self.target_host.domain)
-        #commands.append(command)
-
-        #command = 'sshpass -p \'%s\' scp -o StrictHostKeyChecking=no -p root@%s:/usr/local/apache/conf/vhost/%s.conf /usr/local/apache/conf/vhost/%s.conf' % (
-            #self.source_host.pwd,
-            #self.source_host.ip,
-            #self.source_host.domain,
-            #self.target_host.domain)
-        #commands.append(command)
-
-        #command = 'sshpass -p \'%s\' scp -o StrictHostKeyChecking=no -p root@%s:/usr/local/nginx/conf/vhost/%s.conf /usr/local/nginx/conf/vhost/%s.conf' % (
-            #self.source_host.pwd,
-            #self.source_host.ip,
-            #self.source_host.domain,
-            #self.target_host.domain)
-        #commands.append(command)
-
-        # restore site
-        command = "sed -i \"s/%s/%s/g\" /home/wwwroot/%s/dacscartb.sql" % (
-            self.source_host.domain,
-            self.target_host.domain,
-            self.target_host.domain)
-        commands.append(command)
-
-        command = "mysql -u root -e 'CREATE USER '%s'@'localhost' IDENTIFIED BY '%s';'" % (
-                self.target_host.domain,
-                site_database_password)
-        commands.append(command)
-
-        command = "mysql -u root -e 'GRANT USAGE ON * . * TO '%s'@'localhost' IDENTIFIED BY '%s' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0 ;'" % (
-                self.target_host.domain,
-                site_database_password)
-        commands.append(command)
-
-        command = "mysql -u root -e 'CREATE DATABASE `%s`;'" % (self.target_host.domain)
-        commands.append(command)
-
-        command = "mysql -u root -e 'GRANT ALL PRIVILEGES ON `%s` . * TO '%s'@'localhost';'" % (
-                self.target_host.domain,
-                self.target_host.domain)
-        commands.append(command)
-
-        command = "mysql -u root %s < /home/wwwroot/%s/dacscartb.sql" % (
-            self.target_host.domain,
-            self.target_host.domain)
-        commands.append(command)
-
-        # release site
-        command = "sed -i \"s/\$config\['db_name'] = '.*';/\$config\['db_name'\] = '%s';/g\" /home/wwwroot/%s/config.local.php" % (
-                    self.source_host.domain,
-                    self.target_host.domain)
-        commands.append(command)
-
-        command = "sed -i \"s/\$config\['db_user'] = '.*';/\$config\['db_user'\] = '%s';/g\" /home/wwwroot/%s/config.local.php" % (
-                    'root',
-                    self.target_host.domain)
-        commands.append(command)
-
-        command = "sed -i \"s/\$config\['db_password'] = '.*';/\$config\['db_password'\] = '%s';/g\" /home/wwwroot/%s/config.local.php" % (
-                    site_database_password,
-                    self.target_host.domain)
-        commands.append(command)
-
-        command = "sed -i 's/%s/%s/g' /home/wwwroot/%s/config.local.php" % (
-                    self.source_host.domain,
-                    self.target_host.domain,
-                    self.target_host.domain)
-        commands.append(command)
-
-        command = "sed -i 's/%s/%s/g' /usr/local/apache/conf/vhost/%s.conf" % (
-                    self.source_host.domain,
-                    self.target_host.domain,
-                    self.target_host.domain)
-        commands.append(command)
-
-        command = "sed -i 's/%s/%s/g' /usr/local/nginx/conf/vhost/%s.conf" % (
-                    self.source_host.domain,
-                    self.target_host.domain,
-                    self.target_host.domain)
-        commands.append(command)
-
-        command = "rm -rf /home/wwwroot/%s/var/cache/*" % (self.target_host.domain,)
-        commands.append(command)
-
-        command = "lnmp restart"
-        commands.append(command)
 
         self.target_ssh.connect()
         self.target_ssh.exec(commands)
