@@ -110,6 +110,10 @@ def create_app():
     # clone site task
     @app.route('/task/clone_site', methods=['POST'])
     def task_clone_site():
+        app.logger.debug('site_type: %s' % (request.form['site_type']))
+        app.logger.debug('source_host_id: %s' % (request.form['source_host_id']))
+        app.logger.debug('target_host_id: %s' % (request.form['target_host_id']))
+
         site_type = request.form['site_type'] or 'cscart' # defautl value: cscart
         source_host_id = request.form['source_host_id']
         target_host_id = request.form['target_host_id']
