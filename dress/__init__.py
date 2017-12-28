@@ -118,17 +118,20 @@ def create_app():
         source_host_id = request.form['source_host_id']
         target_host_id = request.form['target_host_id']
 
+        app.logger.debug('Query host info')
         source_host = Host.query.filter_by(id=source_host_id).first()
         target_host = Host.query.filter_by(id=target_host_id).first()
 
+        app.logger.debug('Checking source host id')
         if not isinstance(source_host, Host):
             flash("Source Host Not Found!")
             return redirect(url_for('/task/clone_site/form'))
+        app.logger.debug('Checking target host id')
         if not isinstance(target_host, Host):
             flash("Target Host Not Found!")
             return redirect(url_for('/task/clone_site/form'))
 
-        # log "source %s, target %s!" % (source_host.name(), target_host.name())
+        app.logger.debug('Lanuching task.')
         executor.submit(task_clone_site_exec, source_host, target_host, site_type)
 
         flash("Clone Task Is Running In Background. Please Wait...")
