@@ -36,7 +36,7 @@ class Command(object):
         return self._command_pool_append(command)
 
     def sql(self, sql):
-        command = "mysql -u root -e \"%s\"" % (sql.replace('\'', '\\\'')) # fix bug1 sql语句单引号转义
+        command = "mysql -u root -e \"%s\"" % (sql) # fix #1: 将sql语句换为双引号
 
         return self._command_pool_append(command)
 
