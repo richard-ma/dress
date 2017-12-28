@@ -36,7 +36,7 @@ class Command(object):
         return self._command_pool_append(command)
 
     def sql(self, sql):
-        command = "mysql -u root -e \"%s\"" % (sql.replace('`', '\\`') # fix #1: 将sql语句换为双引号，转义`字符
+        command = "mysql -u root -e \"%s\"" % (sql.replace('`', '\\`')) # fix #1: 将sql语句换为双引号，转义`字符
 
         return self._command_pool_append(command)
 
@@ -218,9 +218,9 @@ class CloneSiteTask(Task):
         command.restart_lnmp()
 
         app.logger.debug("Exectuing commands.")
-        self.target_ssh.connect()
-        self.target_ssh.exec(command_pool)
-        self.target_ssh.close()
+        #self.target_ssh.connect()
+        #self.target_ssh.exec(command_pool)
+        #self.target_ssh.close()
 
         # update host status
         app.logger.debug("Updating host status.")
