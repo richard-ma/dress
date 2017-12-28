@@ -18,7 +18,7 @@ class Command(object):
         return self
 
     def scp(self, source_ip, source_path, target_path, source_user='root', source_password=''):
-        command = 'sshpass -p \'%s\' scp -o StrictHostKeyChecking=no -p -r %s@%s:%s %s' % (
+        command = "sshpass -p \'%s\' scp -o StrictHostKeyChecking=no -p -r %s@%s:%s %s" % (
                 source_password,
                 source_user,
                 source_ip,
@@ -36,7 +36,7 @@ class Command(object):
         return self._command_pool_append(command)
 
     def sql(self, sql):
-        command = "mysql -u root -e '%s'" % (sql)
+        command = "mysql -u root -e \"%s\"" % (sql.replace('\'', '\\\'')) # fix bug1 sql语句单引号转义
 
         return self._command_pool_append(command)
 
