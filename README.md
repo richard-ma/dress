@@ -17,10 +17,10 @@
 * Browser: http://host-ip:5000
 
 # TODO
-* [x] [T] profected host controller test case
-* [x] [M] add host.memo
-* [x] [M] remove host.db_name
-* [x] [V] use Database Root Password instead of Database Password
-* [x] [V] use SSH Port instead of Port
-* [x] [V] use host.domain@host.ip as host identifier
-* [x] [M] remove host.name
+* [x] [Test] profected host controller test case
+* [x] [Model] add host.memo
+* [x] [Model] remove host.db_name
+* [x] [View] use Database Root Password instead of Database Password
+* [x] [View] use SSH Port instead of Port
+* [x] [View] use host.domain@host.ip as host identifier
+* [x] [Model] remove host.name
