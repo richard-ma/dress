@@ -182,6 +182,8 @@ class CloneSiteTask(Task):
                 password = target_host.pwd)
 
     def run(self):
+        app.logger.debug("%s is running." % (self.__class__.__name__))
+
         site_database_user_name = self.target_host.domain
         site_database_name = self.target_host.domain
         site_database_password = generator.PasswordGenerator.generat(32)
@@ -190,6 +192,7 @@ class CloneSiteTask(Task):
 
         command = CommonCommand(command_pool)
 
+        app.logger.debug("Appending commands.")
         # prepare environment
         command.copy_site(self.source_host, self.target_host)
         command.apache_config(self.source_host, self.target_host)
@@ -214,9 +217,11 @@ class CloneSiteTask(Task):
         # restart services
         command.restart_lnmp()
 
+        app.logger.debug("Exectuing commands.")
         self.target_ssh.connect()
         self.target_ssh.exec(command_pool)
         self.target_ssh.close()
 
         # update host status
+        app.logger.debug("Updating host status.")
         self.target_host.status = Status.query.filter_by(title='Business').first()
