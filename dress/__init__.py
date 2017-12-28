@@ -114,7 +114,7 @@ def create_app():
         app.logger.debug('source_host_id: %s' % (request.form['source_host_id']))
         app.logger.debug('target_host_id: %s' % (request.form['target_host_id']))
 
-        site_type = request.form['site_type'] or 'cscart' # defautl value: cscart
+        site_type = request.form['site_type']
         source_host_id = request.form['source_host_id']
         target_host_id = request.form['target_host_id']
 
