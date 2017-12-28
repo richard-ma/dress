@@ -169,7 +169,8 @@ class DelayTask(Task):
 
 # CloneSiteTask
 class CloneSiteTask(Task):
-    def __init__(self, source_host, target_host, site_type='cscart'):
+    def __init__(self, source_host, target_host, site_type):
+        self.site_type = site_type
         self.source_host = source_host
         self.target_host = target_host
 
@@ -197,17 +198,18 @@ class CloneSiteTask(Task):
         command.mysql_create_database(site_database_name, site_database_user_name)
         command.mysql_import_data(self.source_host, self.target_host)
 
-        if site_type == 'cscart':
+        if self.site_type == 'cscart':
             # update cscart config
+            app.logger.debug('cscart mode')
             cscart_command = CscartCommand(command_pool)
             cscart_command.cscart_config(self.source_host, self.target_host, site_database_password)
             cscart_command.clear_cache(self.target_host)
-        elif site_type == 'magento':
-            pass
-        elif site_type == 'opencart':
-            pass
+        elif self.site_type == 'magento':
+            app.logger.debug('magento mode')
+        elif self.site_type == 'opencart':
+            app.logger.debug('opencart mode')
         else:
-            pass
+            app.logger.debug('error mode')
 
         # restart services
         command.restart_lnmp()
