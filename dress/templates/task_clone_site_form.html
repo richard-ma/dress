@@ -7,21 +7,21 @@
 
 <form class="form-horizontal" method="post" action="/task/clone_site">
     <div class="form-group">
-        <label for="site_type" class="col-sm-2 control-label">Site Type</label>
+        <label for="site_type" class="col-sm-2 control-label">Web Type</label>
         <div class="col-sm-4">
             <select class="form-control" name="site_type", value="cscart">
                 <option value="cscart">Cscart</option>
-                <option value="magento">Magento</option>
-                <option value="opencart">Opencart</option>
+                <!--<option value="magento">Magento</option>-->
+                <!--<option value="opencart">Opencart</option>-->
             </select>
         </div>
     </div>
     <div class="form-group">
-        <label for="source_host_id" class="col-sm-2 control-label">Source Host</label>
+        <label for="source_host_id" class="col-sm-2 control-label">Web Source</label>
         <div class="col-sm-4">
             <select class="form-control" name="source_host_id", value="{{ source_hosts[0].id }}">
                 {% for host in source_hosts %}
-                <option value="{{ host.id }}">{{ host.domain }}@{{ host.ip }}</option>
+                <option value="{{ host.id }}">{{ host.domain }}</option>
                 {% endfor %}
             </select>
         </div>
