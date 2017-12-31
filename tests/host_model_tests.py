@@ -29,14 +29,14 @@ class HostTestCase(TestCase):
 
         self.assertEqual(query_host.port, 22)
         self.assertIsInstance(query_host.status, Status)
-        self.assertEqual(query_host.status.title, 'Prepare')
+        self.assertEqual(query_host.status.title, Status.PREPARE)
 
     def test_update_host(self):
         h = Host()
         h.create()
         update_host = Host.query.filter_by(id=h.id).first()
 
-        new_status = Status.query.filter_by(title='Business').first()
+        new_status = Status.query.filter_by(title=Status.BUSINESS).first()
         update_host.update(
                 ip=update_host.ip,
                 port=update_host.port,
@@ -54,7 +54,7 @@ class HostTestCase(TestCase):
 
         # host created
         query_host = Host.query.filter_by(id=h.id).first()
-        self.assertEqual(query_host.status.title, 'Prepare')
+        self.assertEqual(query_host.status.title, Status.PREPARE)
 
         # delete host
         h.delete()
