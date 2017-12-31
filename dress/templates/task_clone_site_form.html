@@ -19,8 +19,8 @@
     <div class="form-group">
         <label for="source_host_id" class="col-sm-2 control-label">Source Host</label>
         <div class="col-sm-4">
-            <select class="form-control" name="source_host_id", value="{{ hosts[0].id }}">
-                {% for host in hosts %}
+            <select class="form-control" name="source_host_id", value="{{ source_hosts[0].id }}">
+                {% for host in source_hosts %}
                 <option value="{{ host.id }}">{{ host.domain }}@{{ host.ip }}</option>
                 {% endfor %}
             </select>
@@ -29,8 +29,8 @@
     <div class="form-group">
         <label for="target_host_id" class="col-sm-2 control-label">Target Host</label>
         <div class="col-sm-4">
-            <select class="form-control" name="target_host_id", value="{{ hosts[0].id }}">
-                {% for host in hosts %}
+            <select class="form-control" name="target_host_id", value="{{ target_hosts[0].id }}">
+                {% for host in target_hosts %}
                 <option value="{{ host.id }}">{{ host.domain }}@{{ host.ip }}</option>
                 {% endfor %}
             </select>

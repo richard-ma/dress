@@ -103,9 +103,13 @@ def create_app():
     # clone site task
     @app.route('/task/clone_site/form')
     def task_clone_site_form():
-        hosts = Host.query.all()
+        source_hosts = Host.query.filter_by(status=Status.query.filter_by(title=Status.SOURCE).first())
+        target_hosts = Host.query.filter(Host.status != Status.query.filter_by(title=Status.SOURCE).first())
 
-        return render_template('task_clone_site_form.html', hosts=hosts)
+        return render_template(
+                'task_clone_site_form.html',
+                source_hosts=source_hosts,
+                target_hosts=target_hosts)
 
     # clone site task
     @app.route('/task/clone_site', methods=['POST'])
