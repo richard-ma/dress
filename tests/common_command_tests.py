@@ -2,7 +2,7 @@ import unittest
 from flask_testing import TestCase
 import dress
 from dress.data.models import Host, Status
-from seed import seed_db
+from manager import seed
 
 from dress.tasks.tasks import CommonCommand
 
@@ -15,7 +15,7 @@ class CommonCommandTestCase(TestCase):
         return app
 
     def setUp(self):
-        seed_db(self.app)
+        seed()
 
         self.source_host = Host()
         self.source_host.ip = '1.1.1.1'

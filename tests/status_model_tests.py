@@ -4,7 +4,7 @@ import unittest
 from flask_testing import TestCase
 import dress
 from dress.data.models import Status
-from seed import seed_db
+from manager import seed
 #from tests.utils import get_endpoint
 
 class StatusTestCase(TestCase):
@@ -16,7 +16,7 @@ class StatusTestCase(TestCase):
         return app
 
     def setUp(self):
-        seed_db(self.app)
+        seed()
 
     def tearDown(self):
         pass

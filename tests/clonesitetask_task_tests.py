@@ -3,7 +3,7 @@ from flask_testing import TestCase
 import dress
 from dress.data.models import Host, Status
 from dress.tasks.tasks import CloneSiteTask
-from seed import seed_db
+from manager import seed
 
 class CloneSiteTaskTestCase(TestCase):
 
@@ -14,7 +14,7 @@ class CloneSiteTaskTestCase(TestCase):
         return app
 
     def setUp(self):
-        seed_db(self.app)
+        seed()
 
         self.source_host = Host()
         self.source_host.ip = '233.233.233.233'
