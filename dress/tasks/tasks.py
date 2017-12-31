@@ -46,6 +46,15 @@ class Command(object):
 
 # common command
 class CommonCommand(Command):
+    def init(self):
+        self.command(
+                "yum install -y epel-release"
+        ).command(
+                "yum install -y sshpass"
+        )
+
+        return self
+
     def copy_site(self, source_host: Host, target_host: Host):
         self.cp( # copy site files
                 source_ip=source_host.ip,
@@ -194,6 +203,7 @@ class CloneSiteTask(Task):
 
         app.logger.debug("Appending commands.")
         # prepare environment
+        command.init()
         command.copy_site(self.source_host, self.target_host)
         command.apache_config(self.source_host, self.target_host)
         command.nginx_config(self.source_host, self.target_host)
@@ -224,4 +234,4 @@ class CloneSiteTask(Task):
 
         # update host status
         app.logger.debug("Updating host status.")
-        self.target_host.status = Status.query.filter_by(title='Business').first()
+        self.target_host.updateStatus(Status.BUSINESS)

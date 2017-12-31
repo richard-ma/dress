@@ -48,6 +48,15 @@ class HostTestCase(TestCase):
         self.assertEqual('test.domain', update_host.domain)
         self.assertEqual(new_status.title, update_host.status.title)
 
+    def test_update_status(self):
+        h = Host()
+        h.create()
+        update_host = Host.query.filter_by(id=h.id).first()
+
+        new_status = Status.BUSINESS
+        update_host.updateStatus(status=new_status)
+        self.assertEqual(new_status, update_host.status.title)
+
     def test_delete_host(self):
         h = Host('testhost')
         h.create()

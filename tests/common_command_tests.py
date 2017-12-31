@@ -34,6 +34,14 @@ class CommonCommandTestCase(TestCase):
     def tearDown(self):
         pass
 
+    def test_init(self):
+        command_pool = list()
+
+        CommonCommand(command_pool).init()
+
+        self.assertTrue("yum install -y epel-release" in command_pool[0])
+        self.assertTrue("yum install -y sshpass" in command_pool[1])
+
     def test_copy_site(self):
         command_pool = list()
 

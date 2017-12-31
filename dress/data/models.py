@@ -52,6 +52,15 @@ class Host(db.Model):
 
         db.session.commit()
 
+        return self
+
+    def updateStatus(self, status):
+        self.status = Status.query.filter_by(title=status).first()
+
+        db.session.commit()
+
+        return self
+
     def name(self):
         return "%s@%s" % (self.domain, self.ip)
 
