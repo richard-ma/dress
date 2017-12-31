@@ -46,7 +46,7 @@ class CommandTestCase(TestCase):
 
         self.assertEqual(1, len(command_pool))
 
-        self.assertTrue("sshpass -p \'source_password\' rsync -az source_user@1.1.1.1:source_path target_path" in command_pool[0])
+        self.assertTrue("sshpass -p \'source_password\' rsync -aze \"ssh -o StrictHostKeyChecking=no\" source_user@1.1.1.1:source_path target_path" in command_pool[0])
 
     def test_cp_command_with_default_parameters(self):
         command_pool = list()
@@ -58,7 +58,7 @@ class CommandTestCase(TestCase):
 
         self.assertEqual(1, len(command_pool))
 
-        self.assertTrue("sshpass -p \'\' rsync -az root@1.1.1.1:source_path target_path" in command_pool[0])
+        self.assertTrue("sshpass -p \'\' rsync -aze \"ssh -o StrictHostKeyChecking=no\" root@1.1.1.1:source_path target_path" in command_pool[0])
 
     def test_sed_command(self):
         command_pool = list()

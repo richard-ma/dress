@@ -18,7 +18,7 @@ class Command(object):
         return self
 
     def cp(self, source_ip, source_path, target_path, source_user='root', source_password=''):
-        command = "sshpass -p \'%s\' rsync -az %s@%s:%s %s" % (
+        command = "sshpass -p \'%s\' rsync -aze \"ssh -o StrictHostKeyChecking=no\" %s@%s:%s %s" % (
                 source_password,
                 source_user,
                 source_ip,
