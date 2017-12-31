@@ -66,6 +66,11 @@ class Status(db.Model):
 
     hosts = relationship("Host", back_populates='status')
 
+    PREPARE = 'prepare'
+    BUSINESS = 'business'
+    PROBLEM = 'problem'
+    SOURCE = 'source'
+
     def __init__(self, title):
         self.title = title
 
