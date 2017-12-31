@@ -77,12 +77,12 @@ class CommonCommandTestCase(TestCase):
 
         command_pool = list()
 
-        CommonCommand(command_pool).mysql_create_user(user_name, user_password)
+        CommonCommand(command_pool).mysql_create_user(self.target_host.db_pwd, user_name, user_password)
 
         self.assertEqual(2, len(command_pool))
 
-        self.assertTrue("mysql -u root -e \"CREATE USER 'test_user'@'localhost' IDENTIFIED BY 'test_password';\"" in command_pool[0])
-        self.assertTrue("mysql -u root -e \"GRANT USAGE ON * . * TO 'test_user'@'localhost' IDENTIFIED BY 'test_password' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;\"" in command_pool[1])
+        self.assertTrue("mysql -u root -p\'target_database_password\' -e \"CREATE USER 'test_user'@'localhost' IDENTIFIED BY 'test_password';\"" in command_pool[0])
+        self.assertTrue("mysql -u root -p\'target_database_password\' -e \"GRANT USAGE ON * . * TO 'test_user'@'localhost' IDENTIFIED BY 'test_password' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;\"" in command_pool[1])
 
     def test_mysql_create_database(self):
         database_name = 'test_database'
@@ -90,12 +90,12 @@ class CommonCommandTestCase(TestCase):
 
         command_pool = list()
 
-        CommonCommand(command_pool).mysql_create_database(database_name, user_name)
+        CommonCommand(command_pool).mysql_create_database(self.target_host.db_pwd, database_name, user_name)
 
         self.assertEqual(2, len(command_pool))
 
-        self.assertTrue("mysql -u root -e \"CREATE DATABASE \`test_database\`;\"" in command_pool[0])
-        self.assertTrue("mysql -u root -e \"GRANT ALL PRIVILEGES ON \`test_database\` . * TO 'test_user'@'localhost';\"" in command_pool[1])
+        self.assertTrue("mysql -u root -p\'target_database_password\' -e \"CREATE DATABASE \`test_database\`;\"" in command_pool[0])
+        self.assertTrue("mysql -u root -p\'target_database_password\' -e \"GRANT ALL PRIVILEGES ON \`test_database\` . * TO 'test_user'@'localhost';\"" in command_pool[1])
 
     def test_mysql_import_data(self):
         command_pool = list()
@@ -104,7 +104,7 @@ class CommonCommandTestCase(TestCase):
         self.assertEqual(2, len(command_pool))
 
         self.assertTrue("sed -i \"s/source_domain/target_domain/g\" /home/wwwroot/target_domain/dacscartb.sql" in command_pool[0])
-        self.assertTrue("mysql -u root target_domain < /home/wwwroot/target_domain/dacscartb.sql" in command_pool[1])
+        self.assertTrue("mysql -u root -p\'target_database_password\' target_domain < /home/wwwroot/target_domain/dacscartb.sql" in command_pool[1])
 
     def test_restart_lnmp(self):
         command_pool = list()

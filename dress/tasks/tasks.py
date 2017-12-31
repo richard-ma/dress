@@ -35,8 +35,8 @@ class Command(object):
 
         return self._command_pool_append(command)
 
-    def sql(self, sql):
-        command = "mysql -u root -e \"%s\"" % (sql.replace('`', '\\`')) # fix #1: 将sql语句换为双引号，转义`字符
+    def sql(self, database_root_password, sql):
+        command = "mysql -u root -p\'%s\' -e \"%s\"" % (database_root_password, sql.replace('`', '\\`')) # fix #1: 将sql语句换为双引号，转义`字符
 
         return self._command_pool_append(command)
 
@@ -93,22 +93,26 @@ class CommonCommand(Command):
 
         return self
 
-    def mysql_create_user(self, user_name, user_password):
+    def mysql_create_user(self, database_root_password, user_name, user_password):
         self.sql( # create user
+                database_root_password,
                 "CREATE USER '%s'@'localhost' IDENTIFIED BY '%s';" % (
                 user_name,
                 user_password)
         ).sql( # grant privilige
+                database_root_password,
                 "GRANT USAGE ON * . * TO '%s'@'localhost' IDENTIFIED BY '%s' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;" % (
                 user_name,
                 user_password))
 
         return self
 
-    def mysql_create_database(self, database_name, user_name):
+    def mysql_create_database(self, database_root_password, database_name, user_name):
         self.sql( # create database
+                database_root_password,
                 "CREATE DATABASE `%s`;" % (database_name)
         ).sql( # grant privilige
+                database_root_password,
                 "GRANT ALL PRIVILEGES ON `%s` . * TO '%s'@'localhost';" % (
                 database_name,
                 user_name))
@@ -124,7 +128,8 @@ class CommonCommand(Command):
         self.sed(source_host.domain,
                 target_host.domain,
                 filename
-        ).command("mysql -u root %s < %s" % (
+        ).command("mysql -u root -p\'%s\' %s < %s" % (
+            target_host.db_pwd,
             database_name,
             filename)
         )
@@ -207,9 +212,9 @@ class CloneSiteTask(Task):
         command.copy_site(self.source_host, self.target_host)
         command.apache_config(self.source_host, self.target_host)
         command.nginx_config(self.source_host, self.target_host)
-        command.mysql_create_user(site_database_user_name, site_database_password)
-        command.mysql_create_database(site_database_name, site_database_user_name)
-        command.mysql_import_data(self.source_host, self.target_host)
+        command.mysql_create_user(self.target_host.db_pwd, site_database_user_name, site_database_password)
+        command.mysql_create_database(self.target_host.db_pwd, site_database_name, site_database_user_name)
+        command.mysql_import_data(self.target_host.db_pwd, self.source_host, self.target_host)
 
         if self.site_type == 'cscart':
             # update cscart config

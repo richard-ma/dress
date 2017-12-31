@@ -74,16 +74,16 @@ class CommandTestCase(TestCase):
     def test_sql_command(self):
         command_pool = list()
 
-        Command(command_pool).sql(sql="sql_statement")
+        Command(command_pool).sql(self.target_host.db_pwd, sql="sql_statement")
         self.assertEqual(1, len(command_pool))
-        self.assertTrue("mysql -u root -e \"sql_statement\"" in command_pool[0])
+        self.assertTrue("mysql -u root -p\'target_database_password\' -e \"sql_statement\"" in command_pool[0])
 
     def test_sql_command_with_single_quote(self):
         command_pool = list()
 
-        Command(command_pool).sql(sql="this is single 'quote' test")
+        Command(command_pool).sql(self.target_host.db_pwd, sql="this is single 'quote' test")
         self.assertEqual(1, len(command_pool))
-        self.assertTrue("mysql -u root -e \"this is single 'quote' test\"" in command_pool[0])
+        self.assertTrue("mysql -u root -p\'target_database_password\' -e \"this is single 'quote' test\"" in command_pool[0])
 
     def test_command_command(self):
         command = 'command'
