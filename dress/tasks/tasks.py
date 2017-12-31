@@ -17,8 +17,8 @@ class Command(object):
 
         return self
 
-    def scp(self, source_ip, source_path, target_path, source_user='root', source_password=''):
-        command = "sshpass -p \'%s\' scp -o StrictHostKeyChecking=no -p -r %s@%s:%s %s" % (
+    def cp(self, source_ip, source_path, target_path, source_user='root', source_password=''):
+        command = "sshpass -p \'%s\' rsync -az %s@%s:%s %s" % (
                 source_password,
                 source_user,
                 source_ip,
@@ -47,7 +47,7 @@ class Command(object):
 # common command
 class CommonCommand(Command):
     def copy_site(self, source_host: Host, target_host: Host):
-        self.scp( # copy site files
+        self.cp( # copy site files
                 source_ip=source_host.ip,
                 source_user='root',
                 source_password=source_host.pwd,
@@ -57,7 +57,7 @@ class CommonCommand(Command):
         return self
 
     def apache_config(self, source_host: Host, target_host: Host):
-        self.scp( # copy config file
+        self.cp( # copy config file
                 source_ip=source_host.ip,
                 source_user='root',
                 source_password=source_host.pwd,
@@ -71,7 +71,7 @@ class CommonCommand(Command):
         return self
 
     def nginx_config(self, source_host: Host, target_host: Host):
-        self.scp( # copy config file
+        self.cp( # copy config file
                 source_ip=source_host.ip,
                 source_user='root',
                 source_password=source_host.pwd,

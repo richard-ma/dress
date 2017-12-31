@@ -34,10 +34,10 @@ class CommandTestCase(TestCase):
     def tearDown(self):
         pass
 
-    def test_scp_command_with_all_parameters(self):
+    def test_cp_command_with_all_parameters(self):
         command_pool = list()
 
-        Command(command_pool).scp(
+        Command(command_pool).cp(
                 source_ip=self.source_host.ip,
                 source_user="source_user",
                 source_password=self.source_host.pwd,
@@ -46,19 +46,19 @@ class CommandTestCase(TestCase):
 
         self.assertEqual(1, len(command_pool))
 
-        self.assertTrue("sshpass -p \'source_password\' scp -o StrictHostKeyChecking=no -p -r source_user@1.1.1.1:source_path target_path" in command_pool[0])
+        self.assertTrue("sshpass -p \'source_password\' rsync -az source_user@1.1.1.1:source_path target_path" in command_pool[0])
 
-    def test_scp_command_with_default_parameters(self):
+    def test_cp_command_with_default_parameters(self):
         command_pool = list()
 
-        Command(command_pool).scp(
+        Command(command_pool).cp(
                 source_ip=self.source_host.ip,
                 source_path="source_path",
                 target_path="target_path")
 
         self.assertEqual(1, len(command_pool))
 
-        self.assertTrue("sshpass -p \'\' scp -o StrictHostKeyChecking=no -p -r root@1.1.1.1:source_path target_path" in command_pool[0])
+        self.assertTrue("sshpass -p \'\' rsync -az root@1.1.1.1:source_path target_path" in command_pool[0])
 
     def test_sed_command(self):
         command_pool = list()

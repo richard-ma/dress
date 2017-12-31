@@ -41,7 +41,7 @@ class CommonCommandTestCase(TestCase):
 
         self.assertEqual(1, len(command_pool))
 
-        self.assertTrue("sshpass -p \'source_password\' scp -o StrictHostKeyChecking=no -p -r root@1.1.1.1:/home/wwwroot/source_domain /home/wwwroot/target_domain" in command_pool[0])
+        self.assertTrue("sshpass -p \'source_password\' rsync -az root@1.1.1.1:/home/wwwroot/source_domain /home/wwwroot/target_domain" in command_pool[0])
 
     def test_apache_config(self):
         command_pool = list()
@@ -50,7 +50,7 @@ class CommonCommandTestCase(TestCase):
 
         self.assertEqual(2, len(command_pool))
 
-        self.assertTrue("sshpass -p \'source_password\' scp -o StrictHostKeyChecking=no -p -r root@1.1.1.1:/usr/local/apache/conf/vhost/source_domain.conf /usr/local/apache/conf/vhost/target_domain.conf" in command_pool[0])
+        self.assertTrue("sshpass -p \'source_password\' rsync -az root@1.1.1.1:/usr/local/apache/conf/vhost/source_domain.conf /usr/local/apache/conf/vhost/target_domain.conf" in command_pool[0])
         self.assertTrue("sed -i \"s/source_domain/target_domain/g\" /usr/local/apache/conf/vhost/target_domain.conf" in command_pool[1])
 
     def test_nginx_config(self):
@@ -60,7 +60,7 @@ class CommonCommandTestCase(TestCase):
 
         self.assertEqual(2, len(command_pool))
 
-        self.assertTrue("sshpass -p \'source_password\' scp -o StrictHostKeyChecking=no -p -r root@1.1.1.1:/usr/local/nginx/conf/vhost/source_domain.conf /usr/local/nginx/conf/vhost/target_domain.conf" in command_pool[0])
+        self.assertTrue("sshpass -p \'source_password\' rsync -az root@1.1.1.1:/usr/local/nginx/conf/vhost/source_domain.conf /usr/local/nginx/conf/vhost/target_domain.conf" in command_pool[0])
         self.assertTrue("sed -i \"s/source_domain/target_domain/g\" /usr/local/nginx/conf/vhost/target_domain.conf" in command_pool[1])
 
     def test_mysql_create_user(self):
