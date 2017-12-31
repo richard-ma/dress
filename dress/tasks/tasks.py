@@ -214,7 +214,7 @@ class CloneSiteTask(Task):
         command.nginx_config(self.source_host, self.target_host)
         command.mysql_create_user(self.target_host.db_pwd, site_database_user_name, site_database_password)
         command.mysql_create_database(self.target_host.db_pwd, site_database_name, site_database_user_name)
-        command.mysql_import_data(self.target_host.db_pwd, self.source_host, self.target_host)
+        command.mysql_import_data(self.source_host, self.target_host)
 
         if self.site_type == 'cscart':
             # update cscart config
