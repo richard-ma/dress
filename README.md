@@ -13,14 +13,5 @@
 * ./test.sh
 
 # RUN
-* python run.py
+* python manager.py runserver
 * Browser: http://host-ip:5000
-
-# TODO
-* [x] [Test] profected host controller test case
-* [x] [Model] add host.memo
-* [x] [Model] remove host.db_name
-* [x] [View] use Database Root Password instead of Database Password
-* [x] [View] use SSH Port instead of Port
-* [x] [View] use host.domain@host.ip as host identifier
-* [x] [Model] remove host.name
