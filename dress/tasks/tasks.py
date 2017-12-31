@@ -60,7 +60,7 @@ class CommonCommand(Command):
                 source_ip=source_host.ip,
                 source_user='root',
                 source_password=source_host.pwd,
-                source_path="/home/wwwroot/%s" % (source_host.domain),
+                source_path="/home/wwwroot/%s/*" % (source_host.domain),
                 target_path="/home/wwwroot/%s" % (target_host.domain))
 
         return self
