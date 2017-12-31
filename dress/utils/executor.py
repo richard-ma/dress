@@ -49,5 +49,5 @@ class SSHExecutor(Executor):
 
     def exec_command(self, command):
         stdin, stdout, stderr = self.client.exec_command(command)
-        print(stdout.readlines())
-        print(stderr.readlines())
+        app.logger.debug(stdout.readlines())
+        app.logger.debug(stderr.readlines())
