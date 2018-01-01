@@ -69,7 +69,7 @@ class CommandTestCase(TestCase):
                 filename="filename")
         self.assertEqual(1, len(command_pool))
 
-        self.assertTrue("sed -i \"s/source/target/g\" filename" in command_pool[0])
+        self.assertTrue("sed -i 's/source/target/g' filename" in command_pool[0])
 
     def test_sql_command(self):
         command_pool = list()
