@@ -39,6 +39,8 @@ class CommonCommandTestCase(TestCase):
 
         CommonCommand(command_pool).init()
 
+        self.assertEqual(2, len(command_pool))
+
         self.assertTrue("yum install -y epel-release" in command_pool[0])
         self.assertTrue("yum install -y sshpass" in command_pool[1])
 
@@ -47,9 +49,10 @@ class CommonCommandTestCase(TestCase):
 
         CommonCommand(command_pool).copy_site(self.source_host, self.target_host)
 
-        self.assertEqual(1, len(command_pool))
+        self.assertEqual(2, len(command_pool))
 
         self.assertTrue("sshpass -p \'source_password\' rsync -aze \"ssh -o StrictHostKeyChecking=no\" root@1.1.1.1:/home/wwwroot/source_domain/ /home/wwwroot/target_domain" in command_pool[0])
+        self.assertTrue("chown -R www:www /home/wwwroot/target_domain" in command_pool[1])
 
     def test_apache_config(self):
         command_pool = list()

@@ -61,7 +61,10 @@ class CommonCommand(Command):
                 source_user='root',
                 source_password=source_host.pwd,
                 source_path="/home/wwwroot/%s/" % (source_host.domain),
-                target_path="/home/wwwroot/%s" % (target_host.domain))
+                target_path="/home/wwwroot/%s" % (target_host.domain)
+        ).command(
+                "chown -R www:www /home/wwwroot/%s" % (target_host.domain)
+        )
 
         return self
 
