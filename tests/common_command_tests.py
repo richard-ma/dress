@@ -49,7 +49,7 @@ class CommonCommandTestCase(TestCase):
 
         self.assertEqual(1, len(command_pool))
 
-        self.assertTrue("sshpass -p \'source_password\' rsync -aze \"ssh -o StrictHostKeyChecking=no\" root@1.1.1.1:/home/wwwroot/source_domain/* /home/wwwroot/target_domain" in command_pool[0])
+        self.assertTrue("sshpass -p \'source_password\' rsync -aze \"ssh -o StrictHostKeyChecking=no\" root@1.1.1.1:/home/wwwroot/source_domain/ /home/wwwroot/target_domain" in command_pool[0])
 
     def test_apache_config(self):
         command_pool = list()
