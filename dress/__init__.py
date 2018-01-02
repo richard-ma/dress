@@ -119,11 +119,17 @@ def create_app():
         target_host_id = request.form['target_host_id']
         table_prefix = request.form['table_prefix']
         order_start_id = request.form['order_start_id']
+        smtp_host = request.form['smtp_host']
+        smtp_username = request.form['smtp_username']
+        smtp_password = request.form['smtp_password']
         app.logger.debug('site_type: %s' % (site_type))
         app.logger.debug('source_host_id: %s' % (source_host_id))
         app.logger.debug('target_host_id: %s' % (target_host_id))
         app.logger.debug('table_prefix: %s' % (table_prefix))
         app.logger.debug('order_start_id: %s' % (order_start_id))
+        app.logger.debug('smtp_host: %s' % (smtp_host))
+        app.logger.debug('smtp_username: %s' % (smtp_username))
+        app.logger.debug('smtp_password: %s' % (smtp_password))
 
         app.logger.debug('Query host info')
         source_host = Host.query.filter_by(id=source_host_id).first()
@@ -139,15 +145,15 @@ def create_app():
             return redirect(url_for('/task/clone_site/form'))
 
         app.logger.debug('Lanuching task.')
-        executor.submit(task_clone_site_exec, source_host, target_host, site_type, table_prefix, order_start_id)
+        executor.submit(task_clone_site_exec, source_host, target_host, site_type, table_prefix, order_start_id, smtp_host, smtp_username, smtp_password)
 
         flash("Clone Task Is Running In Background. Please Wait...")
 
         return redirect(url_for('task_clone_site_form'))
 
-    def task_clone_site_exec(source_host: Host, target_host: Host, site_type, table_prefix, order_start_id):
+    def task_clone_site_exec(source_host: Host, target_host: Host, site_type, table_prefix, order_start_id, smtp_host, smtp_username, smtp_password):
         from dress.tasks.tasks import CloneSiteTask
-        task = CloneSiteTask(source_host, target_host, site_type, table_prefix, order_start_id)
+        task = CloneSiteTask(source_host, target_host, site_type, table_prefix, order_start_id, smtp_host, smtp_username, smtp_password)
         task.run()
 
     # test

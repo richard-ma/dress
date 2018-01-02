@@ -203,6 +203,37 @@ class CscartCommand(Command):
 
         return self
 
+    def cscart_smtpSetting(self, target_host: Host, table_prefix, smtp_host=None, smtp_username=None, smtp_password=None):
+        if smtp_host != '':
+            self.sql(
+                target_host.db_pwd,
+                "UPDATE `%s`.`%ssettings_objects` SET `value` = '%s' WHERE `%ssettings_objects`.`object_id` = 109;" % (
+                target_host.domain,
+                table_prefix,
+                smtp_host,
+                table_prefix)
+            )
+        if smtp_username != '':
+            self.sql(
+                target_host.db_pwd,
+                "UPDATE `%s`.`%ssettings_objects` SET `value` = '%s' WHERE `%ssettings_objects`.`object_id` = 111;" % (
+                target_host.domain,
+                table_prefix,
+                smtp_username,
+                table_prefix)
+            )
+        if smtp_password != '':
+            self.sql(
+                target_host.db_pwd,
+                "UPDATE `%s`.`%ssettings_objects` SET `value` = '%s' WHERE `%ssettings_objects`.`object_id` = 112;" % (
+                target_host.domain,
+                table_prefix,
+                smtp_password,
+                table_prefix)
+            )
+
+        return self
+
 # Tasks
 class Task(object):
     def run(self):
@@ -218,12 +249,15 @@ class DelayTask(Task):
 
 # CloneSiteTask
 class CloneSiteTask(Task):
-    def __init__(self, source_host, target_host, site_type, table_prefix, order_start_id):
+    def __init__(self, source_host, target_host, site_type, table_prefix, order_start_id, smtp_host, smtp_username, smtp_password):
         self.site_type = site_type
         self.source_host = source_host
         self.target_host = target_host
         self.table_prefix = table_prefix
         self.order_start_id = order_start_id
+        self.smtp_host = smtp_host
+        self.smtp_username = smtp_username
+        self.smtp_password = smtp_password
 
         self.target_ssh = executor.SSHExecutor(
                 target_host.ip,
@@ -260,6 +294,7 @@ class CloneSiteTask(Task):
             cscart_command.cscart_config(self.source_host, self.target_host, site_database_password)
             cscart_command.clear_cache(self.target_host)
             cscart_command.cscart_orderStartId(self.target_host, self.table_prefix, self.order_start_id)
+            cscart_command.cscart_smtpSetting(self.target_host, self.table_prefix, self.smtp_host, self.smtp_username, self.smtp_password)
         elif self.site_type == 'magento':
             app.logger.debug('magento mode')
         elif self.site_type == 'opencart':

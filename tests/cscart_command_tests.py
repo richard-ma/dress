@@ -64,5 +64,23 @@ class CscartCommandTestCase(TestCase):
 
         self.assertTrue("mysql -u root -p'target_database_password' -e \"UPDATE \`target_domain\`.\`table_prefix_settings_objects\` SET \`value\` = 'order_start_id' WHERE \`table_prefix_settings_objects\`.\`object_id\` = 62;\"" in command_pool[0])
 
+    def test_cscart_stmpSettings(self):
+        command_pool = list()
+
+        CscartCommand(command_pool).cscart_smtpSetting(self.target_host, 'table_prefix_', 'smtp_host', 'smtp_username', 'smtp_password')
+
+        self.assertEqual(3, len(command_pool))
+
+        self.assertTrue("mysql -u root -p'target_database_password' -e \"UPDATE \`target_domain\`.\`table_prefix_settings_objects\` SET \`value\` = 'smtp_host' WHERE \`table_prefix_settings_objects\`.\`object_id\` = 109;\"" in command_pool[0])
+        self.assertTrue("mysql -u root -p'target_database_password' -e \"UPDATE \`target_domain\`.\`table_prefix_settings_objects\` SET \`value\` = 'smtp_username' WHERE \`table_prefix_settings_objects\`.\`object_id\` = 111;\"" in command_pool[1])
+        self.assertTrue("mysql -u root -p'target_database_password' -e \"UPDATE \`target_domain\`.\`table_prefix_settings_objects\` SET \`value\` = 'smtp_password' WHERE \`table_prefix_settings_objects\`.\`object_id\` = 112;\"" in command_pool[2])
+
+    def test_cscart_stmpSettings_with_empty_parameters(self):
+        command_pool = list()
+
+        CscartCommand(command_pool).cscart_smtpSetting(self.target_host, 'table_prefix_', '', '', '')
+
+        self.assertEqual(0, len(command_pool))
+
 if __name__ == '__main__':
     unittest.main()
