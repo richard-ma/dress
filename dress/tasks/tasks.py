@@ -178,6 +178,18 @@ class CscartCommand(Command):
 
         return self
 
+    def cscart_orderStartId(self, target_host: Host, table_prefix, order_start_id):
+        self.sql(
+                target_host.db_pwd,
+                "UPDATE `%s`.`%ssettings_objects` SET `value` = '%s' WHERE `%ssettings_objects`.`object_id` = 62;" % (
+                target_host.domain,
+                table_prefix,
+                order_start_id,
+                table_prefix)
+        )
+
+        return self
+
 # Tasks
 class Task(object):
     def run(self):
@@ -193,10 +205,12 @@ class DelayTask(Task):
 
 # CloneSiteTask
 class CloneSiteTask(Task):
-    def __init__(self, source_host, target_host, site_type):
+    def __init__(self, source_host, target_host, site_type, table_prefix, order_start_id):
         self.site_type = site_type
         self.source_host = source_host
         self.target_host = target_host
+        self.table_prefix = table_prefix
+        self.order_start_id = order_start_id
 
         self.target_ssh = executor.SSHExecutor(
                 target_host.ip,
@@ -232,6 +246,7 @@ class CloneSiteTask(Task):
             cscart_command = CscartCommand(command_pool)
             cscart_command.cscart_config(self.source_host, self.target_host, site_database_password)
             cscart_command.clear_cache(self.target_host)
+            cscart_command.cscart_orderStartId(self.target_host, self.table_prefix, self.order_start_id)
         elif self.site_type == 'magento':
             app.logger.debug('magento mode')
         elif self.site_type == 'opencart':
