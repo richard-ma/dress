@@ -71,6 +71,18 @@ class CommandTestCase(TestCase):
 
         self.assertTrue("sed -i \"s/source/target/g\" filename" in command_pool[0])
 
+    def test_sed_with_ignore_case(self):
+        command_pool = list()
+
+        Command(command_pool).sed(
+                source="source",
+                target="target",
+                filename="filename",
+                ignore_case=True)
+        self.assertEqual(1, len(command_pool))
+
+        self.assertTrue("sed -i \"s/source/target/Ig\" filename" in command_pool[0])
+
     def test_sql_command(self):
         command_pool = list()
 

@@ -27,11 +27,17 @@ class Command(object):
 
         return self._command_pool_append(command)
 
-    def sed(self, source, target, filename):
-        command = "sed -i \"s/%s/%s/g\" %s" % (
-            source,
-            target,
-            filename)
+    def sed(self, source, target, filename, ignore_case=False):
+        if ignore_case:
+            command = "sed -i \"s/%s/%s/Ig\" %s" % (
+                source,
+                target,
+                filename)
+        else:
+            command = "sed -i \"s/%s/%s/g\" %s" % (
+                source,
+                target,
+                filename)
 
         return self._command_pool_append(command)
 
@@ -166,7 +172,8 @@ class CscartCommand(Command):
         ).sed(
                 source_host.domain,
                 target_host.domain,
-                "/home/wwwroot/%s/config.local.php" % (target_host.domain)
+                "/home/wwwroot/%s/config.local.php" % (target_host.domain),
+                ignore_case=True
         )
 
         return self
