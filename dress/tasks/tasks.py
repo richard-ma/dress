@@ -28,7 +28,7 @@ class Command(object):
         return self._command_pool_append(command)
 
     def sed(self, source, target, filename):
-        command = "sed -i 's/%s/%s/g' %s" % (
+        command = "sed -i \"s/%s/%s/g\" %s" % (
             source,
             target,
             filename)
@@ -152,16 +152,16 @@ class CscartCommand(Command):
 
     def cscart_config(self, source_host: Host, target_host: Host, database_password):
         self.sed(
-                "\$config\[\'db_name\'\] = \'.*\';",
-                "\$config\[\'db_name\'\] = \'%s\';" % (target_host.domain),
+                "\$config\['db_name'\] = '.*';",
+                "\$config\['db_name'\] = '%s';" % (target_host.domain),
                 "/home/wwwroot/%s/config.local.php" % (target_host.domain)
         ).sed(
-                "\$config\[\'db_user\'\] = \'.*\';",
-                "\$config\[\'db_user\'\] = \'%s\';" % (target_host.domain),
+                "\$config\['db_user'\] = '.*';",
+                "\$config\['db_user'\] = '%s';" % (target_host.domain),
                 "/home/wwwroot/%s/config.local.php" % (target_host.domain)
         ).sed(
-                "\$config\[\'db_password\'\] = \'.*\';",
-                "\$config\[\'db_password\'\] = \'%s\';" % (database_password),
+                "\$config\['db_password'\] = '.*';",
+                "\$config\['db_password'\] = '%s';" % (database_password),
                 "/home/wwwroot/%s/config.local.php" % (target_host.domain)
         ).sed(
                 source_host.domain,

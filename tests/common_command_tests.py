@@ -62,7 +62,7 @@ class CommonCommandTestCase(TestCase):
         self.assertEqual(2, len(command_pool))
 
         self.assertTrue("sshpass -p \'source_password\' rsync -aze \"ssh -o StrictHostKeyChecking=no\" root@1.1.1.1:/usr/local/apache/conf/vhost/source_domain.conf /usr/local/apache/conf/vhost/target_domain.conf" in command_pool[0])
-        self.assertTrue("sed -i 's/source_domain/target_domain/g' /usr/local/apache/conf/vhost/target_domain.conf" in command_pool[1])
+        self.assertTrue("sed -i \"s/source_domain/target_domain/g\" /usr/local/apache/conf/vhost/target_domain.conf" in command_pool[1])
 
     def test_nginx_config(self):
         command_pool = list()
@@ -72,7 +72,7 @@ class CommonCommandTestCase(TestCase):
         self.assertEqual(2, len(command_pool))
 
         self.assertTrue("sshpass -p \'source_password\' rsync -aze \"ssh -o StrictHostKeyChecking=no\" root@1.1.1.1:/usr/local/nginx/conf/vhost/source_domain.conf /usr/local/nginx/conf/vhost/target_domain.conf" in command_pool[0])
-        self.assertTrue("sed -i 's/source_domain/target_domain/g' /usr/local/nginx/conf/vhost/target_domain.conf" in command_pool[1])
+        self.assertTrue("sed -i \"s/source_domain/target_domain/g\" /usr/local/nginx/conf/vhost/target_domain.conf" in command_pool[1])
 
     def test_mysql_create_user(self):
         user_name = 'test_user'
@@ -106,7 +106,7 @@ class CommonCommandTestCase(TestCase):
         CommonCommand(command_pool).mysql_import_data(self.source_host, self.target_host)
         self.assertEqual(2, len(command_pool))
 
-        self.assertTrue("sed -i 's/source_domain/target_domain/g' /home/wwwroot/target_domain/dacscartb.sql" in command_pool[0])
+        self.assertTrue("sed -i \"s/source_domain/target_domain/g\" /home/wwwroot/target_domain/dacscartb.sql" in command_pool[0])
         self.assertTrue("mysql -u root -p\'target_database_password\' target_domain < /home/wwwroot/target_domain/dacscartb.sql" in command_pool[1])
 
     def test_restart_lnmp(self):
