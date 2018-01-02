@@ -62,7 +62,9 @@ class CommonCommand(Command):
         return self
 
     def copy_site(self, source_host: Host, target_host: Host):
-        self.cp( # copy site files
+        self.command(
+                "rm -rf /home/wwwroot/%s" % (target_host.domain)
+        ).cp( # copy site files
                 source_ip=source_host.ip,
                 source_user='root',
                 source_password=source_host.pwd,
@@ -75,7 +77,9 @@ class CommonCommand(Command):
         return self
 
     def apache_config(self, source_host: Host, target_host: Host):
-        self.cp( # copy config file
+        self.command(
+                "rm -rf /usr/local/apache/conf/vhost/%s.conf" % (target_host.domain)
+        ).cp( # copy config file
                 source_ip=source_host.ip,
                 source_user='root',
                 source_password=source_host.pwd,
@@ -89,7 +93,9 @@ class CommonCommand(Command):
         return self
 
     def nginx_config(self, source_host: Host, target_host: Host):
-        self.cp( # copy config file
+        self.command(
+                "rm -rf /usr/local/nginx/conf/vhost/%s.conf" % (target_host.domain)
+        ).cp( # copy config file
                 source_ip=source_host.ip,
                 source_user='root',
                 source_password=source_host.pwd,
@@ -103,7 +109,11 @@ class CommonCommand(Command):
         return self
 
     def mysql_create_user(self, database_root_password, user_name, user_password):
-        self.sql( # create user
+        self.sql( # drop user
+                database_root_password,
+                "DROP USER IF EXISTS '%s'@'localhost';" % (
+                user_name)
+        ).sql( # create user
                 database_root_password,
                 "CREATE USER '%s'@'localhost' IDENTIFIED BY '%s';" % (
                 user_name,
@@ -117,7 +127,10 @@ class CommonCommand(Command):
         return self
 
     def mysql_create_database(self, database_root_password, database_name, user_name):
-        self.sql( # create database
+        self.sql( # drop database
+                database_root_password,
+                "DROP DATABASE IF EXISTS `%s`;" % (database_name)
+        ).sql( # create database
                 database_root_password,
                 "CREATE DATABASE `%s`;" % (database_name)
         ).sql( # grant privilige

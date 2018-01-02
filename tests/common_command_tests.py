@@ -49,30 +49,33 @@ class CommonCommandTestCase(TestCase):
 
         CommonCommand(command_pool).copy_site(self.source_host, self.target_host)
 
-        self.assertEqual(2, len(command_pool))
+        self.assertEqual(3, len(command_pool))
 
-        self.assertTrue("sshpass -p \'source_password\' rsync -aze \"ssh -o StrictHostKeyChecking=no\" root@1.1.1.1:/home/wwwroot/source_domain/ /home/wwwroot/target_domain" in command_pool[0])
-        self.assertTrue("chown -R www:www /home/wwwroot/target_domain" in command_pool[1])
+        self.assertTrue("rm -rf /home/wwwroot/target_domain" in command_pool[0])
+        self.assertTrue("sshpass -p \'source_password\' rsync -aze \"ssh -o StrictHostKeyChecking=no\" root@1.1.1.1:/home/wwwroot/source_domain/ /home/wwwroot/target_domain" in command_pool[1])
+        self.assertTrue("chown -R www:www /home/wwwroot/target_domain" in command_pool[2])
 
     def test_apache_config(self):
         command_pool = list()
 
         CommonCommand(command_pool).apache_config(self.source_host, self.target_host)
 
-        self.assertEqual(2, len(command_pool))
+        self.assertEqual(3, len(command_pool))
 
-        self.assertTrue("sshpass -p \'source_password\' rsync -aze \"ssh -o StrictHostKeyChecking=no\" root@1.1.1.1:/usr/local/apache/conf/vhost/source_domain.conf /usr/local/apache/conf/vhost/target_domain.conf" in command_pool[0])
-        self.assertTrue("sed -i \"s/source_domain/target_domain/g\" /usr/local/apache/conf/vhost/target_domain.conf" in command_pool[1])
+        self.assertTrue("rm -rf /usr/local/apache/conf/vhost/target_domain.conf" in command_pool[0])
+        self.assertTrue("sshpass -p \'source_password\' rsync -aze \"ssh -o StrictHostKeyChecking=no\" root@1.1.1.1:/usr/local/apache/conf/vhost/source_domain.conf /usr/local/apache/conf/vhost/target_domain.conf" in command_pool[1])
+        self.assertTrue("sed -i \"s/source_domain/target_domain/g\" /usr/local/apache/conf/vhost/target_domain.conf" in command_pool[2])
 
     def test_nginx_config(self):
         command_pool = list()
 
         CommonCommand(command_pool).nginx_config(self.source_host, self.target_host)
 
-        self.assertEqual(2, len(command_pool))
+        self.assertEqual(3, len(command_pool))
 
-        self.assertTrue("sshpass -p \'source_password\' rsync -aze \"ssh -o StrictHostKeyChecking=no\" root@1.1.1.1:/usr/local/nginx/conf/vhost/source_domain.conf /usr/local/nginx/conf/vhost/target_domain.conf" in command_pool[0])
-        self.assertTrue("sed -i \"s/source_domain/target_domain/g\" /usr/local/nginx/conf/vhost/target_domain.conf" in command_pool[1])
+        self.assertTrue("rm -rf /usr/local/nginx/conf/vhost/target_domain.conf" in command_pool[0])
+        self.assertTrue("sshpass -p \'source_password\' rsync -aze \"ssh -o StrictHostKeyChecking=no\" root@1.1.1.1:/usr/local/nginx/conf/vhost/source_domain.conf /usr/local/nginx/conf/vhost/target_domain.conf" in command_pool[1])
+        self.assertTrue("sed -i \"s/source_domain/target_domain/g\" /usr/local/nginx/conf/vhost/target_domain.conf" in command_pool[2])
 
     def test_mysql_create_user(self):
         user_name = 'test_user'
@@ -82,10 +85,11 @@ class CommonCommandTestCase(TestCase):
 
         CommonCommand(command_pool).mysql_create_user(self.target_host.db_pwd, user_name, user_password)
 
-        self.assertEqual(2, len(command_pool))
+        self.assertEqual(3, len(command_pool))
 
-        self.assertTrue("mysql -u root -p\'target_database_password\' -e \"CREATE USER 'test_user'@'localhost' IDENTIFIED BY 'test_password';\"" in command_pool[0])
-        self.assertTrue("mysql -u root -p\'target_database_password\' -e \"GRANT USAGE ON * . * TO 'test_user'@'localhost' IDENTIFIED BY 'test_password' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;\"" in command_pool[1])
+        self.assertTrue("mysql -u root -p\'target_database_password\' -e \"DROP USER IF EXISTS 'test_user'@'localhost';\"" in command_pool[0])
+        self.assertTrue("mysql -u root -p\'target_database_password\' -e \"CREATE USER 'test_user'@'localhost' IDENTIFIED BY 'test_password';\"" in command_pool[1])
+        self.assertTrue("mysql -u root -p\'target_database_password\' -e \"GRANT USAGE ON * . * TO 'test_user'@'localhost' IDENTIFIED BY 'test_password' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;\"" in command_pool[2])
 
     def test_mysql_create_database(self):
         database_name = 'test_database'
@@ -95,10 +99,11 @@ class CommonCommandTestCase(TestCase):
 
         CommonCommand(command_pool).mysql_create_database(self.target_host.db_pwd, database_name, user_name)
 
-        self.assertEqual(2, len(command_pool))
+        self.assertEqual(3, len(command_pool))
 
-        self.assertTrue("mysql -u root -p\'target_database_password\' -e \"CREATE DATABASE \`test_database\`;\"" in command_pool[0])
-        self.assertTrue("mysql -u root -p\'target_database_password\' -e \"GRANT ALL PRIVILEGES ON \`test_database\` . * TO 'test_user'@'localhost';\"" in command_pool[1])
+        self.assertTrue("mysql -u root -p\'target_database_password\' -e \"DROP DATABASE IF EXISTS \`test_database\`;\"" in command_pool[0])
+        self.assertTrue("mysql -u root -p\'target_database_password\' -e \"CREATE DATABASE \`test_database\`;\"" in command_pool[1])
+        self.assertTrue("mysql -u root -p\'target_database_password\' -e \"GRANT ALL PRIVILEGES ON \`test_database\` . * TO 'test_user'@'localhost';\"" in command_pool[2])
 
     def test_mysql_import_data(self):
         command_pool = list()
