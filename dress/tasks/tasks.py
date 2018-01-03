@@ -149,7 +149,8 @@ class CommonCommand(Command):
 
         self.sed(source_host.domain,
                 target_host.domain,
-                filename
+                filename,
+                ignore_case=True
         ).command("mysql -u root -p\'%s\' %s < %s" % (
             target_host.db_pwd,
             database_name,
