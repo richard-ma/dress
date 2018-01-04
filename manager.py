@@ -1,3 +1,6 @@
+import unittest
+import sys
+import os
 from dress import app
 from dress.data.models import db, Host, Status
 from flask_script import Manager, Server
@@ -78,5 +81,9 @@ def hello():
     print('hello')
 
 if __name__ == "__main__":
-    print(app)
-    manager.run()
+    if len(sys.argv) > 1 and sys.argv[1] == 'test':
+        os.environ["DRESS_CONFIGURATION"] = 'testing'
+        tests = unittest.TestLoader().discover('tests', pattern='*_tests.py')
+        unittest.TextTestRunner(verbosity=1).run(tests)
+    else:
+        manager.run()
