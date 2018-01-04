@@ -27,14 +27,24 @@ class Host(db.Model):
         self.status = Status.query.all()[0]
 
     def create(self):
-        db.session.add(self)
-        db.session.commit()
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except exc.SQLAlchemyError:
+            database.session.rollback()
+
+            app.logger.error(self)
 
         return self
 
     def delete(self):
-        db.session.delete(self)
-        db.session.commit()
+        try:
+            db.session.delete(self)
+            db.session.commit()
+        except exc.SQLAlchemyError:
+            database.session.rollback()
+
+            app.logger.error(self)
 
         return self
 
@@ -50,14 +60,24 @@ class Host(db.Model):
         else:
             self.status = Status.query.all()[0]
 
-        db.session.commit()
+        try:
+            db.session.commit()
+        except exc.SQLAlchemyError:
+            database.session.rollback()
+
+            app.logger.error(self)
 
         return self
 
     def updateStatus(self, status):
         self.status = Status.query.filter_by(title=status).first()
 
-        db.session.commit()
+        try:
+            db.session.commit()
+        except exc.SQLAlchemyError:
+            database.session.rollback()
+
+            app.logger.error(self)
 
         return self
 
@@ -84,20 +104,35 @@ class Status(db.Model):
         self.title = title
 
     def create(self):
-        db.session.add(self)
-        db.session.commit()
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except exc.SQLAlchemyError:
+            database.session.rollback()
+
+            app.logger.error(self)
 
         return self
 
     def delete(self):
-        db.session.delete(self)
-        db.session.commit()
+        try:
+            db.session.delete(self)
+            db.session.commit()
+        except exc.SQLAlchemyError:
+            database.session.rollback()
+
+            app.logger.error(self)
 
         return self
 
     def update(self, title):
         self.title = title
-        db.session.commit()
+        try:
+            db.session.commit()
+        except exc.SQLAlchemyError:
+            database.session.rollback()
+
+            app.logger.error(self)
 
     def __repr__(self):
         return '<Status %r>' % (self.title)

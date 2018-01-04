@@ -43,7 +43,7 @@ def seed_host_data(database):
     except exc.SQLAlchemyError:
         database.session.rollback()
 
-        app.logger.debug('Initial host data importing failed.')
+        app.logger.error('Initial host data importing failed.')
 
 def seed_status_data(database):
     prepare_stauts = Status(title=Status.PREPARE)
@@ -63,7 +63,7 @@ def seed_status_data(database):
     except exc.SQLAlchemyError:
         database.session.rollback()
 
-        app.logger.debug('Initial status data importing failed.')
+        app.logger.error('Initial status data importing failed.')
 
 @manager.command
 def seed():
