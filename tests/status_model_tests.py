@@ -29,16 +29,16 @@ class StatusTestCase(TestCase):
 
         self.assertEqual(query_status.title, 'testStatus')
 
-    def test_update_title(self):
+    def test_update_status(self):
         s = Status(title='testStatus')
         s.create()
 
         update_status = Status.query.filter_by(title='testStatus').first()
-        update_status.title = 'updateStatus'
+        update_status.update(title='updateStatus')
 
         self.assertEqual(update_status.title, 'updateStatus')
 
-    def test_create_status(self):
+    def test_delete_status(self):
         s = Status(title='testStatus')
         s.create()
 

@@ -314,3 +314,4 @@ class CloneSiteTask(Task):
         # update host status
         app.logger.debug("Updating host status.")
         self.target_host.updateStatus(Status.BUSINESS)
+        app.logger.debug(self.target_host.status.title)

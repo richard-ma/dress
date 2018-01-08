@@ -157,6 +157,14 @@ def create_app():
         task.run()
 
     # test
+    @app.route('/test/change_host_status')
+    def test_change_host_status():
+        h = Host.query.all()[0]
+        print(h.status.title)
+        h.updateStatus(Status.BUSINESS)
+        print(h.status.title)
+        return h.status.title
+
     @app.route('/test_flash')
     def test_flash():
         flash('This is flash message')

@@ -136,3 +136,47 @@ class Status(db.Model):
 
     def __repr__(self):
         return '<Status %r>' % (self.title)
+
+class Setting(db.Model):
+    __tablename__ = 'setting'
+
+    name = db.Column(db.String(128), primary_key=True)
+    value = db.Column(db.Text)
+
+    def __init__(self, name, value):
+        self.name = name
+        self.value = value
+
+    def create(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except exc.SQLAlchemyError:
+            database.session.rollback()
+
+            app.logger.error(self)
+
+        return self
+
+    def delete(self):
+        try:
+            db.session.delete(self)
+            db.session.commit()
+        except exc.SQLAlchemyError:
+            database.session.rollback()
+
+            app.logger.error(self)
+
+        return self
+
+    def update(self, value):
+        self.value = value
+        try:
+            db.session.commit()
+        except exc.SQLAlchemyError:
+            database.session.rollback()
+
+            app.logger.error(self)
+
+    def __repr__(self):
+        return '<Setting %r=%r>' % (self.name, self.value)

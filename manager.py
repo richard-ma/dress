@@ -75,7 +75,6 @@ def seed():
     seed_status_data(db)
     seed_host_data(db)
 
-# test command
 @manager.command
 def hello():
     print('hello')
