@@ -143,6 +143,9 @@ class Setting(db.Model):
     name = db.Column(db.String(128), primary_key=True)
     value = db.Column(db.Text)
 
+    ORDER_START_NUMBER_NAME = 'start_order_number'
+    ORDER_START_NUMBER_VALUE = '10000'
+
     def __init__(self, name, value):
         self.name = name
         self.value = value

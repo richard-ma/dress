@@ -2,7 +2,7 @@ import unittest
 import sys
 import os
 from dress import app
-from dress.data.models import db, Host, Status
+from dress.data.models import db, Host, Status, Setting
 from flask_script import Manager, Server
 from flask_migrate import Migrate, MigrateCommand
 
@@ -65,6 +65,22 @@ def seed_status_data(database):
 
         app.logger.error('Initial status data importing failed.')
 
+def seed_setting_data(database):
+    data = list()
+    data.append(Setting(name=Setting.ORDER_START_NUMBER_NAME, value=Setting.ORDER_START_NUMBER_VALUE))
+
+    try:
+        for d in data:
+            database.session.add(d)
+
+        database.session.commit()
+
+        app.logger.debug('Initial setting data imported.')
+    except exc.SQLAlchemyError:
+        database.session.rollback()
+
+        app.logger.error('Initial setting data importing failed.')
+
 @manager.command
 def seed():
     db.drop_all()
@@ -74,6 +90,7 @@ def seed():
 
     seed_status_data(db)
     seed_host_data(db)
+    seed_setting_data(db)
 
 @manager.command
 def hello():

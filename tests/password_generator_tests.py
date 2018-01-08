@@ -20,12 +20,12 @@ class PasswordGeneratorTestCase(TestCase):
 
     def test_password_generator(self):
         password_len = 32
-        password = PasswordGenerator.generat(password_len)
+        password = PasswordGenerator.generate(password_len)
         self.assertEqual(len(password), password_len)
 
-        password1 = PasswordGenerator.generat(password_len)
+        password1 = PasswordGenerator.generate(password_len)
         sleep(1)
-        password2 = PasswordGenerator.generat(password_len)
+        password2 = PasswordGenerator.generate(password_len)
         self.assertNotEqual(password1, password2)
 
 if __name__ == '__main__':
