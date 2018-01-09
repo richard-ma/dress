@@ -7,6 +7,7 @@ from flask_bootstrap import Bootstrap
 
 from dress.config import configure_app
 from dress.data.models import db, Host, Status
+from dress.utils.generator import OrderStartNumberGenerator
 
 from concurrent.futures import ThreadPoolExecutor
 
@@ -105,11 +106,13 @@ def create_app():
     def task_clone_site_form():
         source_hosts = Host.query.filter_by(status=Status.query.filter_by(title=Status.SOURCE).first())
         target_hosts = Host.query.filter(Host.status != Status.query.filter_by(title=Status.SOURCE).first())
+        order_start_id = OrderStartNumberGenerator.generate()
 
         return render_template(
                 'task_clone_site_form.html',
                 source_hosts=source_hosts,
-                target_hosts=target_hosts)
+                target_hosts=target_hosts,
+                order_start_id=order_start_id)
 
     # clone site task
     @app.route('/task/clone_site', methods=['POST'])

@@ -31,11 +31,8 @@ class OrderStartNumberGeneratorTestCase(TestCase):
         OrderStartNumberGenerator.reset(start_number)
         self.assertEqual(start_number, int(Setting.query.filter_by(name=Setting.ORDER_START_NUMBER_NAME).first().value))
 
-        new_start_number = OrderStartNumberGenerator.update(interval=800)
+        new_start_number = OrderStartNumberGenerator.generate(interval=800)
         self.assertEqual(new_start_number, start_number+800)
-
-        new_start_number = OrderStartNumberGenerator.generate()
-        self.assertEqual(new_start_number, int(Setting.query.filter_by(name=Setting.ORDER_START_NUMBER_NAME).first().value))
 
 if __name__ == '__main__':
     unittest.main()
