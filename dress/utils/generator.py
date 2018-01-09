@@ -24,9 +24,16 @@ class OrderStartNumberGenerator(Generator):
         order_start_number_setting.update(value=str(order_start_number or Setting.ORDER_START_NUMBER_VALUE))
 
     @classmethod
-    def generate(cls, interval=10000):
+    def update(cls, interval=10000):
         order_start_number_setting = Setting.query.filter_by(name=Setting.ORDER_START_NUMBER_NAME).first()
         new_order_start_number = int(order_start_number_setting.value) + interval
         order_start_number_setting.update(value=str(new_order_start_number))
 
-        return int(new_order_start_number)
+        return new_order_start_number
+
+    @classmethod
+    def generate(cls):
+        order_start_number_setting = Setting.query.filter_by(name=Setting.ORDER_START_NUMBER_NAME).first()
+        order_start_number = int(order_start_number_setting.value)
+
+        return order_start_number
