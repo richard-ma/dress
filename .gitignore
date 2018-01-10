@@ -103,3 +103,6 @@ ENV/
 # sqlite
 *.db
 *_seed.py
+
+# datafile
+*.csv

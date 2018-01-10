@@ -1,6 +1,7 @@
 import unittest
 import sys
 import os
+import csv
 from dress import app
 from dress.data.models import db, Host, Status, Setting
 from flask_script import Manager, Server
@@ -80,6 +81,23 @@ def seed_setting_data(database):
         database.session.rollback()
 
         app.logger.error('Initial setting data importing failed.')
+
+@manager.command
+def importsource():
+    csvfilename = 'sourcehost.csv'
+    with open(csvfilename) as csvfile:
+        reader = csv.reader(csvfile)
+        for row in reader:
+            host = Host()
+            host.ip = row[0]
+            host.port = row[1]
+            host.domain = row[2]
+            host.pwd = row[3]
+            host.db_pwd = row[4]
+            host.memo = row[5]
+            host.create()
+
+            host.updateStatus(Status.SOURCE)
 
 @manager.command
 def seed():
