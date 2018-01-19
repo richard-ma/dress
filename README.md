@@ -6,7 +6,7 @@
 
 # 系统结构图
 
-![系统结构图](./doc/DressArchitecture.jpeg)
+![系统结构图](https://raw.githubusercontent.com/richard-ma/dress/master/doc/DressArchitecture.jpeg)
 
 # 使用手册
 
