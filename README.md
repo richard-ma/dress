@@ -4,7 +4,7 @@
 
 # 系统概述
 
-# 系统结构图
+## 系统结构图
 
 ![系统结构图](https://raw.githubusercontent.com/richard-ma/dress/master/doc/DressArchitecture.jpeg)
 
