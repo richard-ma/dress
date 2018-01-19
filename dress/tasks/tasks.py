@@ -272,7 +272,7 @@ class CloneSiteTask(Task):
 
         site_database_user_name = self.target_host.domain
         site_database_name = self.target_host.domain
-        site_database_password = generator.PasswordGenerator.generat(32)
+        site_database_password = generator.PasswordGenerator.generate(32)
 
         command_pool = list()
 
