@@ -2,6 +2,12 @@
 
 [![Build Status](https://travis-ci.org/richard-ma/dress.svg?branch=master)](https://travis-ci.org/richard-ma/dress)
 
+# 系统概述
+
+# 系统结构图
+
+![系统结构图](./doc/DressArchitecture.jpeg)
+
 # 使用手册
 
 ## Host
