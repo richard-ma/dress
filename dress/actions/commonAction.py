@@ -5,6 +5,7 @@ from dress.dress.helper import *
 class InitAction(Action):
     def run(self, *data):
         data = data[0]
+        data.append("screen")
         data.append("yum install -y epel-release")
         data.append("yum install -y sshpass")
         return data
