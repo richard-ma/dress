@@ -8,6 +8,10 @@
 
 ![系统结构图](https://raw.githubusercontent.com/richard-ma/dress/master/doc/DressArchitecture.jpeg)
 
+## 工作过程
+
+在主控网站(a.a.a.a)上运行Web界面，用户可以通过这个网站发布命令。命令目的是将模板网站(y.y.y.y)中的网站模板复制到目标网站(x.x.x.x)上，并成功运行，实现网站的自动复制和配置过程。
+
 # 使用手册
 
 ## Host
