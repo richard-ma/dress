@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from dress.helper import command_cp_helper
+from dress.helper import *
 
 class CommandCpHelperTestCase(TestCase):
 
