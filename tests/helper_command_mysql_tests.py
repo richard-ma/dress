@@ -1,8 +1,8 @@
-from unittest import TestCase
+import unittest
 
 from dress.helper import command_mysql_helper
 
-class CommandMysqlHelperTestCase(TestCase):
+class CommandMysqlHelperTestCase(unittest.TestCase):
     def setUp(self):
         pass
 

@@ -1,8 +1,8 @@
-from unittest import TestCase
+import unittest
 
 from dress.helper import *
 
-class CommandCpHelperTestCase(TestCase):
+class CommandCpHelperTestCase(unittest.TestCase):
 
     def setUp(self):
         pass

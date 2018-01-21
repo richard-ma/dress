@@ -1,5 +1,5 @@
 from dress.lib.workflow import *
-from dress.dress.helper import *
+from dress.helper import *
 
 
 class InitAction(Action):
@@ -19,8 +19,9 @@ class CopySiteAction(Action):
         data.append(
             command_cp_helper(
                 self.params['source_password'], self.params['source_user'],
-                self.params['source_ip'], self.params['source_path'],
-                self.params['target_path']))
+                self.params['source_ip'],
+                '/home/wwwroot/%s/' % (self.params['source_domain']),
+                '/home/wwwroot/%s/' % (self.params['target_domain'])))
         data.append("chown -R www:www /home/wwwroot/%s" %
                     (self.params['target_domain']))
         return data
@@ -32,8 +33,9 @@ class ApacheConfigAction(Action):
         data.append("rm -rf /usr/local/apache/conf/vhost/%s.conf" %
                     (self.params['target_domain']))
         data.append(
-            command_cp_helper(self.params['source_ip'], 'root',
-                              self.params['source_password'],
+            command_cp_helper(self.params['source_password'],
+                              self.params['source_user'],
+                              self.params['source_ip'],
                               "/usr/local/apache/conf/vhost/%s.conf" %
                               (self.params['source_domain']),
                               "/usr/local/apache/conf/vhost/%s.conf" %
@@ -52,8 +54,9 @@ class NginxConfigAction(Action):
         data.append("rm -rf /usr/local/nginx/conf/vhost/%s.conf" %
                     (self.params['target_domain']))
         data.append(
-            command_cp_helper(self.params['source_ip'], 'root',
-                              self.params['source_password'],
+            command_cp_helper(self.params['source_password'],
+                              self.params['source_user'],
+                              self.params['source_ip'],
                               "/usr/local/nginx/conf/vhost/%s.conf" %
                               (self.params['source_domain']),
                               "/usr/local/nginx/conf/vhost/%s.conf" %
@@ -122,7 +125,7 @@ class MysqlImportDataAction(Action):
                 (self.params['target_domain']),
                 ignore_case=True))
         data.append("mysql -u root -p\'%s\' %s < %s" %
-                    (self.params['target_database_root_password'],
+                    (self.params['database_root_password'],
                      self.params['database_name'],
                      "/home/wwwroot/%s/dacscartb.sql" %
                      (self.params['target_domain'])))
