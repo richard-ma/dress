@@ -12,6 +12,8 @@ from dress.action.cscart_action import CscartConfigAction
 from dress.action.cscart_action import CscartOrderStartIdAction
 from dress.action.cscart_action import CscartSmtpSettingAction
 
+from dress.action.ssh_action import SshAction
+
 __all__ = [
         'InitAction',
         'CopySiteAction',
@@ -25,4 +27,5 @@ __all__ = [
         'CscartConfigAction',
         'CscartOrderStartIdAction',
         'CscartSmtpSettingAction',
+        'SshAction',
         ]

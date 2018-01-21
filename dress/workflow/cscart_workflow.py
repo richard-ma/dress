@@ -25,6 +25,10 @@ def cscart_workflow(**params):
             #'smtp_host':                        'smtp_host',               # smtp_host
             #'smtp_user_name':                   'smtp_user_name',          # smtp_user_name
             #'smtp_user_password':               'smtp_user_password'       # smtp_user_password
+            #'ip':                               'ip'                       # target_ip
+            #'port':                             'port'                     # target_port always 22
+            #'username':                         'root'                     # target_user_name always root
+            #'password':                         'password'                 # target_password
     #}
     w = Workflow(initData=list()
     ).push(InitAction(**params)
@@ -40,6 +44,7 @@ def cscart_workflow(**params):
     ).push(CscartSmtpSettingAction(**params)
     ).push(LnmpRestartAction(**params)
     ).push(DebugAction()
+    ).push(SshAction(**params))
     ).execute()
 
 if __name__ == '__main__':
