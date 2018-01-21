@@ -65,26 +65,26 @@ class CommonActionTestCase(unittest.TestCase):
     def test_mysql_create_user(self):
         action = MysqlCreateUserAction(
                 database_root_password='database_root_password',
-                user_name='user_name',
-                user_password='user_password')
+                database_user_name='database_user_name',
+                database_password='database_password')
         data = action.run(list())
 
         self.assertEqual(3, len(data))
-        self.assertTrue("mysql -u root -p\'database_root_password\' -e \"DROP USER IF EXISTS 'user_name'@'localhost';\"" in data[0])
-        self.assertTrue("mysql -u root -p\'database_root_password\' -e \"CREATE USER 'user_name'@'localhost' IDENTIFIED BY 'user_password';\"" in data[1])
-        self.assertTrue("mysql -u root -p\'database_root_password\' -e \"GRANT USAGE ON * . * TO 'user_name'@'localhost' IDENTIFIED BY 'user_password' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;\"" in data[2])
+        self.assertTrue("mysql -u root -p\'database_root_password\' -e \"DROP USER IF EXISTS 'database_user_name'@'localhost';\"" in data[0])
+        self.assertTrue("mysql -u root -p\'database_root_password\' -e \"CREATE USER 'database_user_name'@'localhost' IDENTIFIED BY 'database_password';\"" in data[1])
+        self.assertTrue("mysql -u root -p\'database_root_password\' -e \"GRANT USAGE ON * . * TO 'database_user_name'@'localhost' IDENTIFIED BY 'database_password' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;\"" in data[2])
 
     def test_mysql_create_database(self):
         action = MysqlCreateDatabaseAction(
                 database_root_password='database_root_password',
-                user_name='user_name',
+                database_user_name='database_user_name',
                 database_name='database_name')
         data = action.run(list())
 
         self.assertEqual(3, len(data))
         self.assertTrue("mysql -u root -p\'database_root_password\' -e \"DROP DATABASE IF EXISTS \`database_name\`;\"" in data[0])
         self.assertTrue("mysql -u root -p\'database_root_password\' -e \"CREATE DATABASE \`database_name\`;\"" in data[1])
-        self.assertTrue("mysql -u root -p\'database_root_password\' -e \"GRANT ALL PRIVILEGES ON \`database_name\` . * TO 'user_name'@'localhost';\"" in data[2])
+        self.assertTrue("mysql -u root -p\'database_root_password\' -e \"GRANT ALL PRIVILEGES ON \`database_name\` . * TO 'database_user_name'@'localhost';\"" in data[2])
 
     def test_mysql_import_data(self):
         action = MysqlImportDataAction(

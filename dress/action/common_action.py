@@ -76,19 +76,19 @@ class MysqlCreateUserAction(Action):
         data.append(
             command_mysql_helper(self.params['database_root_password'],
                                  "DROP USER IF EXISTS '%s'@'localhost';" %
-                                 (self.params['user_name'])))
+                                 (self.params['database_user_name'])))
         # create user
         data.append(
             command_mysql_helper(
                 self.params['database_root_password'],
                 "CREATE USER '%s'@'localhost' IDENTIFIED BY '%s';" %
-                (self.params['user_name'], self.params['user_password'])))
+                (self.params['database_user_name'], self.params['database_password'])))
         # grant privilige
         data.append(
             command_mysql_helper(
                 self.params['database_root_password'],
                 "GRANT USAGE ON * . * TO '%s'@'localhost' IDENTIFIED BY '%s' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;"
-                % (self.params['user_name'], self.params['user_password'])))
+                % (self.params['database_user_name'], self.params['database_password'])))
         return data
 
 
@@ -110,7 +110,7 @@ class MysqlCreateDatabaseAction(Action):
             command_mysql_helper(
                 self.params['database_root_password'],
                 "GRANT ALL PRIVILEGES ON `%s` . * TO '%s'@'localhost';" %
-                (self.params['database_name'], self.params['user_name'])))
+                (self.params['database_name'], self.params['database_user_name'])))
         return data
 
 
