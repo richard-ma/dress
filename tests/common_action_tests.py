@@ -1,7 +1,7 @@
 import unittest
 import dress
 
-from dress.actions.commonAction import *
+from dress.actions.common_action import *
 
 class CommonActionTestCase(unittest.TestCase):
     def setUp(self):

@@ -1,11 +1,11 @@
-from dress.actions.commonAction import InitAction
-from dress.actions.commonAction import CopySiteAction
-from dress.actions.commonAction import ApacheConfigAction
-from dress.actions.commonAction import NginxConfigAction
-from dress.actions.commonAction import MysqlCreateUserAction
-from dress.actions.commonAction import MysqlCreateDatabaseAction
-from dress.actions.commonAction import MysqlImportDataAction
-from dress.actions.commonAction import LnmpRestartAction
+from dress.actions.common_action import InitAction
+from dress.actions.common_action import CopySiteAction
+from dress.actions.common_action import ApacheConfigAction
+from dress.actions.common_action import NginxConfigAction
+from dress.actions.common_action import MysqlCreateUserAction
+from dress.actions.common_action import MysqlCreateDatabaseAction
+from dress.actions.common_action import MysqlImportDataAction
+from dress.actions.common_action import LnmpRestartAction
 
 __all__ = [
         'InitAction',
