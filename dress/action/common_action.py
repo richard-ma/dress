@@ -1,4 +1,4 @@
-from dress.lib.workflow import *
+from dress.vendor.workflow import *
 from dress.helper import *
 
 
