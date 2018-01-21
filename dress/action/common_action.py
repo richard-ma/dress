@@ -137,7 +137,3 @@ class LnmpRestartAction(Action):
         data = data[0]
         data.append("lnmp restart")
         return data
-
-
-if __name__ == "__main__":
-    Workflow(list()).push(InitAction()).execute()

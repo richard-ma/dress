@@ -78,7 +78,3 @@ class CscartSmtpSettingAction(Action):
                    self.params['smtp_user_password'],
                    self.params['table_prefix'])))
         return data
-
-
-if __name__ == "__main__":
-    Workflow(list()).push(InitAction()).execute()
