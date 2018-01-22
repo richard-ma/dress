@@ -155,6 +155,7 @@ def create_app():
 
         app.logger.debug('Lanuching task.')
         params = {
+            'logger': app.logger,
             'source_domain': source_host.domain,
             'source_ip': source_host.ip,
             'source_port': source_host.port,
@@ -166,23 +167,23 @@ def create_app():
             'target_database_root_password': target_host.db_pwd,
             'order_start_id': order_start_id,
         }
-        cscart_workflow(**params)
+        executor.submit(cscart_workflow, **params)
         #executor.submit(task_clone_site_exec, source_host, target_host,
-                        #site_type, table_prefix, order_start_id, smtp_host,
-                        #smtp_username, smtp_password)
+        #site_type, table_prefix, order_start_id, smtp_host,
+        #smtp_username, smtp_password)
 
         flash("Clone Task Is Running In Background. Please Wait...")
 
         return redirect(url_for('task_clone_site_form'))
 
     #def task_clone_site_exec(source_host: Host, target_host: Host, site_type,
-                             #table_prefix, order_start_id, smtp_host,
-                             #smtp_username, smtp_password):
-        #from dress.tasks.tasks import CloneSiteTask
-        #task = CloneSiteTask(source_host, target_host, site_type, table_prefix,
-                             #order_start_id, smtp_host, smtp_username,
-                             #smtp_password)
-        #task.run()
+    #table_prefix, order_start_id, smtp_host,
+    #smtp_username, smtp_password):
+    #from dress.tasks.tasks import CloneSiteTask
+    #task = CloneSiteTask(source_host, target_host, site_type, table_prefix,
+    #order_start_id, smtp_host, smtp_username,
+    #smtp_password)
+    #task.run()
 
     # test
     @app.route('/test/change_host_status')
