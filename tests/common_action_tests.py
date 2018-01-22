@@ -14,10 +14,10 @@ class CommonActionTestCase(unittest.TestCase):
         action = InitAction()
         data = action.run(list())
 
-        self.assertEqual(3, len(data))
-        self.assertTrue("screen" in data[0])
-        self.assertTrue("yum install -y epel-release" in data[1])
-        self.assertTrue("yum install -y sshpass" in data[2])
+        self.assertEqual(2, len(data))
+        #self.assertTrue("screen" in data[0])
+        self.assertTrue("yum install -y epel-release" in data[0])
+        self.assertTrue("yum install -y sshpass" in data[1])
 
     def test_copy_site(self):
         action = CopySiteAction(
@@ -70,7 +70,9 @@ class CommonActionTestCase(unittest.TestCase):
         data = action.run(list())
 
         self.assertEqual(3, len(data))
-        self.assertTrue("mysql -u root -p\'database_root_password\' -e \"DROP USER IF EXISTS 'database_user_name'@'localhost';\"" in data[0])
+        self.assertTrue("mysql -u root -p\'database_root_password\' -e \"DROP USER 'database_user_name'@'localhost';\"" in data[0])
+        # mysql version >= 5.7
+        #self.assertTrue("mysql -u root -p\'database_root_password\' -e \"DROP USER IF EXISTS 'database_user_name'@'localhost';\"" in data[0])
         self.assertTrue("mysql -u root -p\'database_root_password\' -e \"CREATE USER 'database_user_name'@'localhost' IDENTIFIED BY 'database_password';\"" in data[1])
         self.assertTrue("mysql -u root -p\'database_root_password\' -e \"GRANT USAGE ON * . * TO 'database_user_name'@'localhost' IDENTIFIED BY 'database_password' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;\"" in data[2])
 

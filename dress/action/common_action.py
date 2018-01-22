@@ -5,7 +5,7 @@ from dress.helper import *
 class InitAction(Action):
     def run(self, *data):
         data = data[0]
-        data.append("screen")
+        #data.append("screen")
         data.append("yum install -y epel-release")
         data.append("yum install -y sshpass")
         return data
@@ -75,8 +75,13 @@ class MysqlCreateUserAction(Action):
         # drop user
         data.append(
             command_mysql_helper(self.params['database_root_password'],
-                                 "DROP USER IF EXISTS '%s'@'localhost';" %
+                                 "DROP USER '%s'@'localhost';" %
                                  (self.params['database_user_name'])))
+        # mysql version >= 5.7
+        #data.append(
+            #command_mysql_helper(self.params['database_root_password'],
+                                 #"DROP USER IF EXISTS '%s'@'localhost';" %
+                                 #(self.params['database_user_name'])))
         # create user
         data.append(
             command_mysql_helper(
