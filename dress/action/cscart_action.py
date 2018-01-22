@@ -44,37 +44,45 @@ class CscartConfigAction(Action):
 class CscartOrderStartIdAction(Action):
     def run(self, *data):
         data = data[0]
-        data.append(
-            command_mysql_helper(
-                self.params['target_database_root_password'],
-                "UPDATE `%s`.`%ssettings_objects` SET `value` = '%s' WHERE `%ssettings_objects`.`object_id` = 62;"
-                % (self.params['target_database_name'], self.params['table_prefix'],
-                   self.params['order_start_id'],
-                   self.params['table_prefix'])))
+        # order_start_id is None: doing nothing
+        if self.params['order_start_id'] != None:
+            data.append(
+                command_mysql_helper(
+                    self.params['target_database_root_password'],
+                    "UPDATE `%s`.`%ssettings_objects` SET `value` = '%s' WHERE `%ssettings_objects`.`object_id` = 62;"
+                    % (self.params['target_database_name'],
+                       self.params['table_prefix'],
+                       self.params['order_start_id'],
+                       self.params['table_prefix'])))
         return data
 
 
 class CscartSmtpSettingAction(Action):
     def run(self, *data):
         data = data[0]
-        data.append(
+        if self.params['smtp_host'] != None:
+            data.append(
             command_mysql_helper(
                 self.params['target_database_root_password'],
                 "UPDATE `%s`.`%ssettings_objects` SET `value` = '%s' WHERE `%ssettings_objects`.`object_id` = 109;"
-                % (self.params['target_database_name'], self.params['table_prefix'],
-                   self.params['smtp_host'], self.params['table_prefix'])))
-        data.append(
+                % (self.params['target_database_name'],
+                   self.params['table_prefix'], self.params['smtp_host'],
+                   self.params['table_prefix'])))
+        if self.params['smtp_user_name'] != None:
+            data.append(
             command_mysql_helper(
                 self.params['target_database_root_password'],
                 "UPDATE `%s`.`%ssettings_objects` SET `value` = '%s' WHERE `%ssettings_objects`.`object_id` = 111;"
-                % (self.params['target_database_name'], self.params['table_prefix'],
-                   self.params['smtp_user_name'],
+                % (self.params['target_database_name'],
+                   self.params['table_prefix'], self.params['smtp_user_name'],
                    self.params['table_prefix'])))
-        data.append(
+        if self.params['smtp_user_password'] != None:
+            data.append(
             command_mysql_helper(
                 self.params['target_database_root_password'],
                 "UPDATE `%s`.`%ssettings_objects` SET `value` = '%s' WHERE `%ssettings_objects`.`object_id` = 112;"
-                % (self.params['target_database_name'], self.params['table_prefix'],
+                % (self.params['target_database_name'],
+                   self.params['table_prefix'],
                    self.params['smtp_user_password'],
                    self.params['table_prefix'])))
         return data

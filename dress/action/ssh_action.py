@@ -4,8 +4,8 @@ import paramiko
 
 
 class SshAction(Action):
-    def __init__(**kwargs):
-        super(**kwargs)
+    def __init__(self, **kwargs):
+        super(SshAction, self).__init__(**kwargs)
         self.client = paramiko.SSHClient()
         # ignore ssh host key to .ssh/know_hosts
         self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())

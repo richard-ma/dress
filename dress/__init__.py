@@ -11,6 +11,9 @@ from dress.utils.generator import OrderStartNumberGenerator
 
 from concurrent.futures import ThreadPoolExecutor
 
+from dress.workflow.cscart_workflow import cscart_workflow
+
+
 def create_app():
     app = Flask(__name__)
 
@@ -25,9 +28,10 @@ def create_app():
     Bootstrap(app)
 
     # Navbar flask-nav
-    topbar = Navbar('',
-            View('Host', 'host'),
-            View('Clone', 'task_clone_site_form'),
+    topbar = Navbar(
+        '',
+        View('Host', 'host'),
+        View('Clone', 'task_clone_site_form'),
     )
     nav = Nav()
     nav.register_element('top', topbar)
@@ -104,15 +108,17 @@ def create_app():
     # clone site task
     @app.route('/task/clone_site/form')
     def task_clone_site_form():
-        source_hosts = Host.query.filter_by(status=Status.query.filter_by(title=Status.SOURCE).first())
-        target_hosts = Host.query.filter(Host.status != Status.query.filter_by(title=Status.SOURCE).first())
+        source_hosts = Host.query.filter_by(
+            status=Status.query.filter_by(title=Status.SOURCE).first())
+        target_hosts = Host.query.filter(
+            Host.status != Status.query.filter_by(title=Status.SOURCE).first())
         order_start_id = OrderStartNumberGenerator.generate()
 
         return render_template(
-                'task_clone_site_form.html',
-                source_hosts=source_hosts,
-                target_hosts=target_hosts,
-                order_start_id=order_start_id)
+            'task_clone_site_form.html',
+            source_hosts=source_hosts,
+            target_hosts=target_hosts,
+            order_start_id=order_start_id)
 
     # clone site task
     @app.route('/task/clone_site', methods=['POST'])
@@ -148,16 +154,35 @@ def create_app():
             return redirect(url_for('/task/clone_site/form'))
 
         app.logger.debug('Lanuching task.')
-        executor.submit(task_clone_site_exec, source_host, target_host, site_type, table_prefix, order_start_id, smtp_host, smtp_username, smtp_password)
+        params = {
+            'source_domain': source_host.domain,
+            'source_ip': source_host.ip,
+            'source_port': source_host.port,
+            'source_password': source_host.pwd,
+            'target_domain': target_host.domain,
+            'target_ip': target_host.ip,
+            'target_port': target_host.port,
+            'target_password': target_host.pwd,
+            'target_database_root_password': target_host.db_pwd,
+            'order_start_id': order_start_id,
+        }
+        cscart_workflow(**params)
+        #executor.submit(task_clone_site_exec, source_host, target_host,
+                        #site_type, table_prefix, order_start_id, smtp_host,
+                        #smtp_username, smtp_password)
 
         flash("Clone Task Is Running In Background. Please Wait...")
 
         return redirect(url_for('task_clone_site_form'))
 
-    def task_clone_site_exec(source_host: Host, target_host: Host, site_type, table_prefix, order_start_id, smtp_host, smtp_username, smtp_password):
-        from dress.tasks.tasks import CloneSiteTask
-        task = CloneSiteTask(source_host, target_host, site_type, table_prefix, order_start_id, smtp_host, smtp_username, smtp_password)
-        task.run()
+    #def task_clone_site_exec(source_host: Host, target_host: Host, site_type,
+                             #table_prefix, order_start_id, smtp_host,
+                             #smtp_username, smtp_password):
+        #from dress.tasks.tasks import CloneSiteTask
+        #task = CloneSiteTask(source_host, target_host, site_type, table_prefix,
+                             #order_start_id, smtp_host, smtp_username,
+                             #smtp_password)
+        #task.run()
 
     # test
     @app.route('/test/change_host_status')
@@ -192,5 +217,6 @@ def create_app():
         print("Task #2 is done!")
 
     return app
+
 
 app = create_app()
