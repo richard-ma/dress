@@ -5,6 +5,7 @@ from dress.action import *
 def cscart_workflow(**params):
     target_database_password = generator_password_helper(32)
     parsed_params = {
+            'logger':                           params['logger'],
             'source_domain':                    params['source_domain'],
             'source_ip':                        params['source_ip'],
             'source_port':                      params['source_port'],
@@ -16,7 +17,7 @@ def cscart_workflow(**params):
             'target_user':                      'root',
             'target_password':                  params['target_password'],
             'target_database_root_password':    params['target_database_root_password'],
-            'target_database_user_name':        'root',
+            'target_database_user_name':        params['target_domain'],
             'target_database_password':         target_database_password,
             'target_database_name':             params['target_domain'],                    # target_domain
             'database_root_password':           params['target_database_root_password'],    # target_database_root_password
@@ -28,10 +29,10 @@ def cscart_workflow(**params):
             'smtp_host':                        params['smtp_host'] if 'smtp_host' in params.keys() else None,                  # smtp_host
             'smtp_user_name':                   params['smtp_user_name'] if 'smtp_user_name' in params.keys() else None,        # smtp_user_name
             'smtp_user_password':               params['smtp_user_password'] if 'smtp_user_password' in params.keys() else None,# smtp_user_password
-            'ip':                               params['target_ip'],             # target_ip
-            'port':                             params['target_port'],           # target_port always 22
-            'username':                         'root',                          # target_user_name always root
-            'password':                         params['target_password'],       # target_password
+            'ssh_ip':                           params['target_ip'],             # target_ip
+            'ssh_port':                         params['target_port'],           # target_port always 22
+            'ssh_username':                     'root',                          # target_user_name always root
+            'ssh_password':                     params['target_password'],       # target_password
     }
     w = Workflow(initData=list()
     ).push(InitAction(**parsed_params)
@@ -46,7 +47,7 @@ def cscart_workflow(**params):
     ).push(CscartOrderStartIdAction(**parsed_params)
     ).push(CscartSmtpSettingAction(**parsed_params)
     ).push(LnmpRestartAction(**parsed_params)
-    ).push(DebugAction()
+    #).push(DebugAction()
     ).push(SshAction(**parsed_params)
     ).execute()
 
