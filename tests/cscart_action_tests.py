@@ -1,7 +1,7 @@
 import unittest
 import dress
 
-from dress.action import *
+from dress.actions import *
 
 
 class CscartActionTestCase(unittest.TestCase):
