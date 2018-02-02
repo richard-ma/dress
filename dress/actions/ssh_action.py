@@ -1,6 +1,7 @@
 from dress.vendor.workflow import *
 from dress.helper import *
 import paramiko
+import time
 
 
 class SshAction(Action):
@@ -16,25 +17,50 @@ class SshAction(Action):
             port=self.params['ssh_port'],
             username=self.params['ssh_username'],
             password=self.params['ssh_password'])
+        channel = self.client.invoke_shell()
+        channel.settimeout(3600)
+        self.channel = channel
 
     def close(self):
         self.client.close()
 
+    def screen_exec(self, command):
+        self.channel.send("{}\n".format(command))
+        flag = False
+        retVal = ""
+        while not flag:
+            time.sleep(1)
+            try:
+                buffByte = self.channel.recv(9999)
+                buff = buffByte.decode()
+                retVal = retVal + buff
+                gotit = buff.find('#')
+                if gotit != -1:
+                    flag = True
+            except:
+                flag = True
+        return retVal
+
+    # unused
     def exec_command(self, command):
         stdin, stdout, stderr = self.client.exec_command(command)
+        print('output:' + ''.join(stdout.readlines()))
+        print('error:' + ''.join(stderr.readlines()))
         # log command response
+        return stdin, stdout, stderr
 
     def run(self, *data):
-        commands = data[0]
-        self.connect()
+        data = data[0]
         try:
             self.connect()
-            for command in commands:
-                # log command response
-                self.exec_command(command)
+            self.screen_exec("screen -S dress -X quit")
+            self.screen_exec("screen -S dress")
+            for command in data:
+                print(command)
+                print(self.screen_exec(command))
         except paramiko.SSHException as e:
             # log command response
-            pass
+            print("error accourd")
         finally:
             self.close()
-        return commands
+        return True  # The end of workflow

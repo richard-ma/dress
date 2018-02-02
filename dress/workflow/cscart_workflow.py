@@ -1,6 +1,6 @@
 from dress.vendor.workflow import *
 from dress.helper import *
-from dress.action import *
+from dress.actions import *
 
 def cscart_workflow(**params):
     target_database_password = generator_password_helper(32)
@@ -47,6 +47,7 @@ def cscart_workflow(**params):
     ).push(CscartOrderStartIdAction(**parsed_params)
     ).push(CscartSmtpSettingAction(**parsed_params)
     ).push(LnmpRestartAction(**parsed_params)
+    #).push(CommandToShellScriptAction(**parsed_params)
     #).push(DebugAction()
     ).push(SshAction(**parsed_params)
     ).execute()
