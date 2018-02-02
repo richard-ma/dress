@@ -56,8 +56,7 @@ class SshAction(Action):
             self.screen_exec("screen -S dress -X quit")
             self.screen_exec("screen -S dress")
             for command in data:
-                print(command)
-                print(self.screen_exec(command))
+                self.screen_exec(command)
         except paramiko.SSHException as e:
             # log command response
             print("error accourd")
