@@ -3,7 +3,7 @@ from dress.helper import *
 from dress.actions import *
 
 
-def cscart_workflow(**params):
+def magento_workflow(**params):
     target_database_password = generator_password_helper(32)
     parsed_params = {
         'logger':
@@ -50,15 +50,6 @@ def cscart_workflow(**params):
         'order_start_id':
         params['order_start_id']
         if 'order_start_id' in params.keys() else None,  # order_start_id
-        'smtp_host':
-        params['smtp_host']
-        if 'smtp_host' in params.keys() else None,  # smtp_host
-        'smtp_user_name':
-        params['smtp_user_name']
-        if 'smtp_user_name' in params.keys() else None,  # smtp_user_name
-        'smtp_user_password':
-        params['smtp_user_password'] if 'smtp_user_password' in params.keys()
-        else None,  # smtp_user_password
         'ssh_ip':
         params['target_ip'],  # target_ip
         'ssh_port':
@@ -84,14 +75,6 @@ def cscart_workflow(**params):
     ).push(
         MysqlImportDataAction(**parsed_params)
     ).push(
-        CscartClearCacheAction(**parsed_params)
-    ).push(
-        CscartConfigAction(**parsed_params)
-    ).push(
-        CscartOrderStartIdAction(**parsed_params)
-    ).push(
-        CscartSmtpSettingAction(**parsed_params)
-    ).push(
         LnmpRestartAction(**parsed_params)
     ).push(
         SshAction(**parsed_params)
@@ -99,4 +82,4 @@ def cscart_workflow(**params):
 
 
 if __name__ == '__main__':
-    cscart_workflow()
+    magento_workflow()

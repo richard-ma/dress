@@ -11,7 +11,7 @@ from dress.utils.generator import OrderStartNumberGenerator
 
 from concurrent.futures import ThreadPoolExecutor
 
-from dress.workflow.cscart_workflow import cscart_workflow
+from dress.workflow import *
 
 
 def create_app():
@@ -168,7 +168,10 @@ def create_app():
             'order_start_id': order_start_id,
         }
         #cscart_workflow(**params)
-        executor.submit(cscart_workflow, **params)
+        if site_type == 'cscart':
+            executor.submit(cscart_workflow, **params)
+        elif site_type == 'magento':
+            executor.submit(magento_workflow, **params)
         #executor.submit(task_clone_site_exec, source_host, target_host,
         #site_type, table_prefix, order_start_id, smtp_host,
         #smtp_username, smtp_password)
