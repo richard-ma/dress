@@ -16,28 +16,21 @@ class MagentoConfigAction(Action):
     def run(self, *data):
         data = data[0]
         data.append(
-            command_sed_helper("\$config\['db_name'\] = '.*';",
-                               "\$config\['db_name'\] = '%s';" %
+            command_sed_helper("'dbname' => '.*',",
+                               "'dbname' => '%s'," %
                                (self.params['target_database_name']),
-                               "/home/wwwroot/%s/config.local.php" %
+                               "/home/wwwroot/%s/app/etc/env.php" %
                                (self.params['target_domain'])))
         data.append(
-            command_sed_helper("\$config\['db_user'\] = '.*';",
-                               "\$config\['db_user'\] = '%s';" %
+            command_sed_helper("'username' => '.*',",
+                               "'username' => '%s'," %
                                (self.params['target_database_user_name']),
-                               "/home/wwwroot/%s/config.local.php" %
+                               "/home/wwwroot/%s/app/etc/env.php" %
                                (self.params['target_domain'])))
         data.append(
-            command_sed_helper("\$config\['db_password'\] = '.*';",
-                               "\$config\['db_password'\] = '%s';" %
+            command_sed_helper("'password' => '.*',",
+                               "'password' => '%s'," %
                                (self.params['target_database_password']),
-                               "/home/wwwroot/%s/config.local.php" %
+                               "/home/wwwroot/%s/app/etc/env.php" %
                                (self.params['target_domain'])))
-        data.append(
-            command_sed_helper(
-                self.params['source_domain'],
-                self.params['target_domain'],
-                "/home/wwwroot/%s/config.local.php" %
-                (self.params['target_domain']),
-                ignore_case=True))
         return data

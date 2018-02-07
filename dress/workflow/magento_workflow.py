@@ -3,6 +3,13 @@ from dress.helper import *
 from dress.actions import *
 
 
+# Env Version
+# PHP >= 5.6
+# Mysql >= 5.6
+# Apache >= 2.2
+#
+
+
 def magento_workflow(**params):
     target_database_password = generator_password_helper(32)
     data_file_name = "/home/wwwroot/%s/d%sb.sql" % (
@@ -53,9 +60,11 @@ def magento_workflow(**params):
     ).push(
         MysqlImportDataAction(**parsed_params)
     ).push(
-        LnmpRestartAction(**parsed_params)
-    ).push(
         MagentoClearCacheAction(**parsed_params)
+    ).push(
+        MagentoConfigAction(**parsed_params)
+    ).push(
+        LnmpRestartAction(**parsed_params)
     ).push(
         SshAction(**parsed_params)
     ).execute()

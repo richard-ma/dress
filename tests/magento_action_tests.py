@@ -28,19 +28,16 @@ class MagentoActionTestCase(unittest.TestCase):
             target_database_password='target_database_password')
         data = action.run(list())
 
-        self.assertEqual(4, len(data))
+        self.assertEqual(3, len(data))
         self.assertTrue(
-            "sed -i \"s/\$config\['db_name'\] = '.*';/\$config\['db_name'\] = 'target_database_name';/g\" /home/wwwroot/target_domain/config.local.php"
+            "sed -i \"s/'dbname' => '.*',/'dbname' => 'target_database_name',/g\" /home/wwwroot/target_domain/app/etc/env.php"
             in data[0])
         self.assertTrue(
-            "sed -i \"s/\$config\['db_user'\] = '.*';/\$config\['db_user'\] = 'target_database_user_name';/g\" /home/wwwroot/target_domain/config.local.php"
+            "sed -i \"s/'username' => '.*',/'username' => 'target_database_user_name',/g\" /home/wwwroot/target_domain/app/etc/env.php"
             in data[1])
         self.assertTrue(
-            "sed -i \"s/\$config\['db_password'\] = '.*';/\$config\['db_password'\] = 'target_database_password';/g\" /home/wwwroot/target_domain/config.local.php"
+            "sed -i \"s/'password' => '.*',/'password' => 'target_database_password',/g\" /home/wwwroot/target_domain/app/etc/env.php"
             in data[2])
-        self.assertTrue(
-            "sed -i \"s/source_domain/target_domain/Ig\" /home/wwwroot/target_domain/config.local.php"
-            in data[3])
 
 
 if __name__ == '__main__':
