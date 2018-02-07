@@ -12,6 +12,9 @@ from dress.actions.cscart_action import CscartConfigAction
 from dress.actions.cscart_action import CscartOrderStartIdAction
 from dress.actions.cscart_action import CscartSmtpSettingAction
 
+from dress.actions.magento_action import MagentoClearCacheAction
+from dress.actions.magento_action import MagentoConfigAction
+
 from dress.actions.ssh_action import SshAction
 
 from dress.actions.file_action import CommandToShellScriptAction
@@ -29,6 +32,8 @@ __all__ = [
         'CscartConfigAction',
         'CscartOrderStartIdAction',
         'CscartSmtpSettingAction',
+        'MagentoClearCacheAction',
+        'MagentoConfigAction',
         'SshAction',
         'CommandToShellScriptAction',
         ]
