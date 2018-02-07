@@ -93,12 +93,13 @@ class CommonActionTestCase(unittest.TestCase):
                 database_root_password='database_root_password',
                 database_name='database_name',
                 source_domain='source_domain',
-                target_domain='target_domain')
+                target_domain='target_domain',
+                data_file_name='data_file_name')
         data = action.run(list())
 
         self.assertEqual(2, len(data))
-        self.assertTrue("sed -i \"s/source_domain/target_domain/Ig\" /home/wwwroot/target_domain/dacscartb.sql" in data[0])
-        self.assertTrue("mysql -u root -p\'database_root_password\' database_name < /home/wwwroot/target_domain/dacscartb.sql" in data[1])
+        self.assertTrue("sed -i \"s/source_domain/target_domain/Ig\" data_file_name" in data[0])
+        self.assertTrue("mysql -u root -p\'database_root_password\' database_name < data_file_name" in data[1])
 
     def test_restart_lnmp(self):
         action = LnmpRestartAction()
