@@ -170,6 +170,7 @@ def create_app():
         #cscart_workflow(**params)
         if site_type == 'cscart':
             executor.submit(cscart_workflow, **params)
+            #cscart_workflow(**params)
         elif site_type == 'magento':
             executor.submit(magento_workflow, **params)
         #executor.submit(task_clone_site_exec, source_host, target_host,
