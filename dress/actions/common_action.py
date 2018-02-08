@@ -128,6 +128,12 @@ class MysqlImportDataAction(Action):
                 self.params['target_domain'],
                 self.params['data_file_name'],
                 ignore_case=True))
+        data.append(
+            command_sed_helper(
+                self.params['source_domain'].split('.')[0],
+                self.params['target_domain'].split('.')[0],
+                self.params['data_file_name'],
+                ignore_case=True))
         data.append("mysql -u root -p\'%s\' %s < %s" %
                     (self.params['database_root_password'],
                      self.params['database_name'],

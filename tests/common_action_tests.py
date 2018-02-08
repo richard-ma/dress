@@ -92,14 +92,15 @@ class CommonActionTestCase(unittest.TestCase):
         action = MysqlImportDataAction(
                 database_root_password='database_root_password',
                 database_name='database_name',
-                source_domain='source_domain',
-                target_domain='target_domain',
+                source_domain='source.domain',
+                target_domain='target.domain',
                 data_file_name='data_file_name')
         data = action.run(list())
 
-        self.assertEqual(2, len(data))
-        self.assertTrue("sed -i \"s/source_domain/target_domain/Ig\" data_file_name" in data[0])
-        self.assertTrue("mysql -u root -p\'database_root_password\' database_name < data_file_name" in data[1])
+        self.assertEqual(3, len(data))
+        self.assertTrue("sed -i \"s/source.domain/target.domain/Ig\" data_file_name" in data[0])
+        self.assertTrue("sed -i \"s/source/target/Ig\" data_file_name" in data[1])
+        self.assertTrue("mysql -u root -p\'database_root_password\' database_name < data_file_name" in data[2])
 
     def test_restart_lnmp(self):
         action = LnmpRestartAction()
