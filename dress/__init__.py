@@ -44,7 +44,8 @@ def create_app():
     # host operation
     @app.route('/host')
     def host():
-        hosts = Host.query.all()
+        hosts = Host.query.filter(
+            Host.status != Status.query.filter_by(title=Status.SOURCE).first())
 
         return render_template('host.html', hosts=hosts)
 
