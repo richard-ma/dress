@@ -4,7 +4,7 @@ import dress
 from dress.actions import *
 
 
-class CscartActionTestCase(unittest.TestCase):
+class ActionCscartTestCase(unittest.TestCase):
     def setUp(self):
         pass
 

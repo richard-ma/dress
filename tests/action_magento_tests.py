@@ -4,7 +4,7 @@ import dress
 from dress.actions import *
 
 
-class MagentoActionTestCase(unittest.TestCase):
+class ActionMagentoTestCase(unittest.TestCase):
     def setUp(self):
         pass
 

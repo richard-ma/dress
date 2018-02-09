@@ -3,7 +3,7 @@ import dress
 
 from dress.actions import *
 
-class CommonActionTestCase(unittest.TestCase):
+class ActionCommonTestCase(unittest.TestCase):
     def setUp(self):
         pass
 

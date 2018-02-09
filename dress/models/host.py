@@ -1,7 +1,5 @@
-from flask_sqlalchemy import SQLAlchemy
+from dress.models.db import db
 from sqlalchemy.orm import relationship
-
-db = SQLAlchemy()
 
 class Host(db.Model):
     __tablename__ = 'host'
@@ -87,6 +85,7 @@ class Host(db.Model):
     def __repr__(self):
         return '<Host %r>' % (self.name)
 
+
 class Status(db.Model):
     __tablename__ = 'status'
 
@@ -136,50 +135,3 @@ class Status(db.Model):
 
     def __repr__(self):
         return '<Status %r>' % (self.title)
-
-class Setting(db.Model):
-    __tablename__ = 'setting'
-
-    name = db.Column(db.String(128), primary_key=True)
-    value = db.Column(db.Text)
-
-    ORDER_START_NUMBER_NAME = 'start_order_number'
-    ORDER_START_NUMBER_VALUE = '10000'
-
-    def __init__(self, name, value):
-        self.name = name
-        self.value = value
-
-    def create(self):
-        try:
-            db.session.add(self)
-            db.session.commit()
-        except exc.SQLAlchemyError:
-            database.session.rollback()
-
-            app.logger.error(self)
-
-        return self
-
-    def delete(self):
-        try:
-            db.session.delete(self)
-            db.session.commit()
-        except exc.SQLAlchemyError:
-            database.session.rollback()
-
-            app.logger.error(self)
-
-        return self
-
-    def update(self, value):
-        self.value = value
-        try:
-            db.session.commit()
-        except exc.SQLAlchemyError:
-            database.session.rollback()
-
-            app.logger.error(self)
-
-    def __repr__(self):
-        return '<Setting %r=%r>' % (self.name, self.value)

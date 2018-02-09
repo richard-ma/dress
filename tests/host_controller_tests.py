@@ -3,11 +3,10 @@
 import unittest
 from flask_testing import TestCase
 import dress
-from dress.data.models import db, Host, Status
+from dress.models import *
 from manager import seed
-#from tests.utils import get_endpoint
 
-class HostControllerTestCase(TestCase):
+class ControllerHostTestCase(TestCase):
 
     def create_app(self):
         app = dress.create_app()

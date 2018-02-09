@@ -3,7 +3,7 @@ import sys
 import os
 import csv
 from dress import app
-from dress.data.models import db, Host, Status, Setting
+from dress.models import *
 from flask_script import Manager, Server
 from flask_migrate import Migrate, MigrateCommand
 
@@ -68,7 +68,7 @@ def seed_status_data(database):
 
 def seed_setting_data(database):
     data = list()
-    data.append(Setting(name=Setting.ORDER_START_NUMBER_NAME, value=Setting.ORDER_START_NUMBER_VALUE))
+    data.append(Setting(name=SettingOrderStartNumber.NAME, value=SettingOrderStartNumber.INIT_VALUE))
 
     try:
         for d in data:

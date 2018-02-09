@@ -6,8 +6,7 @@ from flask_nav.elements import Navbar, View
 from flask_bootstrap import Bootstrap
 
 from dress.config import configure_app
-from dress.data.models import db, Host, Status
-from dress.utils.generator import OrderStartNumberGenerator
+from dress.models import *
 
 from concurrent.futures import ThreadPoolExecutor
 
@@ -113,7 +112,7 @@ def create_app():
             status=Status.query.filter_by(title=Status.SOURCE).first())
         target_hosts = Host.query.filter(
             Host.status != Status.query.filter_by(title=Status.SOURCE).first())
-        order_start_id = OrderStartNumberGenerator.generate()
+        order_start_id = SettingOrderStartNumber().get()
 
         return render_template(
             'task_clone_site_form.html',
@@ -128,7 +127,7 @@ def create_app():
         source_host_id = request.form['source_host_id']
         target_host_id = request.form['target_host_id']
         table_prefix = request.form['table_prefix']
-        order_start_id = request.form['order_start_id']
+        order_start_id = SettingOrderStartNumber().inc_interval()
         smtp_host = request.form['smtp_host']
         smtp_username = request.form['smtp_username']
         smtp_password = request.form['smtp_password']
