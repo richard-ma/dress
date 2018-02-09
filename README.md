@@ -51,10 +51,12 @@
 * cd `directory`
 * git clone git@github.com:richard-ma/dress.git
 * pip install -r requirements.txt
-* python seed.py
+* python manager.py db upgrade
+* python manager.py seed
+* python manager.py importsource
 
 # TESTING
-* ./test.sh
+* python manager.py test
 
 # RUN
 * python manager.py runserver
