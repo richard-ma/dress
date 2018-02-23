@@ -1,12 +1,12 @@
 import datetime
-from dress.models.db import db
+from dress.models.db import *
 
 class TaskLog(db.Model):
     __tablename__ = 'tasklog'
 
     id = db.Column(db.Integer, primary_key=True)
     task_name = db.Column(db.String(64), default='unknown')
-    custom_data = db.Column(db.JSON)
+    custom_data = db.Column(MyJSONType)
     logtime = db.Column(db.DateTime, default=datetime.datetime.now)
 
     def __init__(self, task_name, custom_data):
