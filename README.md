@@ -46,7 +46,7 @@
 * 给目标主机添加screen会话，可以在目标主机查看克隆状态(TODO)
 * 更新目标主机STATUS状态，提示克隆完成(TODO)
 
-# INSTALL
+# 安装
 * virtualenv -p python3 `directory`
 * cd `directory`
 * git clone git@github.com:richard-ma/dress.git
@@ -55,9 +55,11 @@
 * python manager.py seed
 * python manager.py importsource
 
-# TESTING
+# 运行功能测试（可选）
 * python manager.py test
 
-# RUN
+# 启动
+* screen
 * python manager.py runserver
+* Ctrl-a d
 * Browser: http://host-ip:5000
