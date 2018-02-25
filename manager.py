@@ -82,6 +82,20 @@ def seed_setting_data(database):
 
         app.logger.error('Initial setting data importing failed.')
 
+def seed_tasklog_data(database):
+    test_tasklog= TaskLog(task_name='test', custom_data={
+        'hello': 'world',
+    })
+
+    try:
+        test_tasklog.create()
+
+        app.logger.debug('Initial tasklog data imported.')
+    except exc.SQLAlchemyError:
+        database.session.rollback()
+
+        app.logger.debug('Initial tasklog data importing failed.')
+
 @manager.command
 def importsource():
     csvfilename = 'sourcehost.csv'
@@ -109,6 +123,7 @@ def seed():
     seed_status_data(db)
     seed_host_data(db)
     seed_setting_data(db)
+    seed_tasklog_data(db)
 
 @manager.command
 def hello():

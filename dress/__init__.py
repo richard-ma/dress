@@ -29,8 +29,8 @@ def create_app():
     # Navbar flask-nav
     topbar = Navbar(
         '',
+        View('Task', 'task'),
         View('Host', 'host'),
-        View('Clone', 'task_clone_site_form'),
     )
     nav = Nav()
     nav.register_element('top', topbar)
@@ -38,7 +38,7 @@ def create_app():
 
     @app.route('/')
     def index():
-        return redirect(url_for('host'))
+        return redirect(url_for('task'))
 
     # host operation
     @app.route('/host')
@@ -104,6 +104,12 @@ def create_app():
         return redirect(url_for('host'))
 
     # Tasks
+
+    # task
+    @app.route('/task')
+    def task():
+        tasklogs = TaskLog.query.all()
+        return render_template('task.html', tasklogs=tasklogs)
 
     # clone site task
     @app.route('/task/clone_site/form')
