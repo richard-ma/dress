@@ -13,6 +13,7 @@
         <th scope="col">#</th>
         <th scope="col">NAME</th>
         <th scope="col">DATA</th>
+        <th scope="col">LOG TIME</th>
     </thead>
     <tbody>
 {% for tasklog in tasklogs%}
@@ -20,6 +21,7 @@
             <th scope="row">{{ tasklog.id }}</th>
             <td>{{ tasklog.task_name }}</td>
             <td>{{ tasklog.custom_data }}</td>
+            <td>{{ tasklog.logtime }}</td>
         </tr>
 {% endfor %}
     </tbody>

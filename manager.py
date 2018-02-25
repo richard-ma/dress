@@ -123,7 +123,7 @@ def seed():
     seed_status_data(db)
     seed_host_data(db)
     seed_setting_data(db)
-    seed_tasklog_data(db)
+    #seed_tasklog_data(db)
 
 @manager.command
 def hello():

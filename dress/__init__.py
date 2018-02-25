@@ -5,6 +5,8 @@ from flask_nav.elements import Navbar, View
 
 from flask_bootstrap import Bootstrap
 
+from sqlalchemy import asc, desc
+
 from dress.config import configure_app
 from dress.models import *
 
@@ -108,7 +110,7 @@ def create_app():
     # task
     @app.route('/task')
     def task():
-        tasklogs = TaskLog.query.all()
+        tasklogs = TaskLog.query.order_by(desc(TaskLog.id)).all()
         return render_template('task.html', tasklogs=tasklogs)
 
     # clone site task
@@ -173,10 +175,16 @@ def create_app():
             'target_database_root_password': target_host.db_pwd,
             'order_start_id': order_start_id,
         }
+        tasklog_params = {
+            'web_type': site_type,
+            'template': params['source_domain'],
+            'target_host': params['target_ip'],
+            'target_domain': params['target_domain'],
+        }
+        TaskLog(task_name='clone site', custom_data=tasklog_params).create()
         #cscart_workflow(**params)
         if site_type == 'cscart':
             executor.submit(cscart_workflow, **params)
-            #cscart_workflow(**params)
         elif site_type == 'magento':
             executor.submit(magento_workflow, **params)
         #executor.submit(task_clone_site_exec, source_host, target_host,
@@ -185,7 +193,7 @@ def create_app():
 
         flash("Clone Task Is Running In Background. Please Wait...")
 
-        return redirect(url_for('task_clone_site_form'))
+        return redirect(url_for('task'))
 
     #def task_clone_site_exec(source_host: Host, target_host: Host, site_type,
     #table_prefix, order_start_id, smtp_host,
