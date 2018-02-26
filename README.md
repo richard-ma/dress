@@ -29,7 +29,9 @@
 * Database Root Password:   主机上mysql数据库的root用户密码（必填，source类型主机可以不填）
 * Memo:                     备注（可选）
 
-## Clone
+## 任务Task
+
+### 网站克隆
 
 * Web Type:                 克隆网站类型（必填）
 * Web Source:               源主机即模板存放的主机（必填，只有主机STATUS`是source`的主机才会在这里列出）
@@ -47,6 +49,8 @@
 * 更新目标主机STATUS状态，提示克隆完成(TODO)
 
 # 安装
+* yum install python3 git
+* pip install virtualenv
 * virtualenv -p python3 `directory`
 * cd `directory`
 * git clone git@github.com:richard-ma/dress.git
@@ -54,24 +58,26 @@
 * python manager.py db upgrade
 * python manager.py seed
 
-# 启动
+## 基本操作
+
+## 启动
 * screen -S dress\_master
 * python manager.py runserver
 * Ctrl-a d
-* 浏览器访问: http://host-ip:5000
+* 浏览器访问: http://主机ip:5000
 
-# 终止
+## 停止 
 * screen -r dress\_master
 * Ctrl-c
 * exit
 
-# 重新启动
-* 参照上述操作先终止再启动
+## 重新启动
+* 参照上述操作先停止再启动
 
-# 导入source主机信息
+## 导入source主机信息
 * 将所有source主机信息写入sourcehost.csv文件中并保存到本程序根目录下
 * python manager.py importsource
 * 重新启动
 
-# 运行功能测试（可选）
+## 运行功能测试（可选）
 * python manager.py test
