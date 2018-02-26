@@ -53,13 +53,25 @@
 * pip install -r requirements.txt
 * python manager.py db upgrade
 * python manager.py seed
+
+# 启动
+* screen -S dress\_master
+* python manager.py runserver
+* Ctrl-a d
+* 浏览器访问: http://host-ip:5000
+
+# 终止
+* screen -r dress\_master
+* Ctrl-c
+* exit
+
+# 重新启动
+* 参照上述操作先终止再启动
+
+# 导入source主机信息
+* 将所有source主机信息写入sourcehost.csv文件中并保存到本程序根目录下
 * python manager.py importsource
+* 重新启动
 
 # 运行功能测试（可选）
 * python manager.py test
-
-# 启动
-* screen
-* python manager.py runserver
-* Ctrl-a d
-* Browser: http://host-ip:5000
