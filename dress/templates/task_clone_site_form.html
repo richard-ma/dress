@@ -1,5 +1,20 @@
 {% extends "base.html" %}
 
+{% block scripts %}
+    {{ super() }}
+    <script>
+    $(function () {
+        $('#site_type').on('change', function() {
+            var val = this.value;
+            $('#source_host_id option').hide().filter(function() {
+                return this.text.indexOf(val) != -1;
+            }).show();
+        })
+        .change();
+    });
+    </script>
+{% endblock %}
+
 {% block content %}
 <div class="container">
 
@@ -9,7 +24,7 @@
     <div class="form-group">
         <label for="site_type" class="col-sm-2 control-label">Web Type</label>
         <div class="col-sm-4">
-            <select class="form-control" name="site_type", value="cscart">
+            <select id="site_type" class="form-control" name="site_type" value="cscart">
                 <option value="cscart">Cscart</option>
                 <option value="magento">Magento</option>
                 <!--<option value="opencart">Opencart</option>-->
@@ -19,7 +34,8 @@
     <div class="form-group">
         <label for="source_host_id" class="col-sm-2 control-label">Web Source</label>
         <div class="col-sm-4">
-            <select class="form-control" name="source_host_id", value="{{ source_hosts[0].id }}">
+            <select id="source_host_id" class="form-control" name="source_host_id" value="{{ source_hosts[0].id }}">
+                <option>Please Select Source...</option>
                 {% for host in source_hosts %}
                 <option value="{{ host.id }}">{{ host.domain }}</option>
                 {% endfor %}
@@ -29,7 +45,7 @@
     <div class="form-group">
         <label for="target_host_id" class="col-sm-2 control-label">Target Host</label>
         <div class="col-sm-4">
-            <select class="form-control" name="target_host_id", value="{{ target_hosts[0].id }}">
+            <select class="form-control" name="target_host_id" value="{{ target_hosts[0].id }}">
                 {% for host in target_hosts %}
                 <option value="{{ host.id }}">{{ host.domain }}@{{ host.ip }}</option>
                 {% endfor %}
@@ -39,31 +55,31 @@
     <div class="form-group">
         <label for="table_prefix" class="col-sm-2 control-label">Table prefix</label>
         <div class="col-sm-4">
-            <input class="form-control" type="text" name="table_prefix", value="cscart_" />
+            <input class="form-control" type="text" name="table_prefix" value="cscart_" />
         </div>
     </div>
     <div class="form-group">
         <label for="order_start_id" class="col-sm-2 control-label">Initial order ID value</label>
         <div class="col-sm-4">
-            <input class="form-control" type="text" name="order_start_id", value="{% if order_start_id %} {{ order_start_id }} {% endif %}" />
+            <input class="form-control" type="text" name="order_start_id" value="{% if order_start_id %} {{ order_start_id }} {% endif %}" />
         </div>
     </div>
     <div class="form-group">
         <label for="smtp_host" class="col-sm-2 control-label">SMTP host</label>
         <div class="col-sm-4">
-            <input class="form-control" type="text" name="smtp_host", value="" />
+            <input class="form-control" type="text" name="smtp_host" value="" />
         </div>
     </div>
     <div class="form-group">
         <label for="smtp_username" class="col-sm-2 control-label">SMTP username</label>
         <div class="col-sm-4">
-            <input class="form-control" type="text" name="smtp_username", value="" />
+            <input class="form-control" type="text" name="smtp_username" value="" />
         </div>
     </div>
     <div class="form-group">
         <label for="smtp_password" class="col-sm-2 control-label">SMTP password</label>
         <div class="col-sm-4">
-            <input class="form-control" type="text" name="smtp_password", value="" />
+            <input class="form-control" type="text" name="smtp_password" value="" />
         </div>
     </div>
     <div class="form-group">
@@ -74,4 +90,5 @@
 </form>
 
 </div>
+
 {% endblock %}
