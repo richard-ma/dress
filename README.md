@@ -49,11 +49,23 @@
 * 更新目标主机STATUS状态，提示克隆完成(TODO)
 
 # 安装
+
+## 在线安装
 * yum install python3 git
 * pip install virtualenv
-* virtualenv -p python3 `directory`
-* cd `directory`
+* virtualenv -p python3 dress-virtualenv
+* cd dress-virtualenv
 * git clone git@github.com:richard-ma/dress.git
+* pip install -r requirements.txt
+* python manager.py db upgrade
+* python manager.py seed
+
+## 上传安装
+* yum install python3
+* pip install virtualenv
+* virtualenv -p python3 dress-virtualenv
+* cd dress-virtualenv
+* 上传压缩包并解压，使用cd命令进入解压后的目录
 * pip install -r requirements.txt
 * python manager.py db upgrade
 * python manager.py seed
