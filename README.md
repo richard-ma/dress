@@ -70,7 +70,7 @@
 * python manager.py db upgrade
 * python manager.py seed
 
-## 基本操作
+# 基本操作
 
 ## 启动
 * screen -S dress\_master
