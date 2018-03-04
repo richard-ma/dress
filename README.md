@@ -55,6 +55,7 @@
 * pip install virtualenv
 * virtualenv -p python3 dress-virtualenv
 * cd dress-virtualenv
+* source ./bin/activate
 * git clone git@github.com:richard-ma/dress.git
 * pip install -r requirements.txt
 * python manager.py db upgrade
@@ -65,6 +66,7 @@
 * pip install virtualenv
 * virtualenv -p python3 dress-virtualenv
 * cd dress-virtualenv
+* source ./bin/activate
 * 上传压缩包并解压，使用cd命令进入解压后的目录
 * pip install -r requirements.txt
 * python manager.py db upgrade
