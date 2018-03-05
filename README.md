@@ -51,7 +51,11 @@
 # 安装
 
 ## 在线安装
-* yum install python3 git
+* yum install -y epel-release
+* yum install -y python34
+* yum install -y python34-setuptools
+* yum install -y git
+* easy_install pip
 * pip install virtualenv
 * virtualenv -p python3 dress-virtualenv
 * cd dress-virtualenv
@@ -62,7 +66,10 @@
 * python manager.py seed
 
 ## 上传安装
-* yum install python3
+* yum install -y epel-release
+* yum install -y python34
+* yum install -y python34-setuptools
+* easy_install pip
 * pip install virtualenv
 * virtualenv -p python3 dress-virtualenv
 * cd dress-virtualenv
