@@ -61,6 +61,7 @@
 * cd dress-virtualenv
 * source ./bin/activate
 * git clone git@github.com:richard-ma/dress.git
+* cd dress
 * pip install -r requirements.txt
 * python manager.py db upgrade
 * python manager.py seed
