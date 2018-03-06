@@ -50,7 +50,6 @@
 
 # 安装
 
-## 在线安装
 * yum install -y epel-release
 * yum install -y python34 python34-setuptools git unzip screen
 * easy_install-3.4 pip
