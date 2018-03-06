@@ -52,9 +52,7 @@
 
 ## 在线安装
 * yum install -y epel-release
-* yum install -y python34
-* yum install -y python34-setuptools
-* yum install -y git
+* yum install -y python34 python34-setuptools git unzip screen
 * easy_install-3.4 pip
 * pip install virtualenv
 * virtualenv -p python3 dress-virtualenv
@@ -65,7 +63,7 @@
         * git clone git@github.com:richard-ma/dress.git
         * cd dress
     * 上传安装
-        * 上传压缩包并解压，使用cd命令进入解压后的目录
+        * 上传压缩包到当前目录并解压，使用cd命令进入解压后的目录
 * pip install -r requirements.txt
 * python manager.py db upgrade
 * python manager.py seed
