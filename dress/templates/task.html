@@ -20,7 +20,14 @@
         <tr>
             <th scope="row">{{ tasklog.id }}</th>
             <td>{{ tasklog.task_name }}</td>
-            <td>{{ tasklog.custom_data }}</td>
+            <td>
+                {% if tasklog.task_name == "clone site" %}
+                    <span class="label label-default">{{ tasklog.custom_data["web_type"] }}</span>
+                    <span class="label label-primary">{{ tasklog.custom_data["template"] }}</span>
+                {% else %}
+                    <span class="label label-error">error</span>
+                {% endif %}
+            </td>
             <td>{{ tasklog.logtime }}</td>
         </tr>
 {% endfor %}
