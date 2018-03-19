@@ -94,6 +94,6 @@
 
 # 升级版本
 
-* 备份dress-virtualenv/dress/dress_development.db文件
+* 备份dress-virtualenv/dress/dress_development.db文件(上传安装为dress-virtualenv/dress-master/dress_development.db)
 * 将代码解压到dress目录，进行代码替换
-* 将备份的dress_development.db文件放回dress-virtualenv/dress/目录
+* 将备份的dress_development.db文件放回dress-virtualenv/dress/目录(上传安装为dress-virtualenv/dress-master/)
