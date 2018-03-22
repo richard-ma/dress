@@ -25,6 +25,8 @@
                 {% if tasklog.task_name == "clone site" %}
                     <span class="label label-default">{{ tasklog.custom_data["web_type"] }}</span>
                     <span class="label label-primary">{{ tasklog.custom_data["template"] }}</span>
+                {% if tasklog.task_name == "install lnmpa" %}
+                    <span class="label label-default">{{ tasklog.custom_data["domain"] }}</span>
                 {% else %}
                     <span class="label label-error">error</span>
                 {% endif %}
