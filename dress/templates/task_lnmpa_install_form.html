@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+
+<h2 class="sub-header">Lnmpa Installation</h2>
+
+<form class="form-horizontal" method="post" action="/task/clone_site">
+    <div class="form-group">
+        <label for="target_host_id" class="col-sm-2 control-label">Target Host</label>
+        <div class="col-sm-4">
+            <select class="form-control" name="target_host_id" value="{{ target_hosts[0].id }}">
+                {% for host in target_hosts %}
+                <option value="{{ host.id }}">{{ host.domain }}@{{ host.ip }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="db_root_password" class="col-sm-2 control-label">DB Root Password</label>
+        <div class="col-sm-4">
+            <input class="form-control" type="text" name="db_root_password" value="password" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary">Install</button>
+        </div>
+    </div>
+</form>
+
+</div>
+
+{% endblock %}

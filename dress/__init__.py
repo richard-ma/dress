@@ -204,6 +204,41 @@ def create_app():
     #smtp_password)
     #task.run()
 
+    @app.route('/task/lnmpa_install/form')
+    def task_lnmpa_install_form():
+        target_hosts = Host.query.filter(
+            Host.status != Status.query.filter_by(title=Status.SOURCE).first())
+
+        return render_template(
+            'task_lnmpa_install_form.html',
+            target_hosts=target_hosts)
+
+    @app.route('/task/lnmpa_install', methods=['POST'])
+    def task_lnmpa_install():
+        target_host_id = form.request('target_host_id')
+        db_root_password = form.request('db_root_password')
+
+        target_host = Host.query.filter_by(id=target_host_id).first()
+        if not isinstance(target_host, Host):
+            flash("Target Host Not Found!")
+            return redirect(url_for('/task/clone_site/form'))
+
+        params = {
+            'db_root_password': db_root_password,
+            'domain': target_host.domain,
+        }
+        tasklog_params = {
+            'domain': params['domain'],
+        }
+        TaskLog(task_name='install lnmpa', custom_data=tasklog_params).create()
+
+        lnmpa_workflow(params)
+        #executor.submit(lnmpa_workflow, **params)
+
+        flash("Lnmpa Installation Is Running In Background. Please Wait...")
+
+        return redirect(url_for('task'))
+
     # test
     @app.route('/test/change_host_status')
     def test_change_host_status():
