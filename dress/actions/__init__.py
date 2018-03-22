@@ -19,6 +19,8 @@ from dress.actions.ssh_action import SshAction
 
 from dress.actions.file_action import CommandToShellScriptAction
 
+from dress.actions.lnmpa_action import LnmpaInstallAction
+
 __all__ = [
         'InitAction',
         'CopySiteAction',
@@ -36,4 +38,5 @@ __all__ = [
         'MagentoConfigAction',
         'SshAction',
         'CommandToShellScriptAction',
+        'LnmpaInstallAction',
         ]
