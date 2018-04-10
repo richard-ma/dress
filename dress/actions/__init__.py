@@ -21,6 +21,8 @@ from dress.actions.file_action import CommandToShellScriptAction
 
 from dress.actions.lnmpa_action import LnmpaInstallAction
 
+from dress.actions.opencart_action import OpencartConfigAction
+
 __all__ = [
         'InitAction',
         'CopySiteAction',
@@ -39,4 +41,5 @@ __all__ = [
         'SshAction',
         'CommandToShellScriptAction',
         'LnmpaInstallAction',
+        'OpencartConfigAction',
         ]
