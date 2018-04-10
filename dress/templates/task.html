@@ -17,7 +17,7 @@
         <th scope="col">LOG TIME</th>
     </thead>
     <tbody>
-{% for tasklog in tasklogs%}
+{% for tasklog in tasklogs %}
         <tr>
             <th scope="row">{{ tasklog.id }}</th>
             <td>{{ tasklog.task_name }}</td>
@@ -25,7 +25,7 @@
                 {% if tasklog.task_name == "clone site" %}
                     <span class="label label-default">{{ tasklog.custom_data["web_type"] }}</span>
                     <span class="label label-primary">{{ tasklog.custom_data["template"] }}</span>
-                {% if tasklog.task_name == "install lnmpa" %}
+                {% elif tasklog.task_name == "install lnmpa" %}
                     <span class="label label-default">{{ tasklog.custom_data["domain"] }}</span>
                 {% else %}
                     <span class="label label-error">error</span>
