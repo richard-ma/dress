@@ -20,7 +20,7 @@ class ActionOpencartTestCase(unittest.TestCase):
             target_database_password='target_database_password')
         data = action.run(list())
 
-        self.assertEqual(4, len(data))
+        self.assertEqual(8, len(data))
         self.assertTrue(
             "sed -i \"s/define('DB_DATABASE', '.*');/define('DB_DATABASE', 'target_database_name');/g\" /home/wwwroot/target_domain/config.php"
             in data[0])
@@ -33,6 +33,18 @@ class ActionOpencartTestCase(unittest.TestCase):
         self.assertTrue(
             "sed -i \"s/source_domain/target_domain/Ig\" /home/wwwroot/target_domain/config.php"
             in data[3])
+        self.assertTrue(
+            "sed -i \"s/define('DB_DATABASE', '.*');/define('DB_DATABASE', 'target_database_name');/g\" /home/wwwroot/target_domain/admin/config.php"
+            in data[4])
+        self.assertTrue(
+            "sed -i \"s/define('DB_USERNAME', '.*');/define('DB_USERNAME', 'target_database_user_name');/g\" /home/wwwroot/target_domain/admin/config.php"
+            in data[5])
+        self.assertTrue(
+            "sed -i \"s/define('DB_PASSWORD', '.*');/define('DB_PASSWORD', 'target_database_password');/g\" /home/wwwroot/target_domain/admin/config.php"
+            in data[6])
+        self.assertTrue(
+            "sed -i \"s/source_domain/target_domain/Ig\" /home/wwwroot/target_domain/admin/config.php"
+            in data[7])
 
 if __name__ == '__main__':
     unittest.main()
