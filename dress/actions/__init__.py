@@ -23,6 +23,8 @@ from dress.actions.lnmpa_action import LnmpaInstallAction
 
 from dress.actions.opencart_action import OpencartConfigAction
 
+from dress.actions.letsencrypt_action import LetsencryptAction
+
 __all__ = [
         'InitAction',
         'CopySiteAction',
@@ -42,4 +44,5 @@ __all__ = [
         'CommandToShellScriptAction',
         'LnmpaInstallAction',
         'OpencartConfigAction',
+        'LetsencryptAction',
         ]
