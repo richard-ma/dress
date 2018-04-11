@@ -59,6 +59,8 @@ def opencart_workflow(**params):
     ).push(
         OpencartConfigAction(**parsed_params)
     ).push(
+        LetsencryptAction(**parsed_params)
+    ).push(
         LnmpRestartAction(**parsed_params)
     ).push(
         SshAction(**parsed_params)
