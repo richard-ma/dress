@@ -30,7 +30,7 @@ def cscart_workflow(**params):
         'database_password': target_database_password,  # target_database_password
         'database_name': params['target_domain'],  # target_domain
         'data_file_name': data_file_name,
-        'table_prefix': 'cscart_',  # table prefix
+        'table_prefix': params['table_prefix'],  # table prefix
         'order_start_id': params['order_start_id'] if 'order_start_id' in params.keys() else None,  # order_start_id
         'smtp_host': params['smtp_host'] if 'smtp_host' in params.keys() else None,  # smtp_host
         'smtp_user_name': params['smtp_user_name'] if 'smtp_user_name' in params.keys() else None,  # smtp_user_name

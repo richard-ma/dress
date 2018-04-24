@@ -184,10 +184,12 @@ def create_app():
         TaskLog(task_name='clone site', custom_data=tasklog_params).create()
         #cscart_workflow(**params)
         if site_type == 'cscart':
+            params['table_prefix'] = 'cscart_'
             executor.submit(cscart_workflow, **params)
         elif site_type == 'magento':
             executor.submit(magento_workflow, **params)
         elif site_type == 'opencart':
+            params['table_prefix'] = 'oc'
             executor.submit(opencart_workflow, **params)
         #executor.submit(task_clone_site_exec, source_host, target_host,
         #site_type, table_prefix, order_start_id, smtp_host,
