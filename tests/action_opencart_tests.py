@@ -46,5 +46,19 @@ class ActionOpencartTestCase(unittest.TestCase):
             "sed -i \"s/source_domain/target_domain/Ig\" /home/wwwroot/target_domain/admin/config.php"
             in data[7])
 
+
+    def test_opencart_order_start_id(self):
+        action = OpencartOrderStartIdAction(
+            target_database_root_password='target_database_root_password',
+            table_prefix='table_prefix_',
+            order_start_id='order_start_id')
+        data = action.run(list())
+
+        self.assertEqual(1, len(data))
+        self.assertTrue(
+            "mysql -u root -p'target_database_root_password' -e \"ALTER TABLE \`table_prefix_order\` AUTO_INCREMENT = order_start_id;\""
+            in data[0])
+
+
 if __name__ == '__main__':
     unittest.main()

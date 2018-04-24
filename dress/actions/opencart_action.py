@@ -60,3 +60,17 @@ class OpencartConfigAction(Action):
                 ignore_case=True))
 
         return data
+
+
+class OpencartOrderStartIdAction(Action):
+    def run(self, *data):
+        data = data[0]
+        # order_start_id is None: doing nothing
+        if self.params['order_start_id'] != None:
+            data.append(
+                command_mysql_helper(
+                    self.params['target_database_root_password'],
+                    "ALTER TABLE `%sorder` AUTO_INCREMENT = %s;"
+                    % (self.params['table_prefix'],
+                       self.params['order_start_id'])))
+        return data

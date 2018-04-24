@@ -22,6 +22,7 @@ from dress.actions.file_action import CommandToShellScriptAction
 from dress.actions.lnmpa_action import LnmpaInstallAction
 
 from dress.actions.opencart_action import OpencartConfigAction
+from dress.actions.opencart_action import OpencartOrderStartIdAction
 
 from dress.actions.letsencrypt_action import LetsencryptAction
 
@@ -44,5 +45,6 @@ __all__ = [
         'CommandToShellScriptAction',
         'LnmpaInstallAction',
         'OpencartConfigAction',
+        'OpencartOrderStartIdAction',
         'LetsencryptAction',
         ]
